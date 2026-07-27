@@ -239,7 +239,7 @@ export default function Home() {
         setUserPoints(String(json.points));
         setSearchError("");
       } else {
-        setSearchError("Wallet address not found in Dune snapshot");
+        setSearchError(json.message || "Wallet address not found in Dune snapshot");
       }
     } catch {
       setSearchError("Failed to lookup wallet. Please try again.");
@@ -418,6 +418,7 @@ export default function Home() {
   };
 
   const isDuneActive = duneData && duneData.duneActive === true;
+  const hasLeaderboard = isDuneActive && duneData.leaderboard && duneData.leaderboard.length > 0;
 
   return (
     <main className="relative min-h-screen bg-[#07080a] text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white pb-24">
@@ -571,23 +572,23 @@ export default function Home() {
                     <div className="flex gap-2">
                       <input
                         className="flex-1 h-10 rounded-lg bg-zinc-900/60 border-0 px-3.5 font-mono text-xs font-medium text-white outline-none focus:ring-1 focus:ring-zinc-800 transition disabled:opacity-40"
-                        placeholder={isDuneActive ? "Enter wallet address 0x..." : "Waiting for public Dune query..."}
+                        placeholder={hasLeaderboard ? "Enter wallet address 0x..." : "Leaderboard sync pending..."}
                         value={searchAddress}
                         onChange={(e) => setSearchAddress(e.target.value)}
-                        disabled={!isDuneActive}
+                        disabled={!hasLeaderboard}
                       />
                       <button
                         onClick={handleWalletLookup}
-                        disabled={isSearching || !isDuneActive}
+                        disabled={isSearching || !hasLeaderboard}
                         className="h-10 px-4 rounded-lg bg-zinc-100 hover:bg-white text-black font-bold text-xs uppercase tracking-wider transition active:scale-95 disabled:opacity-40 cursor-pointer"
                       >
                         {isSearching ? "..." : "Sync"}
                       </button>
                     </div>
                     {searchError && <span className="text-[10px] text-rose-500 font-medium">{searchError}</span>}
-                    {!isDuneActive && (
+                    {!hasLeaderboard && (
                       <span className="text-[9px] text-zinc-500 leading-normal">
-                        To enable auto-sync, make Dune query <strong>#5749530</strong> Public.
+                        Wallet sync is currently disabled (requires a public leaderboard snapshot query).
                       </span>
                     )}
                   </div>
@@ -853,19 +854,19 @@ export default function Home() {
               {isDuneActive && (
                 <>
                   <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl animate-fade-in">
-                    <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Total Points (Dune)</span>
+                    <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">24h Trading Volume</span>
                     <div className="mt-2.5 font-mono text-2xl font-bold text-zinc-200">
-                      {formatNumber(duneData.totalPoints)}
+                      {formatUsd(duneData.totalVolume24h)}
                     </div>
-                    <p className="text-[9px] text-zinc-500 mt-1">Total points across network.</p>
+                    <p className="text-[9px] text-zinc-500 mt-1">Real-time cleared volume (Dune).</p>
                   </div>
 
                   <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl animate-fade-in">
-                    <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Registered Users</span>
+                    <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Open Interest</span>
                     <div className="mt-2.5 font-mono text-2xl font-bold text-zinc-200">
-                      {formatNumber(duneData.totalUsers)}
+                      {formatUsd(duneData.totalOpenInterest)}
                     </div>
-                    <p className="text-[9px] text-zinc-500 mt-1">Total unique wallets.</p>
+                    <p className="text-[9px] text-zinc-500 mt-1">Active contract positions (Dune).</p>
                   </div>
                 </>
               )}
@@ -902,8 +903,8 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Right: Top Points Leaderboard (From Dune) or Connection Pending */}
-              {isDuneActive ? (
+              {/* Right: Top Points Leaderboard or Protocol Health Details */}
+              {hasLeaderboard ? (
                 <div className="lg:col-span-5 flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl animate-fade-in">
                   <div>
                     <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Top Points Leaderboard</h3>
@@ -942,31 +943,42 @@ export default function Home() {
                   </div>
                   
                   <div className="flex items-center justify-between text-[9px] text-zinc-500 border-t border-zinc-900 pt-3">
-                    <span>Source: Dune Analytics (#5749530)</span>
+                    <span>Source: Dune Analytics</span>
                     <span>Status: Live Sync</span>
                   </div>
                 </div>
               ) : (
-                <div className="lg:col-span-5 flex flex-col items-center justify-center text-center p-8 bg-zinc-950/20 border border-zinc-900 rounded-xl min-h-[280px]">
-                  <Image
-                    className="size-10 opacity-30 invert"
-                    src="/brand/variational-logo-white.png"
-                    alt=""
-                    width={40}
-                    height={40}
-                  />
-                  <span className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase mt-4">Dune Analytics Connection</span>
-                  <p className="text-xs text-zinc-500 mt-2 max-w-xs leading-normal">
-                    Leaderboard and wallet sync are pending. Please set your Dune Query <span className="text-[#4C9AF8] font-bold">#5749530</span> to Public.
-                  </p>
-                  <a 
-                    href="https://dune.com/queries/5749530"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-5 inline-flex items-center gap-1.5 rounded-lg border border-[#4C9AF8]/25 bg-[#4C9AF8]/5 hover:bg-[#4C9AF8]/10 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-[#4C9AF8] transition active:scale-95 cursor-pointer"
-                  >
-                    Configure on Dune.com ➔
-                  </a>
+                <div className="lg:col-span-5 flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl animate-fade-in">
+                  <div>
+                    <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Protocol Statistics</h3>
+                    <p className="text-xs text-zinc-500 mt-1">Real-time trading and infrastructure health metrics from Dune.</p>
+                  </div>
+
+                  <div className="flex flex-col gap-4 font-mono">
+                    <div className="flex items-center justify-between py-2 border-b border-zinc-900">
+                      <span className="text-[10px] text-zinc-500 uppercase font-sans font-bold">Active Markets</span>
+                      <span className="text-xs font-bold text-zinc-300">{duneData?.activeMarkets ?? 0}</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-zinc-900">
+                      <span className="text-[10px] text-zinc-500 uppercase font-sans font-bold">Avg Funding Rate</span>
+                      <span className="text-xs font-bold text-[#4C9AF8]">
+                        {(duneData?.avgFundingRatePct ?? 0).toFixed(4)}%
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-zinc-900">
+                      <span className="text-[10px] text-zinc-500 uppercase font-sans font-bold">Data Status</span>
+                      <span className="text-xs font-bold text-emerald-500">Live Sync</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="text-[10px] text-zinc-500 uppercase font-sans font-bold">Dune Source</span>
+                      <span className="text-xs text-zinc-400">Query #{duneData?.queryId || 6548904}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[9px] text-zinc-500 border-t border-zinc-900 pt-3">
+                    <span>Source: Dune Analytics</span>
+                    <span>Status: Connected</span>
+                  </div>
                 </div>
               )}
             </div>

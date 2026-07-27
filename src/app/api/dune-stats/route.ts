@@ -6,7 +6,7 @@ import { DuneClient } from "@duneanalytics/client-sdk";
 const CACHE_FILE = path.join(process.cwd(), "dune-cache.json");
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 const DUNE_API_KEY = "llQ8YcWqCIuC7qU4kqFZCKQBE9SXrlAB";
-const QUERY_ID = 5749530;
+const QUERY_ID = 6548904; // Live Variational Protocol activity query
 
 export async function GET(request: Request) {
   try {
@@ -31,31 +31,20 @@ export async function GET(request: Request) {
     // 2. Fetch fresh data from Dune
     if (!cachedData) {
       try {
-        console.log(`Calling Dune API for query ID: ${QUERY_ID}...`);
+        console.log(`Calling Dune API for protocol stats query ID: ${QUERY_ID}...`);
         const dune = new DuneClient(DUNE_API_KEY);
         const result = await dune.getLatestResult({ queryId: QUERY_ID });
 
-        if (result && result.result?.rows) {
-          const rows = result.result.rows;
+        if (result && result.result?.rows && result.result.rows.length > 0) {
+          const row = result.result.rows[0];
           
           cachedData = {
             queryId: QUERY_ID,
             duneActive: true,
-            totalUsers: Number(rows[0]?.total_users ?? rows[0]?.users_count ?? 0),
-            totalPoints: Number(rows[0]?.total_points ?? rows[0]?.sum_points ?? 0),
-            averagePoints: Number(rows[0]?.avg_points ?? rows[0]?.average_points ?? 0),
-            leaderboard: rows.slice(0, 10).map((row: any, index: number) => ({
-              rank: Number(row.rank ?? index + 1),
-              address: String(row.address ?? row.user ?? "").toLowerCase(),
-              points: Number(row.points ?? row.score ?? 0),
-              tier: String(row.tier ?? (row.points > 75000 ? "Gold" : row.points > 25000 ? "Silver" : "Bronze"))
-            })),
-            allRows: rows.map((row: any, index: number) => ({
-              rank: Number(row.rank ?? index + 1),
-              address: String(row.address ?? row.user ?? "").toLowerCase(),
-              points: Number(row.points ?? row.score ?? 0),
-              tier: String(row.tier ?? (row.points > 75000 ? "Gold" : row.points > 25000 ? "Silver" : "Bronze"))
-            })),
+            totalVolume24h: Number(row.total_volume_24h ?? 0),
+            totalOpenInterest: Number(row.total_open_interest ?? 0),
+            activeMarkets: Number(row.active_markets ?? row.total_markets ?? 0),
+            avgFundingRatePct: Number(row.avg_funding_rate_pct ?? 0),
             updatedAt: new Date().toISOString(),
             source: "dune"
           };
@@ -71,39 +60,24 @@ export async function GET(request: Request) {
       }
     }
 
-    // If still no cachedData (fetch failed and no cache is present), return duneActive: false
+    // If fetch failed and no cache is present, return duneActive: false
     if (!cachedData) {
       return NextResponse.json({
         duneActive: false,
         queryId: QUERY_ID,
-        message: "Dune query is private or inaccessible. Please set query to Public."
+        message: "Dune query failed or is currently executing. Please try again."
       });
     }
 
-    // 3. Handle optional address lookup
+    // Since query 6548904 doesn't have address rows, lookups always return not found for now
     if (searchAddress) {
-      const match = cachedData.allRows?.find(
-        (row: any) => row.address === searchAddress || row.address.includes(searchAddress)
-      );
-
-      if (match) {
-        return NextResponse.json({
-          found: true,
-          rank: match.rank,
-          address: match.address,
-          points: match.points,
-          tier: match.tier
-        });
-      } else {
-        return NextResponse.json({
-          found: false,
-          message: "Address not found in Dune snapshot"
-        });
-      }
+      return NextResponse.json({
+        found: false,
+        message: "Wallet search requires a leaderboard snapshot query (pending configuration)"
+      });
     }
 
-    const { allRows, ...summaryData } = cachedData;
-    return NextResponse.json({ ...summaryData, cacheStatus: "ok" });
+    return NextResponse.json({ ...cachedData, cacheStatus: "ok" });
   } catch (error: any) {
     console.error("Dune API route general error:", error);
     return NextResponse.json({ error: "dune-fetch-error", details: error.message }, { status: 500 });
