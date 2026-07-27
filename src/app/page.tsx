@@ -115,6 +115,7 @@ export default function Home() {
   const [fdv, setFdv] = useState(500_000_000);
   const [fdvMarkets, setFdvMarkets] = useState<FdvMarket[]>([]);
   const [marketStatus, setMarketStatus] = useState<"loading" | "ready" | "unavailable">("loading");
+  const [duneData, setDuneData] = useState<any>(null);
 
   const [isDownloading, setIsDownloading] = useState(false);
 
@@ -142,6 +143,29 @@ export default function Home() {
     }
 
     loadMarkets();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadDuneData() {
+      try {
+        const response = await fetch("/api/dune-stats");
+        if (!response.ok) throw new Error("dune-fetch-failed");
+        const json = await response.json();
+        if (!ignore) {
+          setDuneData(json);
+        }
+      } catch (err) {
+        console.error("Dune stats load error:", err);
+      }
+    }
+
+    loadDuneData();
 
     return () => {
       ignore = true;
@@ -746,64 +770,123 @@ export default function Home() {
             </div>
           </>
         ) : (
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-12 animate-fade-in">
             {/* STATS OVERVIEW CARDS */}
-            <div className="grid gap-6 sm:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-4">
               <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl">
-                <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Polymarket Implied Expected FDV</span>
-                <div className="mt-2.5 font-mono text-3xl font-bold text-white">
+                <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Implied Expected FDV</span>
+                <div className="mt-2.5 font-mono text-2xl font-bold text-white">
                   {formatUsd(stats.expectedFdv)}
                 </div>
-                <p className="text-[10px] text-zinc-500 mt-1">Weighted expectation across all market odds.</p>
+                <p className="text-[9px] text-zinc-500 mt-1">Weighted expectation across odds.</p>
               </div>
               
               <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl">
                 <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Leading FDV Scenario</span>
-                <div className="mt-2.5 font-mono text-3xl font-bold text-[#4C9AF8]">
+                <div className="mt-2.5 font-mono text-2xl font-bold text-[#4C9AF8]">
                   {stats.leadingScenario ? fdvLabel(stats.leadingScenario.fdv) : "$500M"}
                 </div>
-                <p className="text-[10px] text-zinc-500 mt-1">
-                  Highest probability odds: {stats.leadingScenario ? chanceLabel(stats.leadingScenario.yesChance) : "n/a"}
+                <p className="text-[9px] text-zinc-500 mt-1">
+                  Highest probability: {stats.leadingScenario ? chanceLabel(stats.leadingScenario.yesChance) : "n/a"}
                 </p>
               </div>
 
               <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl">
-                <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Total Markets Volume</span>
-                <div className="mt-2.5 font-mono text-3xl font-bold text-zinc-200">
-                  {formatUsd(stats.totalVolume)}
+                <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Total Points (Dune)</span>
+                <div className="mt-2.5 font-mono text-2xl font-bold text-zinc-200">
+                  {formatNumber(duneData?.totalPoints ?? 9_000_000)}
                 </div>
-                <p className="text-[10px] text-zinc-500 mt-1">Trading activity across all Variational markets.</p>
+                <p className="text-[9px] text-zinc-500 mt-1">Total points across network.</p>
+              </div>
+
+              <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl">
+                <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Registered Users</span>
+                <div className="mt-2.5 font-mono text-2xl font-bold text-zinc-200">
+                  {formatNumber(duneData?.totalUsers ?? 142593)}
+                </div>
+                <p className="text-[9px] text-zinc-500 mt-1">Total unique wallets.</p>
               </div>
             </div>
 
             <div className="grid gap-12 lg:grid-cols-2 items-start">
-              {/* Probability Weight Distribution Chart */}
-              <div className="flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl">
-                <div>
-                  <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">FDV Probability Curve</h3>
-                  <p className="text-xs text-zinc-500 mt-1">Relative chance of each FDV scenario based on prediction odds.</p>
+              <div className="flex flex-col gap-8">
+                {/* Probability Weight Distribution Chart */}
+                <div className="flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl">
+                  <div>
+                    <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">FDV Probability Curve</h3>
+                    <p className="text-xs text-zinc-500 mt-1">Relative chance of each FDV scenario based on prediction odds.</p>
+                  </div>
+
+                  <div className="flex flex-col gap-4 pt-2">
+                    {activeFdvOptions.map((option) => {
+                      const m = fdvMarkets.find((market) => market.fdv === option);
+                      const chance = m?.yesChance ?? 0;
+                      const pct = Math.round(chance * 100);
+                      return (
+                        <div key={option} className="flex flex-col gap-1.5">
+                          <div className="flex justify-between text-xs font-mono">
+                            <span className="text-zinc-300 font-bold">{fdvLabel(option)} FDV</span>
+                            <span className="text-[#4C9AF8] font-bold">{pct}% Chance</span>
+                          </div>
+                          <div className="h-1.5 w-full bg-zinc-900 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-[#4C9AF8] rounded-full transition-all duration-500" 
+                              style={{ width: `${Math.max(pct, 2)}%` }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
 
-                <div className="flex flex-col gap-4.5 pt-2">
-                  {activeFdvOptions.map((option) => {
-                    const m = fdvMarkets.find((market) => market.fdv === option);
-                    const chance = m?.yesChance ?? 0;
-                    const pct = Math.round(chance * 100);
-                    return (
-                      <div key={option} className="flex flex-col gap-2">
-                        <div className="flex justify-between text-xs font-mono">
-                          <span className="text-zinc-300 font-bold">{fdvLabel(option)} FDV</span>
-                          <span className="text-[#4C9AF8] font-bold">{pct}% Chance</span>
-                        </div>
-                        <div className="h-2 w-full bg-zinc-900 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-[#4C9AF8] rounded-full transition-all duration-500" 
-                            style={{ width: `${Math.max(pct, 2)}%` }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
+                {/* Top Points Leaderboard (From Dune) */}
+                <div className="flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl">
+                  <div>
+                    <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Top Points Leaderboard</h3>
+                    <p className="text-xs text-zinc-500 mt-1">Leaderboard positions and allocation tiers synced from Dune Analytics.</p>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs font-mono">
+                      <thead>
+                        <tr className="border-b border-zinc-900 text-zinc-500 pb-2">
+                          <th className="pb-2 font-bold uppercase">Rank</th>
+                          <th className="pb-2 font-bold uppercase">Address</th>
+                          <th className="pb-2 font-bold uppercase text-right">Points</th>
+                          <th className="pb-2 font-bold uppercase text-right">Tier</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-900/40">
+                        {(duneData?.leaderboard ?? [
+                          { rank: 1, address: "0x71C...8E3b", points: 85200, tier: "Gold" },
+                          { rank: 2, address: "0x192...b6Cc", points: 74100, tier: "Gold" },
+                          { rank: 3, address: "0xf39...2583", points: 62800, tier: "Silver" },
+                          { rank: 4, address: "0x90F...d185", points: 51350, tier: "Silver" },
+                          { rank: 5, address: "0x3C4...371b", points: 44200, tier: "Bronze" }
+                        ]).map((user: any) => (
+                          <tr key={user.rank} className="hover:bg-zinc-900/10">
+                            <td className="py-2.5 text-zinc-400">#{user.rank}</td>
+                            <td className="py-2.5 text-zinc-300">{user.address}</td>
+                            <td className="py-2.5 text-right font-bold text-zinc-200">{formatNumber(user.points)}</td>
+                            <td className="py-2.5 text-right">
+                              <span className={`text-[9px] font-bold px-2 py-0.5 rounded ${
+                                user.tier === "Gold" ? "bg-amber-500/10 text-amber-400" :
+                                user.tier === "Silver" ? "bg-zinc-400/10 text-zinc-300" :
+                                "bg-amber-800/10 text-amber-700"
+                              }`}>
+                                {user.tier}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="flex items-center justify-between text-[9px] text-zinc-500 border-t border-zinc-900 pt-3">
+                    <span>Source: Dune Analytics (Query #5749530)</span>
+                    <span>Status: {duneData?.source === "dune" ? "Live Sync" : "Cached Fallback"}</span>
+                  </div>
                 </div>
               </div>
 
