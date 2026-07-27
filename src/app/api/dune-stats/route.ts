@@ -6,15 +6,13 @@ import { DuneClient } from "@duneanalytics/client-sdk";
 const CACHE_FILE = path.join(process.cwd(), "dune-cache.json");
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 const DUNE_API_KEY = "llQ8YcWqCIuC7qU4kqFZCKQBE9SXrlAB";
-const QUERY_ID = 6548904; // The active public query for protocol stats
+const QUERY_ID = 6548904;
 
-// Background revalidation function (non-blocking)
-async function revalidateCache() {
+// Sync/async fetch runner
+async function runRevalidation(): Promise<any> {
   try {
-    console.log("Starting background Dune revalidation for query:", QUERY_ID);
+    console.log("Fetching Dune data for query:", QUERY_ID);
     const dune = new DuneClient(DUNE_API_KEY);
-
-    // Fetch only the public query
     const res = await dune.getLatestResult({ queryId: QUERY_ID });
 
     if (res && res.result?.rows && res.result.rows.length > 0) {
@@ -35,11 +33,12 @@ async function revalidateCache() {
         data: combinedStats
       };
       fs.writeFileSync(CACHE_FILE, JSON.stringify(cacheEntry, null, 2), "utf-8");
-      console.log("Dune cache successfully updated.");
+      return combinedStats;
     }
   } catch (err) {
-    console.error("Background revalidation failed:", err);
+    console.error("Dune query fetch failed:", err);
   }
+  return null;
 }
 
 export async function GET(request: Request) {
@@ -66,27 +65,26 @@ export async function GET(request: Request) {
       cacheExpired = true;
     }
 
-    // 2. Trigger background update if cache is expired or missing
+    // 2. Resolve data (fetching synchronously on first run if missing, else in background)
     if (cacheExpired) {
-      revalidateCache(); // Async non-blocking
+      if (!cachedData) {
+        // Fetch synchronously on first run to avoid empty/fallback mock data
+        cachedData = await runRevalidation();
+      } else {
+        // Fire-and-forget background fetch for subsequent updates
+        runRevalidation();
+      }
     }
 
-    // If cache is empty, return static initial metrics for instant page load
+    // If still no data (e.g. Dune is down), return duneActive: false
     if (!cachedData) {
-      const fallbackStats = {
-        duneActive: true,
-        queryId: QUERY_ID,
-        totalVolume24h: 500.29298,
-        totalOpenInterest: 678.80877,
-        activeMarkets: 439,
-        avgFundingRatePct: -5.37512,
-        updatedAt: new Date().toISOString(),
-        source: "local-first-load"
-      };
-      return NextResponse.json(fallbackStats);
+      return NextResponse.json({
+        duneActive: false,
+        message: "Real-time Dune stats are currently unavailable. No fallback data provided."
+      });
     }
 
-    // 3. Handle optional address lookup (disabled as there are no leaderboard rows)
+    // 3. Address lookup (disabled for protocol query)
     if (searchAddress) {
       return NextResponse.json({
         found: false,
