@@ -417,6 +417,8 @@ export default function Home() {
     }
   };
 
+  const isDuneActive = duneData && duneData.duneActive === true;
+
   return (
     <main className="relative min-h-screen bg-[#07080a] text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white pb-24">
       {/* Background soft grid */}
@@ -568,20 +570,26 @@ export default function Home() {
                     <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Sync Points via Wallet</span>
                     <div className="flex gap-2">
                       <input
-                        className="flex-1 h-10 rounded-lg bg-zinc-900/60 border-0 px-3.5 font-mono text-xs font-medium text-white outline-none focus:ring-1 focus:ring-zinc-800 transition"
-                        placeholder="Enter wallet address 0x..."
+                        className="flex-1 h-10 rounded-lg bg-zinc-900/60 border-0 px-3.5 font-mono text-xs font-medium text-white outline-none focus:ring-1 focus:ring-zinc-800 transition disabled:opacity-40"
+                        placeholder={isDuneActive ? "Enter wallet address 0x..." : "Waiting for public Dune query..."}
                         value={searchAddress}
                         onChange={(e) => setSearchAddress(e.target.value)}
+                        disabled={!isDuneActive}
                       />
                       <button
                         onClick={handleWalletLookup}
-                        disabled={isSearching}
-                        className="h-10 px-4 rounded-lg bg-zinc-100 hover:bg-white text-black font-bold text-xs uppercase tracking-wider transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                        disabled={isSearching || !isDuneActive}
+                        className="h-10 px-4 rounded-lg bg-zinc-100 hover:bg-white text-black font-bold text-xs uppercase tracking-wider transition active:scale-95 disabled:opacity-40 cursor-pointer"
                       >
                         {isSearching ? "..." : "Sync"}
                       </button>
                     </div>
                     {searchError && <span className="text-[10px] text-rose-500 font-medium">{searchError}</span>}
+                    {!isDuneActive && (
+                      <span className="text-[9px] text-zinc-500 leading-normal">
+                        To enable auto-sync, make Dune query <strong>#5749530</strong> Public.
+                      </span>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -823,7 +831,7 @@ export default function Home() {
         ) : (
           <div className="flex flex-col gap-12 animate-fade-in">
             {/* STATS OVERVIEW CARDS */}
-            <div className="grid gap-6 sm:grid-cols-4">
+            <div className={`grid gap-6 ${isDuneActive ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-2"}`}>
               <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl">
                 <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Implied Expected FDV</span>
                 <div className="mt-2.5 font-mono text-2xl font-bold text-white">
@@ -842,26 +850,30 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl">
-                <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Total Points (Dune)</span>
-                <div className="mt-2.5 font-mono text-2xl font-bold text-zinc-200">
-                  {formatNumber(duneData?.totalPoints ?? 9_000_000)}
-                </div>
-                <p className="text-[9px] text-zinc-500 mt-1">Total points across network.</p>
-              </div>
+              {isDuneActive && (
+                <>
+                  <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl animate-fade-in">
+                    <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Total Points (Dune)</span>
+                    <div className="mt-2.5 font-mono text-2xl font-bold text-zinc-200">
+                      {formatNumber(duneData.totalPoints)}
+                    </div>
+                    <p className="text-[9px] text-zinc-500 mt-1">Total points across network.</p>
+                  </div>
 
-              <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl">
-                <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Registered Users</span>
-                <div className="mt-2.5 font-mono text-2xl font-bold text-zinc-200">
-                  {formatNumber(duneData?.totalUsers ?? 142593)}
-                </div>
-                <p className="text-[9px] text-zinc-500 mt-1">Total unique wallets.</p>
-              </div>
+                  <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl animate-fade-in">
+                    <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Registered Users</span>
+                    <div className="mt-2.5 font-mono text-2xl font-bold text-zinc-200">
+                      {formatNumber(duneData.totalUsers)}
+                    </div>
+                    <p className="text-[9px] text-zinc-500 mt-1">Total unique wallets.</p>
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="grid gap-8 lg:grid-cols-12 items-start">
               {/* Left: Probability Weight Distribution Chart */}
-              <div className="lg:col-span-7 flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl">
+              <div className={isDuneActive ? "lg:col-span-7 flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl" : "lg:col-span-12 flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl"}>
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">FDV Probability Curve</h3>
                   <p className="text-xs text-zinc-500 mt-1">Relative chance of each FDV scenario based on prediction odds.</p>
@@ -890,55 +902,73 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Right: Top Points Leaderboard (From Dune) */}
-              <div className="lg:col-span-5 flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl">
-                <div>
-                  <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Top Points Leaderboard</h3>
-                  <p className="text-xs text-zinc-500 mt-1">Leaderboard positions synced from Dune Analytics.</p>
-                </div>
+              {/* Right: Top Points Leaderboard (From Dune) or Connection Pending */}
+              {isDuneActive ? (
+                <div className="lg:col-span-5 flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl animate-fade-in">
+                  <div>
+                    <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Top Points Leaderboard</h3>
+                    <p className="text-xs text-zinc-500 mt-1">Leaderboard positions synced from Dune Analytics.</p>
+                  </div>
 
-                <div className="overflow-y-auto max-h-[220px] pr-1.5 scrollbar-thin">
-                  <table className="w-full text-left text-xs font-mono">
-                    <thead>
-                      <tr className="border-b border-zinc-900 text-zinc-500 pb-2">
-                        <th className="pb-2 font-bold uppercase">Rank</th>
-                        <th className="pb-2 font-bold uppercase">Address</th>
-                        <th className="pb-2 font-bold uppercase text-right">Points</th>
-                        <th className="pb-2 font-bold uppercase text-right">Tier</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-zinc-900/40">
-                      {(duneData?.leaderboard ?? [
-                        { rank: 1, address: "0x71C...8E3b", points: 85200, tier: "Gold" },
-                        { rank: 2, address: "0x192...b6Cc", points: 74100, tier: "Gold" },
-                        { rank: 3, address: "0xf39...2583", points: 62800, tier: "Silver" },
-                        { rank: 4, address: "0x90F...d185", points: 51350, tier: "Silver" },
-                        { rank: 5, address: "0x3C4...371b", points: 44200, tier: "Bronze" }
-                      ]).map((user: any) => (
-                        <tr key={user.rank} className="hover:bg-zinc-900/10">
-                          <td className="py-2 text-zinc-400">#{user.rank}</td>
-                          <td className="py-2 text-zinc-300">{user.address}</td>
-                          <td className="py-2 text-right font-bold text-zinc-200">{formatNumber(user.points)}</td>
-                          <td className="py-2 text-right">
-                            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
-                              user.tier === "Gold" ? "bg-amber-500/10 text-amber-400" :
-                              user.tier === "Silver" ? "bg-zinc-400/10 text-zinc-300" :
-                              "bg-amber-800/10 text-amber-700"
-                            }`}>
-                              {user.tier}
-                            </span>
-                          </td>
+                  <div className="overflow-y-auto max-h-[220px] pr-1.5 scrollbar-thin">
+                    <table className="w-full text-left text-xs font-mono">
+                      <thead>
+                        <tr className="border-b border-zinc-900 text-zinc-500 pb-2">
+                          <th className="pb-2 font-bold uppercase">Rank</th>
+                          <th className="pb-2 font-bold uppercase">Address</th>
+                          <th className="pb-2 font-bold uppercase text-right">Points</th>
+                          <th className="pb-2 font-bold uppercase text-right">Tier</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-900/40">
+                        {duneData.leaderboard.map((user: any) => (
+                          <tr key={user.rank} className="hover:bg-zinc-900/10">
+                            <td className="py-2 text-zinc-400">#{user.rank}</td>
+                            <td className="py-2 text-zinc-300">{user.address}</td>
+                            <td className="py-2 text-right font-bold text-zinc-200">{formatNumber(user.points)}</td>
+                            <td className="py-2 text-right">
+                              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                                user.tier === "Gold" ? "bg-amber-500/10 text-amber-400" :
+                                user.tier === "Silver" ? "bg-zinc-400/10 text-zinc-300" :
+                                "bg-amber-800/10 text-amber-700"
+                              }`}>
+                                {user.tier}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-[9px] text-zinc-500 border-t border-zinc-900 pt-3">
+                    <span>Source: Dune Analytics (#5749530)</span>
+                    <span>Status: Live Sync</span>
+                  </div>
                 </div>
-                
-                <div className="flex items-center justify-between text-[9px] text-zinc-500 border-t border-zinc-900 pt-3">
-                  <span>Source: Dune Analytics (#5749530)</span>
-                  <span>Status: {duneData?.source === "dune" ? "Live Sync" : "Cached Fallback"}</span>
+              ) : (
+                <div className="lg:col-span-5 flex flex-col items-center justify-center text-center p-8 bg-zinc-950/20 border border-zinc-900 rounded-xl min-h-[280px]">
+                  <Image
+                    className="size-10 opacity-30 invert"
+                    src="/brand/variational-logo-white.png"
+                    alt=""
+                    width={40}
+                    height={40}
+                  />
+                  <span className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase mt-4">Dune Analytics Connection</span>
+                  <p className="text-xs text-zinc-500 mt-2 max-w-xs leading-normal">
+                    Leaderboard and wallet sync are pending. Please set your Dune Query <span className="text-[#4C9AF8] font-bold">#5749530</span> to Public.
+                  </p>
+                  <a 
+                    href="https://dune.com/queries/5749530"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-5 inline-flex items-center gap-1.5 rounded-lg border border-[#4C9AF8]/25 bg-[#4C9AF8]/5 hover:bg-[#4C9AF8]/10 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-[#4C9AF8] transition active:scale-95 cursor-pointer"
+                  >
+                    Configure on Dune.com ➔
+                  </a>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Prediction Markets Activity (Secondary) */}
