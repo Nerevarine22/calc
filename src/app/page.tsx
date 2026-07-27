@@ -349,6 +349,8 @@ export default function Home() {
       ctx.textAlign = "left";
       ctx.fillText("Estimated TGE Value", 120, 250);
 
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
       ctx.fillStyle = "#ffffff";
       ctx.font = "bold 56px monospace";
       ctx.fillText(formatUsd(results.expectedValue), 120, 350);
@@ -419,6 +421,7 @@ export default function Home() {
 
   const isDuneActive = duneData && duneData.duneActive === true;
   const hasLeaderboard = isDuneActive && duneData.leaderboard && duneData.leaderboard.length > 0;
+  const activeTab = isDuneActive ? tab : "estimator";
 
   return (
     <main className="relative min-h-screen bg-[#07080a] text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white pb-24">
@@ -450,16 +453,18 @@ export default function Home() {
             <nav className="flex items-center gap-6 font-mono text-[10px] tracking-[0.2em] uppercase">
               <button 
                 onClick={() => setTab("estimator")}
-                className={`transition font-bold cursor-pointer ${tab === "estimator" ? "text-white" : "text-zinc-500 hover:text-zinc-300"}`}
+                className={`transition font-bold cursor-pointer ${activeTab === "estimator" ? "text-white" : "text-zinc-500 hover:text-zinc-300"}`}
               >
                 Points Estimator
               </button>
-              <button 
-                onClick={() => setTab("stats")}
-                className={`transition font-bold cursor-pointer ${tab === "stats" ? "text-white" : "text-zinc-500 hover:text-zinc-300"}`}
-              >
-                Statistics
-              </button>
+              {isDuneActive && (
+                <button 
+                  onClick={() => setTab("stats")}
+                  className={`transition font-bold cursor-pointer ${activeTab === "stats" ? "text-white" : "text-zinc-500 hover:text-zinc-300"}`}
+                >
+                  Statistics
+                </button>
+              )}
             </nav>
           </div>
 
@@ -471,7 +476,7 @@ export default function Home() {
           </div>
         </header>
 
-        {tab === "estimator" ? (
+        {activeTab === "estimator" ? (
           <>
             {/* HERO RESULT CARD */}
             <div className="flex flex-col items-center text-center py-12 px-4">
@@ -566,32 +571,28 @@ export default function Home() {
                 </div>
 
                 <div className="flex flex-col gap-6">
-                  {/* WALLET LOOKUP */}
-                  <div className="flex flex-col gap-2 border-b border-zinc-900 pb-5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Sync Points via Wallet</span>
-                    <div className="flex gap-2">
-                      <input
-                        className="flex-1 h-10 rounded-lg bg-zinc-900/60 border-0 px-3.5 font-mono text-xs font-medium text-white outline-none focus:ring-1 focus:ring-zinc-800 transition disabled:opacity-40"
-                        placeholder={hasLeaderboard ? "Enter wallet address 0x..." : "Leaderboard sync pending..."}
-                        value={searchAddress}
-                        onChange={(e) => setSearchAddress(e.target.value)}
-                        disabled={!hasLeaderboard}
-                      />
-                      <button
-                        onClick={handleWalletLookup}
-                        disabled={isSearching || !hasLeaderboard}
-                        className="h-10 px-4 rounded-lg bg-zinc-100 hover:bg-white text-black font-bold text-xs uppercase tracking-wider transition active:scale-95 disabled:opacity-40 cursor-pointer"
-                      >
-                        {isSearching ? "..." : "Sync"}
-                      </button>
+                  {/* WALLET LOOKUP - Conditionally rendered only when data is available */}
+                  {hasLeaderboard && (
+                    <div className="flex flex-col gap-2 border-b border-zinc-900 pb-5 animate-fade-in">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Sync Points via Wallet</span>
+                      <div className="flex gap-2">
+                        <input
+                          className="flex-1 h-10 rounded-lg bg-zinc-900/60 border-0 px-3.5 font-mono text-xs font-medium text-white outline-none focus:ring-1 focus:ring-zinc-800 transition"
+                          placeholder="Enter wallet address 0x..."
+                          value={searchAddress}
+                          onChange={(e) => setSearchAddress(e.target.value)}
+                        />
+                        <button
+                          onClick={handleWalletLookup}
+                          disabled={isSearching}
+                          className="h-10 px-4 rounded-lg bg-zinc-100 hover:bg-white text-black font-bold text-xs uppercase tracking-wider transition active:scale-95 disabled:opacity-40 cursor-pointer"
+                        >
+                          {isSearching ? "..." : "Sync"}
+                        </button>
+                      </div>
+                      {searchError && <span className="text-[10px] text-rose-500 font-medium">{searchError}</span>}
                     </div>
-                    {searchError && <span className="text-[10px] text-rose-500 font-medium">{searchError}</span>}
-                    {!hasLeaderboard && (
-                      <span className="text-[9px] text-zinc-500 leading-normal">
-                        Wallet sync is currently disabled (requires a public leaderboard snapshot query).
-                      </span>
-                    )}
-                  </div>
+                  )}
 
                   <div className="grid grid-cols-2 gap-4">
                     <label className="flex flex-col gap-1.5">
