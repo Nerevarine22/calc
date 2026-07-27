@@ -108,6 +108,7 @@ function StatLine({ label, value }: { label: string; value: string }) {
 }
 
 export default function Home() {
+  const [tab, setTab] = useState<"estimator" | "stats">("estimator");
   const [totalPoints, setTotalPoints] = useState("9000000");
   const [userPoints, setUserPoints] = useState("10000");
   const [airdropPct, setAirdropPct] = useState(40);
@@ -172,6 +173,28 @@ export default function Home() {
       })),
     };
   }, [activeFdvOptions, airdropPct, fdv, totalPoints, userPoints]);
+
+  const stats = useMemo(() => {
+    const totalVol = fdvMarkets.reduce((acc, m) => acc + m.volumeTotal, 0);
+    const validChances = fdvMarkets.filter(m => m.yesChance !== null && m.yesChance !== undefined);
+    
+    const sortedByChance = [...fdvMarkets].sort((a, b) => (b.yesChance ?? 0) - (a.yesChance ?? 0));
+    const leadingScenario = sortedByChance[0];
+
+    let expectedFdvValue = 500_000_000;
+    if (validChances.length > 0) {
+      const sumChance = validChances.reduce((acc, m) => acc + (m.yesChance ?? 0), 0);
+      if (sumChance > 0) {
+        expectedFdvValue = validChances.reduce((acc, m) => acc + (m.fdv * (m.yesChance ?? 0)), 0) / sumChance;
+      }
+    }
+
+    return {
+      totalVolume: totalVol,
+      leadingScenario,
+      expectedFdv: expectedFdvValue,
+    };
+  }, [fdvMarkets]);
 
   const handleDownloadCard = async () => {
     setIsDownloading(true);
@@ -366,9 +389,21 @@ export default function Home() {
               className="opacity-90"
             />
             <span className="hidden sm:inline-block h-4 w-px bg-zinc-800" />
-            <span className="hidden sm:inline-block font-mono text-[10px] tracking-[0.2em] text-zinc-500 uppercase">
-              Points Estimator
-            </span>
+            
+            <nav className="flex items-center gap-6 font-mono text-[10px] tracking-[0.2em] uppercase">
+              <button 
+                onClick={() => setTab("estimator")}
+                className={`transition font-bold cursor-pointer ${tab === "estimator" ? "text-white" : "text-zinc-500 hover:text-zinc-300"}`}
+              >
+                Points Estimator
+              </button>
+              <button 
+                onClick={() => setTab("stats")}
+                className={`transition font-bold cursor-pointer ${tab === "stats" ? "text-white" : "text-zinc-500 hover:text-zinc-300"}`}
+              >
+                Statistics
+              </button>
+            </nav>
           </div>
 
           <div className="flex items-center gap-2">
@@ -379,334 +414,442 @@ export default function Home() {
           </div>
         </header>
 
-        {/* HERO RESULT CARD */}
-        <div className="flex flex-col items-center text-center py-12 px-4">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">
-            Estimated Airdrop Value at TGE
-          </span>
-          <div className="mt-4 font-mono text-6xl sm:text-7xl font-bold tracking-tight text-white drop-shadow-sm">
-            <AnimatedNumber value={results.expectedValue} />
-          </div>
-          
-          <p className="mt-3 text-xs text-zinc-500 max-w-sm">
-            Based on <span className="text-zinc-300 font-medium">{fdvLabel(fdv)} FDV</span> assumptions and a <span className="text-zinc-300 font-medium">{airdropPct}%</span> airdrop pool.
-          </p>
-
-          <div className="mt-10 grid grid-cols-3 gap-8 sm:gap-16 border-t border-b border-zinc-900/60 py-6 w-full max-w-2xl text-center">
-            <div>
-              <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Pool share</p>
-              <p className="mt-1 font-mono text-base font-bold text-zinc-200">{(results.share * 100).toFixed(6)}%</p>
-            </div>
-            <div>
-              <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Est. Tokens</p>
-              <p className="mt-1 font-mono text-base font-bold text-zinc-200">{formatNumber(results.estimatedTokens)}</p>
-            </div>
-            <div>
-              <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Token Price</p>
-              <p className="mt-1 font-mono text-base font-bold text-[#4C9AF8]">{formatUsd(results.tokenPrice)}</p>
-            </div>
-          </div>
-          
-          <a 
-            href="https://omni.variational.io/?ref=OMNIATOMS"
-            target="_blank"
-            rel="noreferrer"
-            className="mt-8 inline-flex items-center gap-2 rounded-full border border-[#4C9AF8]/25 bg-[#4C9AF8]/5 hover:bg-[#4C9AF8]/10 hover:border-[#4C9AF8]/40 px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-[#4C9AF8] transition active:scale-98"
-          >
-            <span>Claim +12% Points Boost & Bronze Tier on Omni</span>
-            <span>➔</span>
-          </a>
-        </div>
-
-        {/* VISUAL MATH FLOW CHART */}
-        <div className="flex flex-col gap-4">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">
-            Visual Math Flow
-          </h3>
-          <div className="grid grid-cols-2 md:flex md:flex-wrap items-center justify-between gap-6 border border-zinc-900 bg-zinc-950/40 p-6 rounded-xl text-center font-mono">
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-[9px] text-zinc-500 uppercase">Your Points</span>
-              <span className="text-xs font-bold text-zinc-300">{formatNumber(parsePositive(userPoints))}</span>
-            </div>
-            <span className="hidden md:inline text-zinc-700">/</span>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-[9px] text-zinc-500 uppercase">Total Points</span>
-              <span className="text-xs font-bold text-zinc-300">{formatNumber(parsePositive(totalPoints))}</span>
-            </div>
-            <span className="hidden md:inline text-zinc-600">➔</span>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-[9px] text-zinc-500 uppercase">Pool Share</span>
-              <span className="text-xs font-bold text-zinc-300">{(results.share * 100).toFixed(6)}%</span>
-            </div>
-            <span className="hidden md:inline text-zinc-600">➔</span>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-[9px] text-zinc-500 uppercase">Airdrop Pool</span>
-              <span className="text-xs font-bold text-zinc-300">{airdropPct}%</span>
-            </div>
-            <span className="hidden md:inline text-zinc-600">➔</span>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-[9px] text-zinc-500 uppercase">Est. Tokens</span>
-              <span className="text-xs font-bold text-zinc-300">{formatNumber(results.estimatedTokens, 0)}</span>
-            </div>
-            <span className="hidden md:inline text-zinc-700">×</span>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-[9px] text-zinc-500 uppercase">Price @ FDV</span>
-              <span className="text-xs font-bold text-zinc-300">{formatUsd(results.tokenPrice)}</span>
-            </div>
-            <span className="hidden md:inline text-[#4C9AF8]/60 font-bold">➔</span>
-            <div className="flex flex-col items-center gap-1 bg-[#4C9AF8]/5 border border-[#4C9AF8]/20 px-3 py-1.5 rounded-lg">
-              <span className="text-[9px] text-[#4C9AF8] font-bold uppercase">TGE Estimate</span>
-              <span className="text-xs font-black text-white">{formatUsd(results.expectedValue)}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* INPUTS AND SHARE PREVIEW */}
-        <div className="grid gap-12 lg:grid-cols-2 items-start">
-          
-          {/* LEFT: SETTINGS & INPUTS */}
-          <div className="flex flex-col gap-8">
-            <div>
-              <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Settings</h2>
-              <p className="text-xs text-zinc-500 mt-1">Configure global supply model assumptions.</p>
-            </div>
-
-            <div className="flex flex-col gap-6">
-              <div className="grid grid-cols-2 gap-4">
-                <label className="flex flex-col gap-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Your points</span>
-                  <input
-                    className="h-10 rounded-lg bg-zinc-900/60 border-0 px-3.5 font-mono text-sm font-medium text-white outline-none focus:ring-1 focus:ring-zinc-600 transition"
-                    inputMode="decimal"
-                    value={userPoints}
-                    onChange={(event) => setUserPoints(event.target.value)}
-                  />
-                </label>
-
-                <label className="flex flex-col gap-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Total system points</span>
-                  <input
-                    className="h-10 rounded-lg bg-zinc-900/60 border-0 px-3.5 font-mono text-sm font-medium text-white outline-none focus:ring-1 focus:ring-zinc-600 transition"
-                    inputMode="decimal"
-                    value={totalPoints}
-                    onChange={(event) => setTotalPoints(event.target.value)}
-                  />
-                </label>
+        {tab === "estimator" ? (
+          <>
+            {/* HERO RESULT CARD */}
+            <div className="flex flex-col items-center text-center py-12 px-4">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">
+                Estimated Airdrop Value at TGE
+              </span>
+              <div className="mt-4 font-mono text-6xl sm:text-7xl font-bold tracking-tight text-white drop-shadow-sm">
+                <AnimatedNumber value={results.expectedValue} />
               </div>
-
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Supply for Airdrop</p>
-                <div className="mt-2.5 flex flex-wrap gap-1.5">
-                  {airdropOptions.map((option) => (
-                    <button
-                      key={option}
-                      className={`px-3 py-1.5 rounded-md text-xs font-bold transition ${
-                        option === airdropPct
-                          ? "bg-white text-black"
-                          : "bg-zinc-900/40 text-zinc-400 hover:bg-zinc-900/80 hover:text-white"
-                      }`}
-                      onClick={() => setAirdropPct(option)}
-                    >
-                      {option}%
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Select FDV Scenario</p>
-                <div className="mt-2.5 grid grid-cols-3 gap-2">
-                  {activeFdvOptions.map((option) => (
-                    <button
-                      key={option}
-                      className={`flex flex-col items-center justify-center py-2.5 rounded-lg border text-xs transition ${
-                        option === fdv
-                          ? "border-[#4C9AF8] bg-[#4C9AF8]/10 text-white"
-                          : "border-zinc-900 bg-zinc-900/30 text-zinc-400 hover:border-zinc-800 hover:text-zinc-200"
-                      }`}
-                      onClick={() => setFdv(option)}
-                    >
-                      <span className="font-bold">{fdvLabel(option)}</span>
-                      <span className="mt-0.5 text-[9px] text-zinc-500">
-                        {chanceLabel(fdvMarkets.find((market) => market.fdv === option)?.yesChance)}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {selectedMarket ? (
-                <div className="border-t border-zinc-900 pt-4 flex flex-col gap-2">
-                  <div className="flex items-center justify-between text-[10px] font-bold tracking-wider text-zinc-500 uppercase">
-                    <span className="flex items-center gap-1">
-                      <Image
-                        className="size-3 invert opacity-50"
-                        src="/polymarket-vector.png"
-                        alt=""
-                        width={12}
-                        height={12}
-                      />
-                      <span>Prediction Market Insight</span>
-                    </span>
-                    <a 
-                      href={selectedMarket.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-[#4C9AF8] hover:underline"
-                    >
-                      View Market
-                    </a>
-                  </div>
-                  <p className="text-xs text-zinc-400 font-medium">{selectedMarket.question}</p>
-                  <p className="text-[10px] text-zinc-500">
-                    Implied Odds: <span className="text-zinc-300 font-mono font-bold">{chanceLabel(selectedMarket.yesChance)}</span> • Volume: {formatUsd(selectedMarket.volumeTotal)}
-                  </p>
-                </div>
-              ) : null}
-
-              <div className="pt-4 border-t border-zinc-900">
-                <StatLine label="Total token supply" value={formatNumber(TOTAL_SUPPLY)} />
-                <StatLine label="Airdrop supply" value={formatNumber(results.airdropSupply)} />
-                <StatLine label="Token price @ FDV" value={formatUsd(results.tokenPrice)} />
-              </div>
-            </div>
-          </div>
-
-          {/* RIGHT: LIVE SHARE CARD PREVIEW */}
-          <div className="flex flex-col gap-6">
-            <div>
-              <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Share Card Preview</h2>
-              <p className="text-xs text-zinc-500 mt-1">Live preview of your estimate to share on X/Twitter.</p>
-            </div>
-
-            <div className="relative overflow-hidden rounded-2xl border border-zinc-900 bg-zinc-950 p-6 flex flex-col justify-between aspect-[1.91/1] w-full shadow-lg">
-              {/* Card visual details */}
-              <div className="absolute top-0 right-0 w-[300px] h-[200px] bg-[#4C9AF8]/3 blur-[80px] pointer-events-none" />
               
-              <div className="flex items-center justify-between border-b border-zinc-900 pb-4">
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/brand/variational-logo-white.png"
-                    alt=""
-                    width={22}
-                    height={22}
-                    className="opacity-90"
-                  />
-                  <div className="flex flex-col">
-                    <span className="font-mono text-xs font-bold text-white tracking-wider">VARIATIONAL</span>
-                    <span className="text-[8px] font-bold text-zinc-600 tracking-widest uppercase">Points Estimator</span>
-                  </div>
-                </div>
-                <span className="text-[8px] font-bold tracking-widest text-[#4C9AF8] border border-[#4C9AF8]/20 bg-[#4C9AF8]/5 px-2 py-0.5 rounded uppercase">
-                  TGE ALLOCATION ESTIMATE
-                </span>
-              </div>
+              <p className="mt-3 text-xs text-zinc-500 max-w-sm">
+                Based on <span className="text-zinc-300 font-medium">{fdvLabel(fdv)} FDV</span> assumptions and a <span className="text-zinc-300 font-medium">{airdropPct}%</span> airdrop pool.
+              </p>
 
-              <div className="grid grid-cols-2 gap-4 my-auto">
-                <div className="bg-zinc-900/30 border border-zinc-900/60 p-3 rounded-lg flex flex-col justify-center">
-                  <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Estimated TGE Value</span>
-                  <span className="text-2xl font-bold font-mono text-[#4C9AF8] mt-1">{formatUsd(results.expectedValue)}</span>
+              <div className="mt-10 grid grid-cols-3 gap-8 sm:gap-16 border-t border-b border-zinc-900/60 py-6 w-full max-w-2xl text-center">
+                <div>
+                  <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Pool share</p>
+                  <p className="mt-1 font-mono text-base font-bold text-zinc-200">{(results.share * 100).toFixed(6)}%</p>
                 </div>
-                <div className="grid grid-rows-2 gap-2">
-                  <div className="bg-zinc-900/30 border border-zinc-900/60 px-3 py-1.5 rounded-lg flex justify-between items-center">
-                    <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Pool Share</span>
-                    <span className="text-xs font-bold font-mono text-zinc-300">{(results.share * 100).toFixed(6)}%</span>
-                  </div>
-                  <div className="bg-zinc-900/30 border border-zinc-900/60 px-3 py-1.5 rounded-lg flex justify-between items-center">
-                    <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Est. Tokens</span>
-                    <span className="text-xs font-bold font-mono text-zinc-300">{formatNumber(results.estimatedTokens, 0)}</span>
-                  </div>
+                <div>
+                  <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Est. Tokens</p>
+                  <p className="mt-1 font-mono text-base font-bold text-zinc-200">{formatNumber(results.estimatedTokens)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Token Price</p>
+                  <p className="mt-1 font-mono text-base font-bold text-[#4C9AF8]">{formatUsd(results.tokenPrice)}</p>
                 </div>
               </div>
-
-              <div className="flex items-center justify-between border-t border-zinc-900 pt-4 text-[8px] text-zinc-500 font-mono">
-                <span>Model: {fdvLabel(fdv)} FDV • {airdropPct}% Pool</span>
-                <span>variational.io</span>
-              </div>
-            </div>
-
-            <div className="flex justify-end">
-              <button
-                disabled={isDownloading}
-                onClick={handleDownloadCard}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-100 hover:bg-white text-black px-6 py-2.5 text-xs font-bold uppercase tracking-wider transition active:scale-95 disabled:opacity-50"
+              
+              <a 
+                href="https://omni.variational.io/?ref=OMNIATOMS"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-8 inline-flex items-center gap-2 rounded-full border border-[#4C9AF8]/25 bg-[#4C9AF8]/5 hover:bg-[#4C9AF8]/10 hover:border-[#4C9AF8]/40 px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-[#4C9AF8] transition active:scale-98"
               >
-                {isDownloading ? (
-                  <>
-                    <svg className="size-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    Generating image...
-                  </>
-                ) : (
-                  <>
-                    <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    Download Share Card
-                  </>
-                )}
-              </button>
+                <span>Claim +12% Points Boost & Bronze Tier on Omni</span>
+                <span>➔</span>
+              </a>
             </div>
 
-          </div>
-        </div>
+            {/* VISUAL MATH FLOW CHART */}
+            <div className="flex flex-col gap-4">
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">
+                Visual Math Flow
+              </h3>
+              <div className="grid grid-cols-2 md:flex md:flex-wrap items-center justify-between gap-6 border border-zinc-900 bg-zinc-950/40 p-6 rounded-xl text-center font-mono">
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-[9px] text-zinc-500 uppercase">Your Points</span>
+                  <span className="text-xs font-bold text-zinc-300">{formatNumber(parsePositive(userPoints))}</span>
+                </div>
+                <span className="hidden md:inline text-zinc-700">/</span>
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-[9px] text-zinc-500 uppercase">Total Points</span>
+                  <span className="text-xs font-bold text-zinc-300">{formatNumber(parsePositive(totalPoints))}</span>
+                </div>
+                <span className="hidden md:inline text-zinc-600">➔</span>
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-[9px] text-zinc-500 uppercase">Pool Share</span>
+                  <span className="text-xs font-bold text-zinc-300">{(results.share * 100).toFixed(6)}%</span>
+                </div>
+                <span className="hidden md:inline text-zinc-600">➔</span>
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-[9px] text-zinc-500 uppercase">Airdrop Pool</span>
+                  <span className="text-xs font-bold text-zinc-300">{airdropPct}%</span>
+                </div>
+                <span className="hidden md:inline text-zinc-600">➔</span>
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-[9px] text-zinc-500 uppercase">Est. Tokens</span>
+                  <span className="text-xs font-bold text-zinc-300">{formatNumber(results.estimatedTokens, 0)}</span>
+                </div>
+                <span className="hidden md:inline text-zinc-700">×</span>
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-[9px] text-zinc-500 uppercase">Price @ FDV</span>
+                  <span className="text-xs font-bold text-zinc-300">{formatUsd(results.tokenPrice)}</span>
+                </div>
+                <span className="hidden md:inline text-[#4C9AF8]/60 font-bold">➔</span>
+                <div className="flex flex-col items-center gap-1 bg-[#4C9AF8]/5 border border-[#4C9AF8]/20 px-3 py-1.5 rounded-lg">
+                  <span className="text-[9px] text-[#4C9AF8] font-bold uppercase">TGE Estimate</span>
+                  <span className="text-xs font-black text-white">{formatUsd(results.expectedValue)}</span>
+                </div>
+              </div>
+            </div>
 
-        {/* FDV SCENARIOS TABLE */}
-        <div className="flex flex-col gap-6">
-          <div>
-            <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">FDV Scenarios Grid</h2>
-            <p className="text-xs text-zinc-500 mt-1">Comparison of total valuation outcomes and expected returns.</p>
-          </div>
+            {/* INPUTS AND SHARE PREVIEW */}
+            <div className="grid gap-12 lg:grid-cols-2 items-start">
+              
+              {/* LEFT: SETTINGS & INPUTS */}
+              <div className="flex flex-col gap-8">
+                <div>
+                  <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Settings</h2>
+                  <p className="text-xs text-zinc-500 mt-1">Configure global supply model assumptions.</p>
+                </div>
 
-          <div className="overflow-x-auto border border-zinc-900 bg-zinc-950/40 rounded-xl">
-            <table className="w-full border-collapse text-left text-xs">
-              <thead className="border-b border-zinc-900 bg-zinc-900/10 text-zinc-500">
-                <tr>
-                  <th className="px-6 py-3.5 font-bold uppercase tracking-wider">FDV</th>
-                  <th className="px-6 py-3.5 font-bold uppercase tracking-wider">
-                    <div className="flex items-center gap-1.5">
-                      <span>Prediction Chance</span>
-                      <Image
-                        className="size-3.5 invert opacity-50"
-                        src="/polymarket-vector.png"
-                        alt="Polymarket"
-                        width={14}
-                        height={14}
+                <div className="flex flex-col gap-6">
+                  <div className="grid grid-cols-2 gap-4">
+                    <label className="flex flex-col gap-1.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Your points</span>
+                      <input
+                        className="h-10 rounded-lg bg-zinc-900/60 border-0 px-3.5 font-mono text-sm font-medium text-white outline-none focus:ring-1 focus:ring-zinc-600 transition"
+                        inputMode="decimal"
+                        value={userPoints}
+                        onChange={(event) => setUserPoints(event.target.value)}
                       />
+                    </label>
+
+                    <label className="flex flex-col gap-1.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Total system points</span>
+                      <input
+                        className="h-10 rounded-lg bg-zinc-900/60 border-0 px-3.5 font-mono text-sm font-medium text-white outline-none focus:ring-1 focus:ring-zinc-600 transition"
+                        inputMode="decimal"
+                        value={totalPoints}
+                        onChange={(event) => setTotalPoints(event.target.value)}
+                      />
+                    </label>
+                  </div>
+
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Supply for Airdrop</p>
+                    <div className="mt-2.5 flex flex-wrap gap-1.5">
+                      {airdropOptions.map((option) => (
+                        <button
+                          key={option}
+                          className={`px-3 py-1.5 rounded-md text-xs font-bold transition ${
+                            option === airdropPct
+                              ? "bg-white text-black"
+                              : "bg-zinc-900/40 text-zinc-400 hover:bg-zinc-900/80 hover:text-white"
+                          }`}
+                          onClick={() => setAirdropPct(option)}
+                        >
+                          {option}%
+                        </button>
+                      ))}
                     </div>
-                  </th>
-                  <th className="px-6 py-3.5 font-bold uppercase tracking-wider">Token price</th>
-                  <th className="px-6 py-3.5 font-bold uppercase tracking-wider">Your Allocation</th>
-                  <th className="px-6 py-3.5 font-bold uppercase tracking-wider">Estimated TGE Value</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-900/60 font-mono">
-                {results.scenarios.map((scenario) => (
-                  <tr
-                    key={scenario.fdv}
-                    onClick={() => setFdv(scenario.fdv)}
-                    className={`cursor-pointer transition hover:bg-zinc-900/20 ${scenario.fdv === fdv ? "bg-zinc-900/40 text-white font-bold" : "text-zinc-400"}`}
-                  >
-                    <td className="px-6 py-4 font-bold">{fdvLabel(scenario.fdv)}</td>
-                    <td className="px-6 py-4">
-                      <PolymarketChance 
-                        value={fdvMarkets.find((market) => market.fdv === scenario.fdv)?.yesChance} 
-                        showIcon={false}
+                  </div>
+
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Select FDV Scenario</p>
+                    <div className="mt-2.5 grid grid-cols-3 gap-2">
+                      {activeFdvOptions.map((option) => (
+                        <button
+                          key={option}
+                          className={`flex flex-col items-center justify-center py-2.5 rounded-lg border text-xs transition ${
+                            option === fdv
+                              ? "border-[#4C9AF8] bg-[#4C9AF8]/10 text-white"
+                              : "border-zinc-900 bg-zinc-900/30 text-zinc-400 hover:border-zinc-800 hover:text-zinc-200"
+                          }`}
+                          onClick={() => setFdv(option)}
+                        >
+                          <span className="font-bold">{fdvLabel(option)}</span>
+                          <span className="mt-0.5 text-[9px] text-zinc-500">
+                            {chanceLabel(fdvMarkets.find((market) => market.fdv === option)?.yesChance)}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {selectedMarket ? (
+                    <div className="border-t border-zinc-900 pt-4 flex flex-col gap-2">
+                      <div className="flex items-center justify-between text-[10px] font-bold tracking-wider text-zinc-500 uppercase">
+                        <span className="flex items-center gap-1">
+                          <Image
+                            className="size-3 invert opacity-50"
+                            src="/polymarket-vector.png"
+                            alt=""
+                            width={12}
+                            height={12}
+                          />
+                          <span>Prediction Market Insight</span>
+                        </span>
+                        <a 
+                          href={selectedMarket.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[#4C9AF8] hover:underline"
+                        >
+                          View Market
+                        </a>
+                      </div>
+                      <p className="text-xs text-zinc-400 font-medium">{selectedMarket.question}</p>
+                      <p className="text-[10px] text-zinc-500">
+                        Implied Odds: <span className="text-zinc-300 font-mono font-bold">{chanceLabel(selectedMarket.yesChance)}</span> • Volume: {formatUsd(selectedMarket.volumeTotal)}
+                      </p>
+                    </div>
+                  ) : null}
+
+                  <div className="pt-4 border-t border-zinc-900">
+                    <StatLine label="Total token supply" value={formatNumber(TOTAL_SUPPLY)} />
+                    <StatLine label="Airdrop supply" value={formatNumber(results.airdropSupply)} />
+                    <StatLine label="Token price @ FDV" value={formatUsd(results.tokenPrice)} />
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT: LIVE SHARE CARD PREVIEW */}
+              <div className="flex flex-col gap-6">
+                <div>
+                  <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Share Card Preview</h2>
+                  <p className="text-xs text-zinc-500 mt-1">Live preview of your estimate to share on X/Twitter.</p>
+                </div>
+
+                <div className="relative overflow-hidden rounded-2xl border border-zinc-900 bg-zinc-950 p-6 flex flex-col justify-between aspect-[1.91/1] w-full shadow-lg">
+                  {/* Card visual details */}
+                  <div className="absolute top-0 right-0 w-[300px] h-[200px] bg-[#4C9AF8]/3 blur-[80px] pointer-events-none" />
+                  
+                  <div className="flex items-center justify-between border-b border-zinc-900 pb-4">
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src="/brand/variational-logo-white.png"
+                        alt=""
+                        width={22}
+                        height={22}
+                        className="opacity-90"
                       />
-                    </td>
-                    <td className="px-6 py-4">{formatUsd(scenario.tokenPrice)}</td>
-                    <td className="px-6 py-4">{formatNumber(results.estimatedTokens, 0)}</td>
-                    <td className={`px-6 py-4 font-bold ${scenario.fdv === fdv ? "text-[#4C9AF8]" : "text-zinc-300"}`}>
-                      {formatUsd(scenario.value)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      <div className="flex flex-col">
+                        <span className="font-mono text-xs font-bold text-white tracking-wider">VARIATIONAL</span>
+                        <span className="text-[8px] font-bold text-zinc-600 tracking-widest uppercase">Points Estimator</span>
+                      </div>
+                    </div>
+                    <span className="text-[8px] font-bold tracking-widest text-[#4C9AF8] border border-[#4C9AF8]/20 bg-[#4C9AF8]/5 px-2 py-0.5 rounded uppercase">
+                      TGE ALLOCATION ESTIMATE
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 my-auto">
+                    <div className="bg-zinc-900/30 border border-zinc-900/60 p-3 rounded-lg flex flex-col justify-center">
+                      <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Estimated TGE Value</span>
+                      <span className="text-2xl font-bold font-mono text-[#4C9AF8] mt-1">{formatUsd(results.expectedValue)}</span>
+                    </div>
+                    <div className="grid grid-rows-2 gap-2">
+                      <div className="bg-zinc-900/30 border border-zinc-900/60 px-3 py-1.5 rounded-lg flex justify-between items-center">
+                        <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Pool Share</span>
+                        <span className="text-xs font-bold font-mono text-zinc-300">{(results.share * 100).toFixed(6)}%</span>
+                      </div>
+                      <div className="bg-zinc-900/30 border border-zinc-900/60 px-3 py-1.5 rounded-lg flex justify-between items-center">
+                        <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Est. Tokens</span>
+                        <span className="text-xs font-bold font-mono text-zinc-300">{formatNumber(results.estimatedTokens, 0)}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between border-t border-zinc-900 pt-4 text-[8px] text-zinc-500 font-mono">
+                    <span>Model: {fdvLabel(fdv)} FDV • {airdropPct}% Pool</span>
+                    <span>variational.io</span>
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <button
+                    disabled={isDownloading}
+                    onClick={handleDownloadCard}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-100 hover:bg-white text-black px-6 py-2.5 text-xs font-bold uppercase tracking-wider transition active:scale-95 disabled:opacity-50"
+                  >
+                    {isDownloading ? (
+                      <>
+                        <svg className="size-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Generating image...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download Share Card
+                      </>
+                    )}
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+            {/* FDV SCENARIOS TABLE */}
+            <div className="flex flex-col gap-6">
+              <div>
+                <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">FDV Scenarios Grid</h2>
+                <p className="text-xs text-zinc-500 mt-1">Comparison of total valuation outcomes and expected returns.</p>
+              </div>
+
+              <div className="overflow-x-auto border border-zinc-900 bg-zinc-950/40 rounded-xl">
+                <table className="w-full border-collapse text-left text-xs">
+                  <thead className="border-b border-zinc-900 bg-zinc-900/10 text-zinc-500">
+                    <tr>
+                      <th className="px-6 py-3.5 font-bold uppercase tracking-wider">FDV</th>
+                      <th className="px-6 py-3.5 font-bold uppercase tracking-wider">
+                        <div className="flex items-center gap-1.5">
+                          <span>Prediction Chance</span>
+                          <Image
+                            className="size-3.5 invert opacity-50"
+                            src="/polymarket-vector.png"
+                            alt="Polymarket"
+                            width={14}
+                            height={14}
+                          />
+                        </div>
+                      </th>
+                      <th className="px-6 py-3.5 font-bold uppercase tracking-wider">Token price</th>
+                      <th className="px-6 py-3.5 font-bold uppercase tracking-wider">Your Allocation</th>
+                      <th className="px-6 py-3.5 font-bold uppercase tracking-wider">Estimated TGE Value</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-zinc-900/60 font-mono">
+                    {results.scenarios.map((scenario) => (
+                      <tr
+                        key={scenario.fdv}
+                        onClick={() => setFdv(scenario.fdv)}
+                        className={`cursor-pointer transition hover:bg-zinc-900/20 ${scenario.fdv === fdv ? "bg-zinc-900/40 text-white font-bold" : "text-zinc-400"}`}
+                      >
+                        <td className="px-6 py-4 font-bold">{fdvLabel(scenario.fdv)}</td>
+                        <td className="px-6 py-4">
+                          <PolymarketChance 
+                            value={fdvMarkets.find((market) => market.fdv === scenario.fdv)?.yesChance} 
+                            showIcon={false}
+                          />
+                        </td>
+                        <td className="px-6 py-4">{formatUsd(scenario.tokenPrice)}</td>
+                        <td className="px-6 py-4">{formatNumber(results.estimatedTokens, 0)}</td>
+                        <td className={`px-6 py-4 font-bold ${scenario.fdv === fdv ? "text-[#4C9AF8]" : "text-zinc-300"}`}>
+                          {formatUsd(scenario.value)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="flex flex-col gap-12">
+            {/* STATS OVERVIEW CARDS */}
+            <div className="grid gap-6 sm:grid-cols-3">
+              <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl">
+                <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Polymarket Implied Expected FDV</span>
+                <div className="mt-2.5 font-mono text-3xl font-bold text-white">
+                  {formatUsd(stats.expectedFdv)}
+                </div>
+                <p className="text-[10px] text-zinc-500 mt-1">Weighted expectation across all market odds.</p>
+              </div>
+              
+              <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl">
+                <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Leading FDV Scenario</span>
+                <div className="mt-2.5 font-mono text-3xl font-bold text-[#4C9AF8]">
+                  {stats.leadingScenario ? fdvLabel(stats.leadingScenario.fdv) : "$500M"}
+                </div>
+                <p className="text-[10px] text-zinc-500 mt-1">
+                  Highest probability odds: {stats.leadingScenario ? chanceLabel(stats.leadingScenario.yesChance) : "n/a"}
+                </p>
+              </div>
+
+              <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl">
+                <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Total Markets Volume</span>
+                <div className="mt-2.5 font-mono text-3xl font-bold text-zinc-200">
+                  {formatUsd(stats.totalVolume)}
+                </div>
+                <p className="text-[10px] text-zinc-500 mt-1">Trading activity across all Variational markets.</p>
+              </div>
+            </div>
+
+            <div className="grid gap-12 lg:grid-cols-2 items-start">
+              {/* Probability Weight Distribution Chart */}
+              <div className="flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl">
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">FDV Probability Curve</h3>
+                  <p className="text-xs text-zinc-500 mt-1">Relative chance of each FDV scenario based on prediction odds.</p>
+                </div>
+
+                <div className="flex flex-col gap-4.5 pt-2">
+                  {activeFdvOptions.map((option) => {
+                    const m = fdvMarkets.find((market) => market.fdv === option);
+                    const chance = m?.yesChance ?? 0;
+                    const pct = Math.round(chance * 100);
+                    return (
+                      <div key={option} className="flex flex-col gap-2">
+                        <div className="flex justify-between text-xs font-mono">
+                          <span className="text-zinc-300 font-bold">{fdvLabel(option)} FDV</span>
+                          <span className="text-[#4C9AF8] font-bold">{pct}% Chance</span>
+                        </div>
+                        <div className="h-2 w-full bg-zinc-900 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-[#4C9AF8] rounded-full transition-all duration-500" 
+                            style={{ width: `${Math.max(pct, 2)}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Prediction Markets Activity Table/List */}
+              <div className="flex flex-col gap-6">
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Prediction Markets Insights</h3>
+                  <p className="text-xs text-zinc-500 mt-1">Active markets tracking the Variational token allocation.</p>
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  {fdvMarkets.length > 0 ? (
+                    fdvMarkets.map((market) => (
+                      <div 
+                        key={market.conditionId}
+                        className="border border-zinc-900 bg-zinc-950/40 p-5 rounded-xl flex flex-col gap-3"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <p className="text-xs text-zinc-300 font-medium leading-relaxed">{market.question}</p>
+                          <span className="font-mono text-xs font-bold bg-[#4C9AF8]/10 text-[#4C9AF8] px-2 py-0.5 rounded shrink-0">
+                            {chanceLabel(market.yesChance)}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between border-t border-zinc-900/60 pt-3 text-[10px] text-zinc-500 font-mono">
+                          <span>Volume: {formatUsd(market.volumeTotal)}</span>
+                          <a 
+                            href={market.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-[#4C9AF8] hover:underline"
+                          >
+                            Trade Market ➔
+                          </a>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-12 border border-zinc-900 rounded-xl text-zinc-500 text-xs">
+                      No prediction market data available at this time.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
 
       </section>
     </main>
