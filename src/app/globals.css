@@ -20,8 +20,21 @@ body {
   font-family: 'Satoshi', var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
+/* Scaling the root font size programmatically on desktops to achieve the 125% zoom layout */
+@media (min-width: 1024px) {
+  html {
+    font-size: 18px; /* 112.5% scaling */
+  }
+}
+@media (min-width: 1280px) {
+  html {
+    font-size: 20px; /* 125% scaling */
+  }
+}
+
 button,
 input {
   font: inherit;
 }
+
 
