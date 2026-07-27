@@ -182,16 +182,12 @@ export default function Home() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // 1. Draw Background Gradient
-      const bgGrad = ctx.createRadialGradient(600, 315, 50, 600, 315, 700);
-      bgGrad.addColorStop(0, "#0c2842"); // Deep branding blue glow in center
-      bgGrad.addColorStop(0.5, "#030c17"); // Darker body
-      bgGrad.addColorStop(1, "#01050e"); // Almost pitch black edges
-      ctx.fillStyle = bgGrad;
+      // 1. Draw Background
+      ctx.fillStyle = "#07080a";
       ctx.fillRect(0, 0, 1200, 630);
 
-      // 2. Draw Subtle tech grid/lines
-      ctx.strokeStyle = "rgba(76, 154, 248, 0.04)";
+      // Draw subtle background grid
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.015)";
       ctx.lineWidth = 1;
       for (let x = 0; x < 1200; x += 40) {
         ctx.beginPath();
@@ -206,14 +202,14 @@ export default function Home() {
         ctx.stroke();
       }
 
-      // 3. Draw neon card outline frame
-      ctx.strokeStyle = "rgba(76, 154, 248, 0.25)";
-      ctx.lineWidth = 2;
+      // 2. Draw outline frame
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.roundRect(40, 40, 1120, 550, 24);
+      ctx.roundRect(40, 40, 1120, 550, 20);
       ctx.stroke();
 
-      // 4. Draw Variational Logo/Brand Header
+      // 3. Draw Header
       try {
         const logoImg = new window.Image();
         await new Promise((resolve, reject) => {
@@ -221,146 +217,116 @@ export default function Home() {
           logoImg.onerror = reject;
           logoImg.src = "/brand/variational-logo-white.png";
         });
-        ctx.drawImage(logoImg, 80, 75, 44, 44);
+        ctx.drawImage(logoImg, 80, 80, 44, 44);
       } catch {
-        // Fallback: draw geometric logo symbol
-        ctx.fillStyle = "#4C9AF8";
+        ctx.fillStyle = "#ffffff";
         ctx.beginPath();
-        ctx.arc(102, 97, 22, 0, Math.PI * 2);
+        ctx.arc(102, 102, 22, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // Logo Text / Wordmark
+      // Wordmark
       ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 28px sans-serif";
+      ctx.font = "bold 26px sans-serif";
       ctx.textAlign = "left";
-      ctx.fillText("VARIATIONAL", 140, 96);
+      ctx.fillText("VARIATIONAL", 140, 102);
 
-      ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
       ctx.font = "bold 11px sans-serif";
       if ('letterSpacing' in ctx) {
         (ctx as any).letterSpacing = "2px";
       }
-      ctx.fillText("POINTS ESTIMATOR", 140, 118);
+      ctx.fillText("POINTS ESTIMATOR", 140, 122);
       if ('letterSpacing' in ctx) {
         (ctx as any).letterSpacing = "0px";
       }
 
-      // Right tag: "TGE ALLOCATION ESTIMATE"
-      ctx.fillStyle = "rgba(76, 154, 248, 0.1)";
+      // Tag "TGE ALLOCATION ESTIMATE"
+      ctx.strokeStyle = "rgba(76, 154, 248, 0.2)";
+      ctx.fillStyle = "rgba(76, 154, 248, 0.05)";
       ctx.beginPath();
-      ctx.roundRect(900, 75, 220, 36, 8);
+      ctx.roundRect(880, 85, 240, 36, 6);
       ctx.fill();
-      ctx.strokeStyle = "rgba(76, 154, 248, 0.3)";
-      ctx.lineWidth = 1;
       ctx.stroke();
 
       ctx.fillStyle = "#4C9AF8";
       ctx.font = "bold 11px sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText("TGE ALLOCATION ESTIMATE", 1010, 97);
+      ctx.fillText("TGE ALLOCATION ESTIMATE", 1000, 107);
 
-      // Left Column: Assumptions Box
-      ctx.fillStyle = "rgba(255, 255, 255, 0.02)";
+      // Main content divide line
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
       ctx.beginPath();
-      ctx.roundRect(80, 170, 480, 360, 16);
-      ctx.fill();
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
-      ctx.lineWidth = 1;
+      ctx.moveTo(80, 160);
+      ctx.lineTo(1120, 160);
       ctx.stroke();
 
-      // Assumptions Title
-      ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+      // 4. Center Section: Left Value Box
+      ctx.fillStyle = "rgba(255, 255, 255, 0.015)";
+      ctx.beginPath();
+      ctx.roundRect(80, 200, 520, 280, 12);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
       ctx.font = "bold 13px sans-serif";
       ctx.textAlign = "left";
-      ctx.fillText("GLOBAL ASSUMPTIONS", 110, 210);
+      ctx.fillText("Estimated TGE Value", 120, 250);
 
-      const drawAssumption = (label: string, val: string, yPos: number) => {
-        ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-        ctx.font = "16px sans-serif";
-        ctx.textAlign = "left";
-        ctx.fillText(label, 110, yPos);
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 18px sans-serif";
-        ctx.textAlign = "right";
-        ctx.fillText(val, 530, yPos);
-        ctx.textAlign = "left";
-        
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
-        ctx.beginPath();
-        ctx.moveTo(110, yPos + 18);
-        ctx.lineTo(530, yPos + 18);
-        ctx.stroke();
-      };
-
-      drawAssumption("Your Points", formatNumber(parsePositive(userPoints)), 260);
-      drawAssumption("Total System Points", formatNumber(parsePositive(totalPoints)), 320);
-      drawAssumption("Airdrop Pool Size", `${airdropPct}%`, 380);
-      drawAssumption("FDV Scenario", fdvLabel(fdv), 440);
-      
-      ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-      ctx.font = "16px sans-serif";
-      ctx.fillText("Implied Token Price", 110, 500);
-      ctx.fillStyle = "#4C9AF8";
-      ctx.font = "bold 18px sans-serif";
-      ctx.textAlign = "right";
-      ctx.fillText(formatUsd(results.tokenPrice), 530, 500);
-      ctx.textAlign = "left";
-
-      // Right Column: Main Results Glowing Card
-      const resultsGrad = ctx.createLinearGradient(600, 170, 1120, 530);
-      resultsGrad.addColorStop(0, "rgba(76, 154, 248, 0.12)");
-      resultsGrad.addColorStop(1, "rgba(76, 154, 248, 0.02)");
-      ctx.fillStyle = resultsGrad;
-      ctx.beginPath();
-      ctx.roundRect(600, 170, 520, 360, 16);
-      ctx.fill();
-      ctx.strokeStyle = "rgba(76, 154, 248, 0.35)";
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      ctx.shadowColor = "rgba(76, 154, 248, 0.3)";
-      ctx.shadowBlur = 30;
-      
-      ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-      ctx.font = "bold 13px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("ESTIMATED VALUE AT TGE", 860, 220);
-
-      ctx.fillStyle = "#4C9AF8";
-      ctx.font = "bold 64px sans-serif";
-      ctx.fillText(formatUsd(results.expectedValue), 860, 300);
-
-      ctx.shadowBlur = 0;
-
-      ctx.strokeStyle = "rgba(76, 154, 248, 0.15)";
-      ctx.beginPath();
-      ctx.moveTo(640, 340);
-      ctx.lineTo(1080, 340);
-      ctx.stroke();
-
-      ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-      ctx.font = "bold 13px sans-serif";
-      ctx.fillText("POOL SHARE", 750, 390);
       ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 26px sans-serif";
-      ctx.fillText(`${(results.share * 100).toFixed(6)}%`, 750, 435);
-
-      ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-      ctx.font = "bold 13px sans-serif";
-      ctx.fillText("ESTIMATED TOKENS", 970, 390);
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 26px sans-serif";
-      ctx.fillText(formatNumber(results.estimatedTokens, 2), 970, 435);
+      ctx.font = "bold 56px monospace";
+      ctx.fillText(formatUsd(results.expectedValue), 120, 350);
 
       ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
-      ctx.font = "12px sans-serif";
-      ctx.fillText("Based on Polymarket-implied FDV scenario odds.", 860, 495);
+      ctx.font = "14px sans-serif";
+      ctx.fillText(`Based on ${fdvLabel(fdv)} FDV & ${airdropPct}% Pool`, 120, 420);
+
+      // Center Section: Right boxes
+      // Pool Share box
+      ctx.fillStyle = "rgba(255, 255, 255, 0.015)";
+      ctx.beginPath();
+      ctx.roundRect(630, 200, 490, 125, 12);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+      ctx.font = "bold 13px sans-serif";
+      ctx.fillText("Pool Share", 670, 245);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 32px monospace";
+      ctx.fillText(`${(results.share * 100).toFixed(6)}%`, 670, 295);
+
+      // Est. Tokens box
+      ctx.fillStyle = "rgba(255, 255, 255, 0.015)";
+      ctx.beginPath();
+      ctx.roundRect(630, 355, 490, 125, 12);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+      ctx.font = "bold 13px sans-serif";
+      ctx.fillText("Estimated Tokens", 670, 400);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 32px monospace";
+      ctx.fillText(formatNumber(results.estimatedTokens, 0), 670, 450);
+
+      // 5. Footer section
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+      ctx.beginPath();
+      ctx.moveTo(80, 520);
+      ctx.lineTo(1120, 520);
+      ctx.stroke();
 
       ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
-      ctx.font = "14px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("variational.io • Estimate only. Not financial guidance.", 600, 580);
+      ctx.font = "14px monospace";
+      ctx.textAlign = "left";
+      ctx.fillText(`Your Points: ${formatNumber(parsePositive(userPoints))} • Total: ${formatNumber(parsePositive(totalPoints))}`, 80, 560);
+
+      ctx.textAlign = "right";
+      ctx.fillText("variational.io", 1120, 560);
 
       const dataUrl = canvas.toDataURL("image/png");
       const link = document.createElement("a");
