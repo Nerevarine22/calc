@@ -406,6 +406,16 @@ export default function Home() {
               <p className="mt-1 font-mono text-base font-bold text-[#4C9AF8]">{formatUsd(results.tokenPrice)}</p>
             </div>
           </div>
+          
+          <a 
+            href="https://omni.variational.io/?ref=OMNIATOMS"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-8 inline-flex items-center gap-2 rounded-full border border-[#4C9AF8]/25 bg-[#4C9AF8]/5 hover:bg-[#4C9AF8]/10 hover:border-[#4C9AF8]/40 px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-[#4C9AF8] transition active:scale-98"
+          >
+            <span>Claim +12% Points Boost & Bronze Tier on Omni</span>
+            <span>➔</span>
+          </a>
         </div>
 
         {/* VISUAL MATH FLOW CHART */}
@@ -459,27 +469,6 @@ export default function Home() {
             <div>
               <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Settings</h2>
               <p className="text-xs text-zinc-500 mt-1">Configure global supply model assumptions.</p>
-            </div>
-
-            <div className="bg-[#4C9AF8]/8 border border-[#4C9AF8]/20 p-5 rounded-xl flex flex-col gap-2.5">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold tracking-widest text-[#4C9AF8] uppercase">Airdrop Boost</span>
-                <span className="text-[9px] font-mono font-bold bg-[#4C9AF8]/20 text-[#4C9AF8] px-2 py-0.5 rounded">
-                  +12% BOOST + BRONZE TIER
-                </span>
-              </div>
-              <p className="text-xs text-zinc-400 leading-normal">
-                Claim an exclusive <strong className="text-zinc-200">+12% points boost</strong> and unlock the <strong className="text-zinc-200">Bronze Tier</strong> allocation by registering.
-              </p>
-              <a 
-                href="https://omni.variational.io/?ref=OMNIATOMS"
-                target="_blank"
-                rel="noreferrer"
-                className="mt-1.5 inline-flex items-center justify-center gap-1.5 w-full bg-[#4C9AF8] hover:bg-white text-[#07080a] font-bold text-xs py-2.5 rounded-lg transition active:scale-98"
-              >
-                <span>Register on Omni</span>
-                <span>➔</span>
-              </a>
             </div>
 
             <div className="flex flex-col gap-6">
