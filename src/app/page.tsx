@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 
 const TOTAL_SUPPLY = 1_000_000_000;
 const fdvOptions = [100_000_000, 250_000_000, 500_000_000, 1_000_000_000, 1_500_000_000, 2_000_000_000];
-const airdropOptions = [5, 10, 25, 50];
+const airdropOptions = [30, 35, 40, 45, 50];
 
 type FdvMarket = {
   conditionId: string;
@@ -60,15 +60,24 @@ function PolymarketChance({ value, active = false }: { value: number | null | un
           aria-hidden="true"
         />
       </span>
-      <span className={active ? "text-white/75" : "text-black/45"}>{chanceLabel(value)}</span>
+      <span className={active ? "text-[#4C9AF8]" : "text-white/45"}>{chanceLabel(value)}</span>
     </span>
+  );
+}
+
+function StatLine({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between border-b border-[#4C9AF8]/10 py-3 last:border-b-0">
+      <span className="text-sm font-semibold text-white/38">{label}</span>
+      <span className="text-sm font-bold text-white">{value}</span>
+    </div>
   );
 }
 
 export default function Home() {
   const [totalPoints, setTotalPoints] = useState("9000000");
   const [userPoints, setUserPoints] = useState("10000");
-  const [airdropPct, setAirdropPct] = useState(10);
+  const [airdropPct, setAirdropPct] = useState(40);
   const [fdv, setFdv] = useState(500_000_000);
   const [fdvMarkets, setFdvMarkets] = useState<FdvMarket[]>([]);
   const [marketStatus, setMarketStatus] = useState<"loading" | "ready" | "unavailable">("loading");
@@ -130,58 +139,55 @@ export default function Home() {
   }, [activeFdvOptions, airdropPct, fdv, totalPoints, userPoints]);
 
   return (
-    <main className="min-h-screen bg-[#f6f5f0] text-[#151515]">
-      <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 py-6 sm:px-8 lg:px-10">
-        <header className="flex flex-col gap-4 border-b border-black/10 pb-6 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-sm font-medium uppercase tracking-[0.16em] text-[#5b6f5a]">
+    <main className="min-h-screen bg-[#020706] text-white">
+      <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 py-8 sm:px-8 lg:px-10">
+        <header className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div className="min-w-0">
+            <Image
+              src="/brand/variational-wordmark-white.svg"
+              alt="Variational"
+              width={187}
+              height={26}
+              priority
+            />
+            <p className="mt-5 text-sm font-bold uppercase tracking-[0.16em] text-[#4C9AF8]">
               Variational Points Estimator
             </p>
-            <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-normal text-[#151515] sm:text-6xl">
+            <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-normal text-white sm:text-6xl">
               Possible airdrop calculator
             </h1>
           </div>
-          <p className="max-w-md text-sm leading-6 text-black/60">
+          <p className="max-w-md text-sm leading-6 text-white/45">
             Enter your points and model a possible token allocation from total points,
             airdrop supply percentage, and FDV assumptions.
           </p>
         </header>
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
-          <section className="rounded-lg border border-black/10 bg-white p-5 shadow-sm sm:p-6">
-            <div className="grid gap-5 md:grid-cols-2">
+        <div className="grid gap-5 lg:grid-cols-[340px_minmax(0,1fr)]">
+          <aside className="rounded-2xl border border-[#4C9AF8]/18 bg-[#07110e] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.28)]">
+            <h2 className="text-sm font-bold uppercase tracking-[0.14em] text-white/60">Global assumptions</h2>
+
+            <div className="mt-7 flex flex-col gap-6">
               <label className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-black/70">Total Variational points</span>
+                <span className="text-sm font-semibold text-white/58">Total Variational points</span>
                 <input
-                  className="h-12 rounded-md border border-black/15 bg-white px-4 text-base outline-none transition focus:border-[#5b6f5a] focus:ring-4 focus:ring-[#5b6f5a]/15"
+                  className="h-12 rounded-xl border border-[#4C9AF8]/20 bg-[#0a1a15] px-4 text-base font-bold text-white outline-none transition placeholder:text-white/20 focus:border-[#4C9AF8] focus:ring-4 focus:ring-[#4C9AF8]/10"
                   inputMode="decimal"
                   value={totalPoints}
                   onChange={(event) => setTotalPoints(event.target.value)}
                 />
               </label>
 
-              <label className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-black/70">Your points</span>
-                <input
-                  className="h-12 rounded-md border border-black/15 bg-white px-4 text-base outline-none transition focus:border-[#5b6f5a] focus:ring-4 focus:ring-[#5b6f5a]/15"
-                  inputMode="decimal"
-                  value={userPoints}
-                  onChange={(event) => setUserPoints(event.target.value)}
-                />
-              </label>
-            </div>
-
-            <div className="mt-6 grid gap-6 md:grid-cols-2">
               <div>
-                <p className="text-sm font-medium text-black/70">Supply for airdrop</p>
-                <div className="mt-3 grid grid-cols-4 gap-2">
+                <p className="text-sm font-semibold text-white/58">Supply for airdrop</p>
+                <div className="mt-3 grid grid-cols-5 gap-2">
                   {airdropOptions.map((option) => (
                     <button
                       key={option}
                       className={`h-11 rounded-md border text-sm font-semibold transition ${
                         option === airdropPct
-                          ? "border-[#5b6f5a] bg-[#5b6f5a] text-white"
-                          : "border-black/10 bg-[#f6f5f0] text-black/70 hover:border-black/25"
+                          ? "border-[#4C9AF8] bg-[#4C9AF8] text-white"
+                          : "border-[#4C9AF8]/18 bg-[#0a1a15] text-white/55 hover:border-[#4C9AF8]/45 hover:text-white"
                       }`}
                       onClick={() => setAirdropPct(option)}
                     >
@@ -193,8 +199,8 @@ export default function Home() {
 
               <div>
                 <div className="flex items-center justify-between gap-3">
-                  <p className="text-sm font-medium text-black/70">FDV scenario</p>
-                  <p className="text-xs text-black/45">
+                  <p className="text-sm font-semibold text-white/58">Fully diluted valuation</p>
+                  <p className="text-xs text-white/35">
                     {marketStatus === "ready"
                       ? "Polymarket odds"
                       : marketStatus === "loading"
@@ -208,8 +214,8 @@ export default function Home() {
                       key={option}
                       className={`flex min-h-14 flex-col items-center justify-center rounded-md border px-2 text-sm font-semibold transition ${
                         option === fdv
-                          ? "border-[#2d595e] bg-[#2d595e] text-white"
-                          : "border-black/10 bg-[#f6f5f0] text-black/70 hover:border-black/25"
+                          ? "border-[#4C9AF8] bg-[#4C9AF8] text-[#010612]"
+                          : "border-[#4C9AF8]/18 bg-[#0a1a15] text-white/58 hover:border-[#4C9AF8]/45 hover:text-white"
                       }`}
                       onClick={() => setFdv(option)}
                     >
@@ -224,93 +230,97 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-            </div>
 
-            {selectedMarket ? (
-              <a
-                className="mt-5 block rounded-lg border border-[#2d595e]/20 bg-[#eef4f5] p-4 text-sm transition hover:border-[#2d595e]/40"
-                href={selectedMarket.url}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <span className="font-semibold text-[#2d595e]">Linked Polymarket market</span>
-                <span className="mt-1 block text-black/70">{selectedMarket.question}</span>
-                <span className="mt-2 block text-xs text-black/50">
-                  Polymarket chance: <PolymarketChance value={selectedMarket.yesChance} /> - Volume: {formatUsd(selectedMarket.volumeTotal)}
-                </span>
-              </a>
-            ) : null}
-
-            <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              <div className="rounded-lg bg-[#eff3ea] p-4">
-                <p className="text-xs font-medium uppercase tracking-[0.12em] text-black/50">Pool share</p>
-                <p className="mt-2 text-2xl font-semibold">{(results.share * 100).toFixed(6)}%</p>
-              </div>
-              <div className="rounded-lg bg-[#eef4f5] p-4">
-                <p className="text-xs font-medium uppercase tracking-[0.12em] text-black/50">Tokens</p>
-                <p className="mt-2 text-2xl font-semibold">{formatNumber(results.estimatedTokens, 2)}</p>
-              </div>
-              <div className="rounded-lg bg-[#f6eddc] p-4">
-                <p className="text-xs font-medium uppercase tracking-[0.12em] text-black/50">Value</p>
-                <p className="mt-2 text-2xl font-semibold">{formatUsd(results.expectedValue)}</p>
+              <div className="pt-4">
+                <StatLine label="Total token supply" value={formatNumber(TOTAL_SUPPLY)} />
+                <StatLine label="Airdrop supply" value={formatNumber(results.airdropSupply)} />
+                <StatLine label="Token price @ FDV" value={formatUsd(results.tokenPrice)} />
               </div>
             </div>
+          </aside>
 
-            <div className="mt-8 overflow-hidden rounded-lg border border-black/10">
-              <table className="w-full border-collapse text-left text-sm">
-                <thead className="bg-[#151515] text-white">
+          <section className="rounded-2xl border border-[#4C9AF8]/18 bg-[#07110e] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.28)]">
+            <h2 className="text-sm font-bold uppercase tracking-[0.14em] text-white/60">Your allocation</h2>
+
+            <div className="mt-7 grid gap-5">
+              <label className="flex flex-col gap-2">
+                <span className="text-sm font-semibold text-white/58">Your points</span>
+                <input
+                  className="h-12 rounded-xl border border-[#4C9AF8]/20 bg-[#0a1a15] px-4 text-base font-bold text-white outline-none transition placeholder:text-white/20 focus:border-[#4C9AF8] focus:ring-4 focus:ring-[#4C9AF8]/10"
+                  inputMode="decimal"
+                  value={userPoints}
+                  onChange={(event) => setUserPoints(event.target.value)}
+                />
+              </label>
+
+              {selectedMarket ? (
+                <a
+                  className="block rounded-xl border border-[#4C9AF8]/18 bg-[#0a1a15] p-4 text-sm transition hover:border-[#4C9AF8]/45"
+                  href={selectedMarket.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span className="font-semibold text-[#4C9AF8]">Linked Polymarket market</span>
+                  <span className="mt-1 block text-white/60">{selectedMarket.question}</span>
+                  <span className="mt-2 block text-xs text-white/42">
+                    Polymarket chance: <PolymarketChance value={selectedMarket.yesChance} /> - Volume: {formatUsd(selectedMarket.volumeTotal)}
+                  </span>
+                </a>
+              ) : null}
+
+              <div className="rounded-2xl border border-[#4C9AF8]/18 bg-[#0b1d17] p-6 text-center">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/55">
+                  Estimated value at TGE
+                </p>
+                <p className="mt-3 text-5xl font-bold tracking-normal text-[#4C9AF8]">
+                  {formatUsd(results.expectedValue)}
+                </p>
+                <div className="mx-auto mt-6 grid max-w-sm grid-cols-2 divide-x divide-[#4C9AF8]/15">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-white/38">Pool share</p>
+                    <p className="mt-1 text-base font-bold text-white">{(results.share * 100).toFixed(6)}%</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-white/38">Estimated tokens</p>
+                    <p className="mt-1 text-base font-bold text-white">{formatNumber(results.estimatedTokens, 2)}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-7">
+              <p className="text-sm font-semibold text-white/58">Value across every FDV scenario</p>
+              <div className="mt-4 overflow-hidden rounded-xl border border-[#4C9AF8]/12">
+                <table className="w-full border-collapse text-left text-sm">
+                  <thead className="text-xs uppercase tracking-[0.12em] text-white/35">
                   <tr>
-                    <th className="px-4 py-3 font-medium">FDV</th>
-                    <th className="px-4 py-3 font-medium">Chance</th>
-                    <th className="px-4 py-3 font-medium">Token price</th>
-                    <th className="px-4 py-3 font-medium">Your value</th>
+                    <th className="px-3 py-3 font-bold sm:px-4">FDV</th>
+                    <th className="px-3 py-3 font-bold sm:px-4">Chance</th>
+                    <th className="px-3 py-3 font-bold sm:px-4">Token price</th>
+                    <th className="px-3 py-3 font-bold sm:px-4">Allocation</th>
+                    <th className="px-3 py-3 font-bold sm:px-4">Your value</th>
                   </tr>
                 </thead>
                 <tbody>
                   {results.scenarios.map((scenario) => (
-                    <tr key={scenario.fdv} className={scenario.fdv === fdv ? "bg-[#f6eddc]" : "bg-white"}>
-                      <td className="border-t border-black/10 px-4 py-3 font-medium">{fdvLabel(scenario.fdv)}</td>
-                      <td className="border-t border-black/10 px-4 py-3">
+                    <tr
+                      key={scenario.fdv}
+                      className={`transition ${scenario.fdv === fdv ? "bg-[#4C9AF8]/16 text-[#4C9AF8]" : "text-white"}`}
+                    >
+                      <td className="border-t border-[#4C9AF8]/10 px-3 py-3 font-bold sm:px-4">{fdvLabel(scenario.fdv)}</td>
+                      <td className="border-t border-[#4C9AF8]/10 px-3 py-3 sm:px-4">
                         <PolymarketChance value={fdvMarkets.find((market) => market.fdv === scenario.fdv)?.yesChance} />
                       </td>
-                      <td className="border-t border-black/10 px-4 py-3">{formatUsd(scenario.tokenPrice)}</td>
-                      <td className="border-t border-black/10 px-4 py-3 font-semibold">{formatUsd(scenario.value)}</td>
+                      <td className="border-t border-[#4C9AF8]/10 px-3 py-3 font-bold sm:px-4">{formatUsd(scenario.tokenPrice)}</td>
+                      <td className="border-t border-[#4C9AF8]/10 px-3 py-3 font-bold sm:px-4">{formatNumber(results.estimatedTokens, 2)}</td>
+                      <td className="border-t border-[#4C9AF8]/10 px-3 py-3 font-bold text-[#4C9AF8] sm:px-4">{formatUsd(scenario.value)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            </div>
-          </section>
-
-          <aside className="flex flex-col gap-4">
-            <div className="rounded-lg border border-black/10 bg-[#151515] p-5 text-white shadow-sm">
-              <p className="text-sm font-medium uppercase tracking-[0.14em] text-white/50">Expected value</p>
-              <p className="mt-4 text-5xl font-semibold">{formatUsd(results.expectedValue)}</p>
-              <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
-                <div>
-                  <p className="text-white/45">Airdrop supply</p>
-                  <p className="mt-1 font-medium">{formatNumber(results.airdropSupply)}</p>
-                </div>
-                <div>
-                  <p className="text-white/45">Token price</p>
-                  <p className="mt-1 font-medium">{formatUsd(results.tokenPrice)}</p>
-                </div>
               </div>
             </div>
-
-            <div className="rounded-lg border border-black/10 bg-white p-5 shadow-sm">
-              <p className="text-sm font-semibold text-black/70">Formula</p>
-              <pre className="mt-3 overflow-auto rounded-md bg-[#f6f5f0] p-4 text-xs leading-6 text-black/70">
-{`expectedValue =
-(yourPoints / totalPoints)
-* (airdropPct / 100)
-* FDV`}
-              </pre>
-              <p className="mt-3 text-sm leading-6 text-black/55">
-                This is an estimate only. Final tokenomics, eligibility, vesting, and TGE liquidity can change the real result.
-              </p>
-            </div>
-          </aside>
+          </section>
         </div>
       </section>
     </main>
