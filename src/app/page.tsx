@@ -122,6 +122,13 @@ export default function Home() {
   const [searchError, setSearchError] = useState("");
 
   const [isDownloading, setIsDownloading] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyReferralCode = () => {
+    navigator.clipboard.writeText("OMNIATOMS");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   useEffect(() => {
     let ignore = false;
@@ -349,8 +356,6 @@ export default function Home() {
       ctx.textAlign = "left";
       ctx.fillText("Estimated TGE Value", 120, 250);
 
-      ctx.shadowColor = "transparent";
-      ctx.shadowBlur = 0;
       ctx.fillStyle = "#ffffff";
       ctx.font = "bold 56px monospace";
       ctx.fillText(formatUsd(results.expectedValue), 120, 350);
@@ -506,15 +511,35 @@ export default function Home() {
                 </div>
               </div>
               
-              <a 
-                href="https://omni.variational.io/?ref=OMNIATOMS"
-                target="_blank"
-                rel="noreferrer"
-                className="mt-8 inline-flex items-center gap-2 rounded-full border border-[#4C9AF8]/25 bg-[#4C9AF8]/5 hover:bg-[#4C9AF8]/10 hover:border-[#4C9AF8]/40 px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-[#4C9AF8] transition active:scale-98"
-              >
-                <span>Claim +12% Points Boost & Bronze Tier on Omni</span>
-                <span>➔</span>
-              </a>
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5">
+                <a 
+                  href="https://omni.variational.io/?ref=OMNIATOMS"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#4C9AF8]/25 bg-[#4C9AF8]/5 hover:bg-[#4C9AF8]/10 hover:border-[#4C9AF8]/40 px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider text-[#4C9AF8] transition active:scale-98"
+                >
+                  <span>Claim +12% Points Boost & Bronze Tier on Omni</span>
+                  <span>➔</span>
+                </a>
+                
+                <div className="inline-flex items-center gap-2 h-9 rounded-full border border-zinc-900 bg-zinc-950/60 px-4 text-xs font-mono">
+                  <span className="text-zinc-500 font-bold text-[10px] uppercase tracking-wider">Code:</span>
+                  <span className="text-white text-[11px] font-bold tracking-wide select-all">OMNIATOMS</span>
+                  <button
+                    onClick={handleCopyReferralCode}
+                    title="Copy code"
+                    className="p-1 text-zinc-500 hover:text-white transition active:scale-90 cursor-pointer ml-0.5 flex items-center justify-center"
+                  >
+                    {copied ? (
+                      <span className="text-[10px] text-emerald-500 font-bold font-sans">Copied!</span>
+                    ) : (
+                      <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
 
             {/* VISUAL MATH FLOW CHART */}
