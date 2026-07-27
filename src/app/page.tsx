@@ -117,6 +117,10 @@ export default function Home() {
   const [marketStatus, setMarketStatus] = useState<"loading" | "ready" | "unavailable">("loading");
   const [duneData, setDuneData] = useState<any>(null);
 
+  const [searchAddress, setSearchAddress] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState("");
+
   const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
@@ -219,6 +223,30 @@ export default function Home() {
       expectedFdv: expectedFdvValue,
     };
   }, [fdvMarkets]);
+
+  const handleWalletLookup = async () => {
+    const query = searchAddress.trim().toLowerCase();
+    if (!query) return;
+
+    setIsSearching(true);
+    setSearchError("");
+    try {
+      const response = await fetch(`/api/dune-stats?address=${query}`);
+      if (!response.ok) throw new Error("search-failed");
+
+      const json = await response.json();
+      if (json.found) {
+        setUserPoints(String(json.points));
+        setSearchError("");
+      } else {
+        setSearchError("Wallet address not found in Dune snapshot");
+      }
+    } catch {
+      setSearchError("Failed to lookup wallet. Please try again.");
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   const handleDownloadCard = async () => {
     setIsDownloading(true);
@@ -372,6 +400,8 @@ export default function Home() {
       ctx.textAlign = "left";
       ctx.fillText(`Your Points: ${formatNumber(parsePositive(userPoints))} • Total: ${formatNumber(parsePositive(totalPoints))}`, 80, 560);
 
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
       ctx.textAlign = "right";
       ctx.fillText("variational.io", 1120, 560);
 
@@ -533,6 +563,27 @@ export default function Home() {
                 </div>
 
                 <div className="flex flex-col gap-6">
+                  {/* WALLET LOOKUP */}
+                  <div className="flex flex-col gap-2 border-b border-zinc-900 pb-5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Sync Points via Wallet</span>
+                    <div className="flex gap-2">
+                      <input
+                        className="flex-1 h-10 rounded-lg bg-zinc-900/60 border-0 px-3.5 font-mono text-xs font-medium text-white outline-none focus:ring-1 focus:ring-zinc-800 transition"
+                        placeholder="Enter wallet address 0x..."
+                        value={searchAddress}
+                        onChange={(e) => setSearchAddress(e.target.value)}
+                      />
+                      <button
+                        onClick={handleWalletLookup}
+                        disabled={isSearching}
+                        className="h-10 px-4 rounded-lg bg-zinc-100 hover:bg-white text-black font-bold text-xs uppercase tracking-wider transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                      >
+                        {isSearching ? "..." : "Sync"}
+                      </button>
+                    </div>
+                    {searchError && <span className="text-[10px] text-rose-500 font-medium">{searchError}</span>}
+                  </div>
+
                   <div className="grid grid-cols-2 gap-4">
                     <label className="flex flex-col gap-1.5">
                       <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Your points</span>
