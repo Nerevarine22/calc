@@ -768,7 +768,7 @@ export default function Home() {
                         disabled={twitterStatus === "checking" || !twitterUsername.trim()}
                         className="h-10 px-4 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-xs uppercase tracking-wider transition active:scale-95 disabled:opacity-40 cursor-pointer flex items-center justify-center min-w-[100px]"
                       >
-                        {twitterStatus === "checking" ? "..." : "Verify"}
+                        {twitterStatus === "checking" ? "..." : "CHECK"}
                       </button>
                     </div>
                     
