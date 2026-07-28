@@ -310,7 +310,7 @@ export default function Home() {
               href="https://x.com/atoms_res"
               target="_blank"
               rel="noreferrer"
-              className="font-mono text-[9px] sm:text-[10px] tracking-wider text-zinc-500 hover:text-white transition uppercase"
+              className="font-mono text-[10px] sm:text-[11px] font-bold tracking-wider text-zinc-400 hover:text-[#4C9AF8] transition-colors uppercase"
             >
               created by @atoms_res
             </a>
