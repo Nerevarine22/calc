@@ -721,7 +721,7 @@ export default function Home() {
                         <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-wider">Possible Extra Points</span>
                       </div>
                       {twitterExtraPoints > 0 && (
-                        <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded animate-pulse">
+                        <span className="text-[10px] font-bold text-[#4C9AF8] bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 px-2 py-0.5 rounded animate-pulse">
                           +{formatNumber(twitterExtraPoints)} Extra Points
                         </span>
                       )}
@@ -765,7 +765,7 @@ export default function Home() {
                         </div>
                         
                         {twitterExtraPoints > 0 ? (
-                          <div className="text-[10px] text-emerald-400 font-bold text-center bg-emerald-500/10 border border-emerald-500/20 py-1.5 rounded-lg">
+                          <div className="text-[10px] text-[#4C9AF8] font-bold text-center bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 py-1.5 rounded-lg">
                             Earned +{formatNumber(twitterExtraPoints)} Extra Points!
                           </div>
                         ) : (() => {
