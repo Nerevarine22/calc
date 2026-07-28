@@ -268,8 +268,15 @@ export default function Home() {
       ctx.fillStyle = "#07080a";
       ctx.fillRect(0, 0, 1200, 630);
 
+      // Draw subtle background radial blue glow
+      const glowGrad = ctx.createRadialGradient(1000, 100, 50, 1000, 100, 500);
+      glowGrad.addColorStop(0, "rgba(76, 154, 248, 0.12)");
+      glowGrad.addColorStop(1, "rgba(76, 154, 248, 0)");
+      ctx.fillStyle = glowGrad;
+      ctx.fillRect(0, 0, 1200, 630);
+
       // Draw subtle background grid
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.015)";
+      ctx.strokeStyle = "rgba(76, 154, 248, 0.008)";
       ctx.lineWidth = 1;
       for (let x = 0; x < 1200; x += 40) {
         ctx.beginPath();
@@ -285,7 +292,7 @@ export default function Home() {
       }
 
       // 2. Draw outline frame
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+      ctx.strokeStyle = "rgba(76, 154, 248, 0.12)";
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.roundRect(40, 40, 1120, 550, 20);
@@ -337,18 +344,18 @@ export default function Home() {
       ctx.fillText("TGE ALLOCATION ESTIMATE", 1000, 107);
 
       // Main content divide line
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+      ctx.strokeStyle = "rgba(76, 154, 248, 0.1)";
       ctx.beginPath();
       ctx.moveTo(80, 160);
       ctx.lineTo(1120, 160);
       ctx.stroke();
 
       // 4. Center Section: Left Value Box
-      ctx.fillStyle = "rgba(255, 255, 255, 0.015)";
+      ctx.fillStyle = "rgba(76, 154, 248, 0.02)";
       ctx.beginPath();
       ctx.roundRect(80, 200, 520, 280, 12);
       ctx.fill();
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+      ctx.strokeStyle = "rgba(76, 154, 248, 0.15)";
       ctx.stroke();
 
       ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
@@ -356,7 +363,7 @@ export default function Home() {
       ctx.textAlign = "left";
       ctx.fillText("Estimated TGE Value", 120, 250);
 
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#4C9AF8";
       ctx.font = "bold 56px monospace";
       ctx.fillText(formatUsd(results.expectedValue), 120, 350);
 
@@ -366,37 +373,37 @@ export default function Home() {
 
       // Center Section: Right boxes
       // Pool Share box
-      ctx.fillStyle = "rgba(255, 255, 255, 0.015)";
+      ctx.fillStyle = "rgba(76, 154, 248, 0.02)";
       ctx.beginPath();
       ctx.roundRect(630, 200, 490, 125, 12);
       ctx.fill();
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+      ctx.strokeStyle = "rgba(76, 154, 248, 0.15)";
       ctx.stroke();
 
       ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
       ctx.font = "bold 13px sans-serif";
       ctx.fillText("Pool Share", 670, 245);
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#4C9AF8";
       ctx.font = "bold 32px monospace";
       ctx.fillText(`${(results.share * 100).toFixed(6)}%`, 670, 295);
 
       // Est. Tokens box
-      ctx.fillStyle = "rgba(255, 255, 255, 0.015)";
+      ctx.fillStyle = "rgba(76, 154, 248, 0.02)";
       ctx.beginPath();
       ctx.roundRect(630, 355, 490, 125, 12);
       ctx.fill();
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+      ctx.strokeStyle = "rgba(76, 154, 248, 0.15)";
       ctx.stroke();
 
       ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
       ctx.font = "bold 13px sans-serif";
       ctx.fillText("Estimated Tokens", 670, 400);
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#4C9AF8";
       ctx.font = "bold 32px monospace";
       ctx.fillText(formatNumber(results.estimatedTokens, 0), 670, 450);
 
       // 5. Footer section
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+      ctx.strokeStyle = "rgba(76, 154, 248, 0.1)";
       ctx.beginPath();
       ctx.moveTo(80, 520);
       ctx.lineTo(1120, 520);
@@ -752,9 +759,9 @@ export default function Home() {
                   <p className="text-xs text-zinc-500 mt-1">Live preview of your estimate to share on X/Twitter.</p>
                 </div>
 
-                <div className="relative overflow-hidden rounded-2xl border border-zinc-900 bg-zinc-950 p-6 flex flex-col justify-between aspect-[1.91/1] w-full shadow-lg">
+                <div className="relative overflow-hidden rounded-2xl border border-[#4C9AF8]/20 hover:border-[#4C9AF8]/45 bg-zinc-950 p-6 flex flex-col justify-between aspect-[1.91/1] w-full shadow-2xl transition-all duration-300 hover:shadow-[#4C9AF8]/5">
                   {/* Card visual details */}
-                  <div className="absolute top-0 right-0 w-[300px] h-[200px] bg-[#4C9AF8]/3 blur-[80px] pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-[300px] h-[200px] bg-[#4C9AF8]/12 blur-[80px] pointer-events-none" />
                   
                   <div className="flex items-center justify-between border-b border-zinc-900 pb-4">
                     <div className="flex items-center gap-2">
@@ -776,20 +783,20 @@ export default function Home() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 my-auto">
-                    <div className="bg-zinc-900/30 border border-zinc-900/60 p-4 rounded-lg flex flex-col justify-center">
+                    <div className="bg-zinc-950/60 border border-[#4C9AF8]/15 p-4 rounded-lg flex flex-col justify-center">
                       <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Estimated TGE Value</span>
                       <span className="text-2xl font-bold font-mono text-[#4C9AF8] mt-1">
                         <AnimatedNumber value={results.expectedValue} />
                       </span>
                     </div>
                     <div className="grid grid-rows-2 gap-2">
-                      <div className="bg-zinc-900/30 border border-zinc-900/60 px-3 py-1.5 rounded-lg flex justify-between items-center">
+                      <div className="bg-zinc-950/60 border border-[#4C9AF8]/15 px-3 py-1.5 rounded-lg flex justify-between items-center">
                         <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Pool Share</span>
-                        <span className="text-xs font-bold font-mono text-zinc-300">{(results.share * 100).toFixed(6)}%</span>
+                        <span className="text-xs font-bold font-mono text-[#4C9AF8]">{(results.share * 100).toFixed(6)}%</span>
                       </div>
-                      <div className="bg-zinc-900/30 border border-zinc-900/60 px-3 py-1.5 rounded-lg flex justify-between items-center">
+                      <div className="bg-zinc-950/60 border border-[#4C9AF8]/15 px-3 py-1.5 rounded-lg flex justify-between items-center">
                         <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Est. Tokens</span>
-                        <span className="text-xs font-bold font-mono text-zinc-300">{formatNumber(results.estimatedTokens, 0)}</span>
+                        <span className="text-xs font-bold font-mono text-[#4C9AF8]">{formatNumber(results.estimatedTokens, 0)}</span>
                       </div>
                     </div>
                   </div>
