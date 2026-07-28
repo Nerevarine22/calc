@@ -125,7 +125,7 @@ export default function Home() {
   const [copied, setCopied] = useState(false);
 
   const handleCopyReferralCode = () => {
-    navigator.clipboard.writeText("OMNIATOMS");
+    navigator.clipboard.writeText("OMNIKLJ9FBUC");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -526,7 +526,7 @@ export default function Home() {
               
               <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5">
                 <a 
-                  href="https://omni.variational.io/?ref=OMNIATOMS"
+                  href="https://omni.variational.io/?ref=OMNIKLJ9FBUC"
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 rounded-full border border-[#4C9AF8]/25 bg-[#4C9AF8]/5 hover:bg-[#4C9AF8]/10 hover:border-[#4C9AF8]/40 px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider text-[#4C9AF8] transition active:scale-98"
@@ -537,7 +537,7 @@ export default function Home() {
                 
                 <div className="inline-flex items-center gap-2 h-9 rounded-full border border-zinc-900 bg-zinc-950/60 px-4 text-xs font-mono">
                   <span className="text-zinc-500 font-bold text-[10px] uppercase tracking-wider">Code:</span>
-                  <span className="text-white text-[11px] font-bold tracking-wide select-all">OMNIATOMS</span>
+                  <span className="text-white text-[11px] font-bold tracking-wide select-all">OMNIKLJ9FBUC</span>
                   <button
                     onClick={handleCopyReferralCode}
                     title="Copy code"
