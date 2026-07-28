@@ -1263,59 +1263,57 @@ export default function Home() {
         )}
 
       </section>
-
-      {/* SHARE CARD EXPORT MODAL */}
       {isShareModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
-          <div className="relative bg-zinc-950 border border-zinc-900 rounded-2xl max-w-2xl w-full p-6 flex flex-col gap-6 animate-slide-fade-in shadow-2xl">
+          <div className="relative bg-zinc-950 border border-zinc-900 rounded-2xl max-w-3xl w-full p-6 flex flex-col gap-6 animate-slide-fade-in shadow-2xl">
             
             {/* Modal Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-zinc-900">
+            <div className="flex items-center justify-between pb-4 border-b border-zinc-900">
               <div className="flex flex-col gap-0.5">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-white">Export Estimate Card</h3>
-                <p className="text-[10px] text-zinc-500">Choose a theme and download your high-quality card.</p>
+                <p className="text-[10px] text-zinc-500">Configure theme options and download your high-quality card.</p>
               </div>
-              <button
-                onClick={() => setIsShareModalOpen(false)}
-                className="p-1 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white transition cursor-pointer"
-              >
-                <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+              
+              <div className="flex items-center gap-3">
+                {/* Embedded Theme Selector */}
+                <div className="flex bg-zinc-900/60 p-0.5 rounded-lg border border-zinc-800/80">
+                  <button
+                    onClick={() => setShareCardTheme("dark")}
+                    className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider transition cursor-pointer ${
+                      shareCardTheme === "dark"
+                        ? "bg-[#4C9AF8] text-white"
+                        : "text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    Dark
+                  </button>
+                  <button
+                    onClick={() => setShareCardTheme("light")}
+                    className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider transition cursor-pointer ${
+                      shareCardTheme === "light"
+                        ? "bg-[#4C9AF8] text-white"
+                        : "text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    Light
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => setIsShareModalOpen(false)}
+                  className="p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-850 text-zinc-400 hover:text-white border border-zinc-800 transition cursor-pointer"
+                >
+                  <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
-            {/* Theme Selector */}
-            <div className="flex items-center gap-3 bg-zinc-900/40 border border-zinc-900 p-2 rounded-lg">
-              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider pl-1.5">Card Theme:</span>
-              <div className="flex gap-1.5 ml-auto">
-                <button
-                  onClick={() => setShareCardTheme("dark")}
-                  className={`px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition ${
-                    shareCardTheme === "dark"
-                      ? "bg-[#4C9AF8] text-white"
-                      : "bg-zinc-950/40 text-zinc-400 hover:bg-zinc-900 hover:text-white"
-                  }`}
-                >
-                  Dark
-                </button>
-                <button
-                  onClick={() => setShareCardTheme("light")}
-                  className={`px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition ${
-                    shareCardTheme === "light"
-                      ? "bg-[#4C9AF8] text-white"
-                      : "bg-zinc-950/40 text-zinc-400 hover:bg-zinc-900 hover:text-white"
-                  }`}
-                >
-                  Light
-                </button>
-              </div>
-            </div>
-
-            {/* Live Preview Inside Modal */}
-            <div className="flex justify-center items-center py-2 bg-zinc-900/10 border border-zinc-900/50 rounded-xl p-4 overflow-x-auto">
+            {/* Live Preview Inside Modal - Expanded width */}
+            <div className="flex justify-center items-center py-2 overflow-x-auto">
               <div
-                className={`relative overflow-hidden rounded-2xl border flex flex-col justify-between aspect-[1.91/1] w-full max-w-[580px] p-5 shadow-xl transition-all duration-300 ${
+                className={`relative overflow-hidden rounded-2xl border flex flex-col justify-between aspect-[1.91/1] w-full max-w-[690px] p-6 shadow-xl transition-all duration-300 ${
                   shareCardTheme === "light"
                     ? "bg-slate-50 border-zinc-200/80 text-zinc-900"
                     : "bg-zinc-950 border-[#4C9AF8]/20 text-white"
@@ -1323,24 +1321,24 @@ export default function Home() {
               >
                 {/* Subtle Radial Glow */}
                 {shareCardTheme === "dark" && (
-                  <div className="absolute top-0 right-0 w-[140px] h-[90px] bg-[#4C9AF8]/12 blur-[45px] pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-[150px] h-[100px] bg-[#4C9AF8]/12 blur-[50px] pointer-events-none" />
                 )}
                 {shareCardTheme === "light" && (
-                  <div className="absolute top-0 right-0 w-[140px] h-[90px] bg-[#4C9AF8]/5 blur-[45px] pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-[150px] h-[100px] bg-[#4C9AF8]/5 blur-[50px] pointer-events-none" />
                 )}
 
-                <div className={`flex items-center justify-between border-b pb-2.5 ${shareCardTheme === "light" ? "border-zinc-200" : "border-zinc-900"}`}>
+                <div className={`flex items-center justify-between border-b pb-3 ${shareCardTheme === "light" ? "border-zinc-200" : "border-zinc-900"}`}>
                   <div className="flex items-center gap-2">
                     <Image
                       src="/brand/variational-logo-white.png"
                       alt=""
-                      width={24}
-                      height={24}
+                      width={26}
+                      height={26}
                       className={`opacity-90 transition ${shareCardTheme === "light" ? "invert brightness-0" : ""}`}
                     />
                     <div className="flex flex-col">
-                      <span className="font-mono text-[11px] font-bold tracking-wider">VARIATIONAL</span>
-                      <span className={`text-[8px] font-bold tracking-widest uppercase ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-600"}`}>Points Estimator</span>
+                      <span className="font-mono text-xs font-bold tracking-wider">VARIATIONAL</span>
+                      <span className={`text-[8px] font-bold tracking-widest uppercase ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-650"}`}>Points Estimator</span>
                     </div>
                   </div>
                   <span className="text-[8px] font-bold tracking-widest text-[#4C9AF8] border border-[#4C9AF8]/25 bg-[#4C9AF8]/5 px-2 py-0.5 rounded uppercase">
@@ -1348,7 +1346,7 @@ export default function Home() {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3.5 my-auto">
+                <div className="grid grid-cols-2 gap-4 my-auto">
                   <div className={`border p-4 rounded-lg flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
                     <span className={`text-[8px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Estimated TGE Value</span>
                     <span className="text-2xl font-bold font-mono text-[#4C9AF8] mt-0.5">
@@ -1373,7 +1371,7 @@ export default function Home() {
                         <span className={`text-[7px] font-bold uppercase tracking-wider flex items-center gap-0.5 truncate ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>
                           <span className="font-sans font-black">𝕏</span> @{twitterUsername}
                         </span>
-                        <span className={`text-[11px] font-bold font-mono mt-0.5 ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
+                        <span className={`text-[11px] font-bold font-mono mt-0.5 ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-650")}`}>
                           {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
                         </span>
                       </div>
@@ -1403,18 +1401,18 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-2">
+            {/* Action Buttons - Compact Right Aligned */}
+            <div className="flex justify-end gap-2.5 border-t border-zinc-900 pt-4">
               <button
                 onClick={() => setIsShareModalOpen(false)}
-                className="flex-1 py-1.5 px-3 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white font-bold text-[10px] uppercase tracking-wider transition active:scale-95 cursor-pointer"
+                className="px-4 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-850 text-zinc-400 hover:text-white font-bold text-[10px] uppercase tracking-wider border border-zinc-800 transition active:scale-95 cursor-pointer"
               >
                 Close
               </button>
               <button
                 disabled={isDownloading}
                 onClick={() => handleDownloadCard(shareCardTheme)}
-                className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg bg-white hover:bg-zinc-100 text-black font-bold text-[10px] uppercase tracking-wider transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                className="inline-flex items-center justify-center gap-1.5 px-4.5 py-1.5 rounded-lg bg-white hover:bg-zinc-100 text-black font-bold text-[10px] uppercase tracking-wider transition active:scale-95 disabled:opacity-50 cursor-pointer"
               >
                 {isDownloading ? (
                   <>
