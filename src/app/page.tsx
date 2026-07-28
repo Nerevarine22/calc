@@ -716,7 +716,10 @@ export default function Home() {
 
                   <div className="bg-zinc-950/40 border border-zinc-900 rounded-xl p-4 flex flex-col gap-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Twitter Reach Bonus (Possible Bonus)</span>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Twitter Reach Bonus</span>
+                        <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-wider">Possible Extra Points</span>
+                      </div>
                       {twitterExtraPoints > 0 && (
                         <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded animate-pulse">
                           +{formatNumber(twitterExtraPoints)} Extra Points
