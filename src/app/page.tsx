@@ -305,11 +305,22 @@ export default function Home() {
             </nav>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-mono text-[10px] tracking-wider text-zinc-500 uppercase">
-              {marketStatus === "ready" ? "Prediction Data Active" : "Local Engine"}
-            </span>
+          <div className="flex items-center gap-4">
+            <a
+              href="https://x.com/atoms_res"
+              target="_blank"
+              rel="noreferrer"
+              className="font-mono text-[9px] sm:text-[10px] tracking-wider text-zinc-500 hover:text-white transition uppercase"
+            >
+              created by @atoms_res
+            </a>
+            <span className="hidden sm:inline-block h-3.5 w-px bg-zinc-800" />
+            <div className="flex items-center gap-2">
+              <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="font-mono text-[10px] tracking-wider text-zinc-500 uppercase">
+                {marketStatus === "ready" ? "Prediction Data Active" : "Local Engine"}
+              </span>
+            </div>
           </div>
         </header>
 
