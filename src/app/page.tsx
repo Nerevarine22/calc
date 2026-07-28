@@ -961,11 +961,6 @@ export default function Home() {
                     </div>
                   ) : null}
 
-                  <div className="pt-4 border-t border-zinc-900">
-                    <StatLine label="Total token supply" value={formatNumber(TOTAL_SUPPLY)} />
-                    <StatLine label="Airdrop supply" value={formatNumber(results.airdropSupply)} />
-                    <StatLine label="Token price @ FDV" value={formatUsd(results.tokenPrice)} />
-                  </div>
                 </div>
               </div>
 
