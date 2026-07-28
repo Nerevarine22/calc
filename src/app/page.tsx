@@ -739,20 +739,6 @@ export default function Home() {
                 Based on <span className="text-zinc-300 font-medium">{fdvLabel(fdv)} FDV</span> assumptions and a <span className="text-zinc-300 font-medium">{airdropPct}%</span> airdrop pool.
               </p>
 
-              <div className="mt-10 grid grid-cols-3 gap-8 sm:gap-16 border-t border-b border-zinc-900/60 py-6 w-full max-w-2xl text-center">
-                <div>
-                  <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Pool share</p>
-                  <p className="mt-1 font-mono text-base font-bold text-zinc-200">{(results.share * 100).toFixed(6)}%</p>
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Est. Tokens</p>
-                  <p className="mt-1 font-mono text-base font-bold text-zinc-200">{formatNumber(results.estimatedTokens)}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Token Price</p>
-                  <p className="mt-1 font-mono text-base font-bold text-[#4C9AF8]">{formatUsd(results.tokenPrice)}</p>
-                </div>
-              </div>
             </div>
 
             {/* INPUTS AND SHARE PREVIEW */}
