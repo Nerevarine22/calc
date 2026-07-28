@@ -449,11 +449,13 @@ export default function Home() {
       ctx.font = "14px sans-serif";
       ctx.fillText(`Based on ${fdvLabel(fdv)} FDV & ${airdropPct}% Pool`, 120, 420);
 
-      // 4. Center Section: Right 2x2 Grid of Boxes
-      const drawRightBox = (x: number, y: number, label: string, value: string, isExtra: boolean = false) => {
+      // 4. Center Section: Right 2x2 Grid of Boxes (or 3-box layout if no twitterUsername)
+      const hasTwitter = !!twitterUsername.trim();
+
+      const drawRightBox = (x: number, y: number, w: number, h: number, label: string, value: string, isExtra: boolean = false) => {
         ctx.fillStyle = theme === "light" ? "rgba(76, 154, 248, 0.01)" : "rgba(76, 154, 248, 0.02)";
         ctx.beginPath();
-        ctx.roundRect(x, y, 235, 130, 12);
+        ctx.roundRect(x, y, w, h, 12);
         ctx.fill();
         ctx.strokeStyle = theme === "light" ? "rgba(76, 154, 248, 0.1)" : "rgba(76, 154, 248, 0.15)";
         ctx.stroke();
@@ -467,18 +469,27 @@ export default function Home() {
         } else {
           ctx.fillStyle = "#4C9AF8";
         }
-        ctx.font = "bold 26px monospace";
+        ctx.font = w > 240 ? "bold 32px monospace" : "bold 26px monospace";
         ctx.fillText(value, x + 30, y + 90);
       };
 
-      // Top Left: Your Points
-      drawRightBox(630, 200, "Your Points", formatNumber(parsePositive(userPoints) + twitterExtraPoints));
-      // Top Right: Pool Share
-      drawRightBox(885, 200, "Pool Share", `${(results.share * 100).toFixed(5)}%`);
-      // Bottom Left: Est. Tokens
-      drawRightBox(630, 350, "Est. Tokens", formatNumber(results.estimatedTokens, 0));
-      // Bottom Right: Extra Points
-      drawRightBox(885, 350, "Extra Points", twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0", true);
+      if (hasTwitter) {
+        // Top Left: Your Points
+        drawRightBox(630, 200, 235, 130, "Your Points", formatNumber(parsePositive(userPoints) + twitterExtraPoints));
+        // Top Right: Pool Share
+        drawRightBox(885, 200, 235, 130, "Pool Share", `${(results.share * 100).toFixed(5)}%`);
+        // Bottom Left: Est. Tokens
+        drawRightBox(630, 350, 235, 130, "Est. Tokens", formatNumber(results.estimatedTokens, 0));
+        // Bottom Right: Extra Points with 𝕏 handle
+        drawRightBox(885, 350, 235, 130, `𝕏 @${twitterUsername}`, twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0", true);
+      } else {
+        // Spanned Top Box: Your Points
+        drawRightBox(630, 200, 490, 130, "Your Points", formatNumber(parsePositive(userPoints)));
+        // Bottom Left: Pool Share
+        drawRightBox(630, 350, 235, 130, "Pool Share", `${(results.share * 100).toFixed(5)}%`);
+        // Bottom Right: Est. Tokens
+        drawRightBox(885, 350, 235, 130, "Est. Tokens", formatNumber(results.estimatedTokens, 0));
+      }
 
       // 5. Footer section
       ctx.strokeStyle = theme === "light" ? "rgba(76, 154, 248, 0.08)" : "rgba(76, 154, 248, 0.1)";
@@ -1347,26 +1358,45 @@ export default function Home() {
                       {formatUsd(results.expectedValue)}
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-1.5 h-full">
-                    <div className={`border p-1.5 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
-                      <span className={`text-[5px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Your Points</span>
-                      <span className="text-[8px] font-bold font-mono text-[#4C9AF8] mt-0.5">{formatNumber(parsePositive(userPoints) + twitterExtraPoints)}</span>
+                  {twitterUsername.trim() ? (
+                    <div className="grid grid-cols-2 gap-1.5 h-full">
+                      <div className={`border p-1.5 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
+                        <span className={`text-[5px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Your Points</span>
+                        <span className="text-[8px] font-bold font-mono text-[#4C9AF8] mt-0.5">{formatNumber(parsePositive(userPoints) + twitterExtraPoints)}</span>
+                      </div>
+                      <div className={`border p-1.5 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
+                        <span className={`text-[5px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Pool Share</span>
+                        <span className="text-[8px] font-bold font-mono text-[#4C9AF8] mt-0.5">{(results.share * 100).toFixed(5)}%</span>
+                      </div>
+                      <div className={`border p-1.5 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
+                        <span className={`text-[5px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Est. Tokens</span>
+                        <span className="text-[8px] font-bold font-mono text-[#4C9AF8] mt-0.5">{formatNumber(results.estimatedTokens, 0)}</span>
+                      </div>
+                      <div className={`border p-1.5 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
+                        <span className={`text-[5px] font-bold uppercase tracking-wider flex items-center gap-0.5 truncate ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>
+                          <span className="font-sans font-black">𝕏</span> @{twitterUsername}
+                        </span>
+                        <span className={`text-[8px] font-bold font-mono mt-0.5 ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
+                          {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
+                        </span>
+                      </div>
                     </div>
-                    <div className={`border p-1.5 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
-                      <span className={`text-[5px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Pool Share</span>
-                      <span className="text-[8px] font-bold font-mono text-[#4C9AF8] mt-0.5">{(results.share * 100).toFixed(5)}%</span>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-1.5 h-full">
+                      <div className={`border p-1.5 rounded-md flex flex-col justify-center col-span-2 ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
+                        <span className={`text-[5px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Your Points</span>
+                        <span className="text-[9px] font-bold font-mono text-[#4C9AF8] mt-0.5">{formatNumber(parsePositive(userPoints))}</span>
+                      </div>
+                      <div className={`border p-1.5 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
+                        <span className={`text-[5px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Pool Share</span>
+                        <span className="text-[8px] font-bold font-mono text-[#4C9AF8] mt-0.5">{(results.share * 100).toFixed(5)}%</span>
+                      </div>
+                      <div className={`border p-1.5 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
+                        <span className={`text-[5px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Est. Tokens</span>
+                        <span className="text-[8px] font-bold font-mono text-[#4C9AF8] mt-0.5">{formatNumber(results.estimatedTokens, 0)}</span>
+                      </div>
                     </div>
-                    <div className={`border p-1.5 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
-                      <span className={`text-[5px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Est. Tokens</span>
-                      <span className="text-[8px] font-bold font-mono text-[#4C9AF8] mt-0.5">{formatNumber(results.estimatedTokens, 0)}</span>
-                    </div>
-                    <div className={`border p-1.5 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
-                      <span className={`text-[5px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Extra Points</span>
-                      <span className={`text-[8px] font-bold font-mono mt-0.5 ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
-                        {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
-                      </span>
-                    </div>
-                  </div>
+                  )}
                 </div>
 
                 <div className={`flex items-center justify-between border-t pt-2 text-[6px] font-mono ${shareCardTheme === "light" ? "border-zinc-200 text-zinc-400" : "border-zinc-900 text-zinc-500"}`}>
