@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
 const TOTAL_SUPPLY = 1_000_000_000;
-const fdvOptions = [100_000_000, 250_000_000, 500_000_000, 1_000_000_000, 1_500_000_000, 2_000_000_000];
+const fdvOptions = [100_000_000, 200_000_000, 300_000_000, 500_000_000, 800_000_000, 1_000_000_000, 2_000_000_000];
 const airdropOptions = [30, 35, 40, 45, 50];
 
 type FdvMarket = {
@@ -121,6 +121,53 @@ export default function Home() {
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState("");
 
+  const [twitterUsername, setTwitterUsername] = useState("");
+  const [twitterExtraPoints, setTwitterExtraPoints] = useState(0);
+  const [twitterStatus, setTwitterStatus] = useState<"idle" | "checking" | "success" | "error">("idle");
+  const [twitterStats, setTwitterStats] = useState<{
+    tweetsCount: number;
+    views: number;
+    likes: number;
+    retweets: number;
+  } | null>(null);
+  const [twitterError, setTwitterError] = useState("");
+
+  const handleCheckTwitterBonus = async () => {
+    const username = twitterUsername.trim();
+    if (!username) return;
+
+    setTwitterStatus("checking");
+    setTwitterError("");
+    setTwitterStats(null);
+    setTwitterExtraPoints(0);
+
+    try {
+      const response = await fetch(`/api/check-twitter?username=${encodeURIComponent(username)}`);
+      const json = await response.json();
+
+      if (!response.ok) {
+        throw new Error(json.error || "Failed to check Twitter bonus");
+      }
+
+      if (json.matchingTweetsCount > 0) {
+        setTwitterStatus("success");
+        setTwitterStats({
+          tweetsCount: json.matchingTweetsCount,
+          views: json.totalViews,
+          likes: json.totalLikes,
+          retweets: json.totalRetweets,
+        });
+        setTwitterExtraPoints(json.extraPoints);
+      } else {
+        setTwitterStatus("error");
+        setTwitterError(`No tweets mentioning Variational found for @${json.username}. Try posting first!`);
+      }
+    } catch (err: any) {
+      setTwitterStatus("error");
+      setTwitterError(err.message || "Failed to lookup Twitter. Please try again later.");
+    }
+  };
+
   const [isDownloading, setIsDownloading] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -188,10 +235,12 @@ export default function Home() {
 
   const results = useMemo(() => {
     const totalNetworkXPoints = parsePositive(totalPoints, 1);
-    const yourXPoints = parsePositive(userPoints);
+    const baseYourXPoints = parsePositive(userPoints);
+    const yourXPoints = baseYourXPoints + twitterExtraPoints;
     const airdropSupply = TOTAL_SUPPLY * (airdropPct / 100);
     const tokenPrice = fdv / TOTAL_SUPPLY;
     const share = yourXPoints / totalNetworkXPoints;
+    
     const estimatedTokens = share * airdropSupply;
     const expectedValue = estimatedTokens * tokenPrice;
 
@@ -207,7 +256,7 @@ export default function Home() {
         value: estimatedTokens * (scenarioFdv / TOTAL_SUPPLY),
       })),
     };
-  }, [activeFdvOptions, airdropPct, fdv, totalPoints, userPoints]);
+  }, [activeFdvOptions, airdropPct, fdv, totalPoints, userPoints, twitterExtraPoints]);
 
   const stats = useMemo(() => {
     const totalVol = fdvMarkets.reduce((acc, m) => acc + m.volumeTotal, 0);
@@ -412,7 +461,11 @@ export default function Home() {
       ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
       ctx.font = "14px monospace";
       ctx.textAlign = "left";
-      ctx.fillText(`Your Points: ${formatNumber(parsePositive(userPoints))} • Total: ${formatNumber(parsePositive(totalPoints))}`, 80, 560);
+      let footerText = `Your Points: ${formatNumber(parsePositive(userPoints) + twitterExtraPoints)} • Total: ${formatNumber(parsePositive(totalPoints))}`;
+      if (twitterExtraPoints > 0) {
+        footerText += ` (incl. +${formatNumber(twitterExtraPoints)} Extra)`;
+      }
+      ctx.fillText(footerText, 80, 560);
 
       ctx.shadowColor = "transparent";
       ctx.shadowBlur = 0;
@@ -661,6 +714,95 @@ export default function Home() {
                     </label>
                   </div>
 
+                  <div className="bg-zinc-950/40 border border-zinc-900 rounded-xl p-4 flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Twitter Reach Bonus</span>
+                      {twitterExtraPoints > 0 && (
+                        <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded animate-pulse">
+                          +{formatNumber(twitterExtraPoints)} Extra Points
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-xs font-semibold font-mono">@</span>
+                        <input
+                          className="w-full h-10 rounded-lg bg-zinc-900/60 border-0 pl-7 pr-3.5 font-mono text-xs text-white outline-none focus:ring-1 focus:ring-zinc-600 transition"
+                          placeholder="username"
+                          value={twitterUsername}
+                          onChange={(e) => setTwitterUsername(e.target.value)}
+                        />
+                      </div>
+                      <button
+                        onClick={handleCheckTwitterBonus}
+                        disabled={twitterStatus === "checking" || !twitterUsername.trim()}
+                        className="h-10 px-4 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-xs uppercase tracking-wider transition active:scale-95 disabled:opacity-40 cursor-pointer flex items-center justify-center min-w-[100px]"
+                      >
+                        {twitterStatus === "checking" ? "..." : "Verify"}
+                      </button>
+                    </div>
+                    
+                    {twitterStatus === "success" && twitterStats && (
+                      <div className="border-t border-zinc-900/80 pt-3 mt-1 flex flex-col gap-2.5 animate-slide-fade-in">
+                        <div className="grid grid-cols-3 gap-2">
+                          <div className="bg-zinc-900/40 border border-zinc-800/60 p-2 rounded-lg text-center flex flex-col justify-center">
+                            <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Tweets</span>
+                            <span className="text-sm font-bold font-mono text-white mt-0.5">{twitterStats.tweetsCount}</span>
+                          </div>
+                          
+                          <div className="bg-zinc-900/40 border border-[#4C9AF8]/20 p-2 rounded-lg text-center flex flex-col justify-center">
+                            <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Views</span>
+                            <span className="text-sm font-bold font-mono text-[#4C9AF8] mt-0.5">{formatNumber(twitterStats.views)}</span>
+                          </div>
+                          
+                          <div className="bg-zinc-900/40 border border-zinc-800/60 p-2 rounded-lg text-center flex flex-col justify-center">
+                            <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Engagement</span>
+                            <span className="text-sm font-bold font-mono text-zinc-200 mt-0.5">{twitterStats.likes + twitterStats.retweets}</span>
+                          </div>
+                        </div>
+                        
+                        {twitterExtraPoints > 0 ? (
+                          <div className="text-[10px] text-emerald-400 font-bold text-center bg-emerald-500/10 border border-emerald-500/20 py-1.5 rounded-lg">
+                            Earned +{formatNumber(twitterExtraPoints)} Extra Points!
+                          </div>
+                        ) : (() => {
+                          const currentEr = twitterStats.views > 0 ? (twitterStats.likes + twitterStats.retweets) / twitterStats.views : 0;
+                          let reason = "";
+                          if (twitterStats.views < 5000) {
+                            reason = `Not enough views: ${formatNumber(twitterStats.views)} (Needs ≥ 5,000)`;
+                          } else if (twitterStats.tweetsCount < 3) {
+                            reason = `Not enough tweets: ${twitterStats.tweetsCount} (Needs ≥ 3)`;
+                          } else if (currentEr < 0.01) {
+                            reason = `Engagement Rate too low: ${(currentEr * 100).toFixed(2)}% (Needs ≥ 1.00%)`;
+                          } else {
+                            reason = "Does not meet higher tiers requirement.";
+                          }
+
+                          return (
+                            <div className="flex flex-col gap-1.5 bg-zinc-900/20 border border-zinc-900/60 p-2.5 rounded-lg text-center">
+                              <div className="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider">
+                                Bonus: 0 Extra Points
+                              </div>
+                              <div className="text-[10px] text-rose-400 font-bold leading-normal">
+                                {reason}
+                              </div>
+                              <div className="text-[9px] text-zinc-500 leading-normal">
+                                Rule: Needs ≥5k views, ≥3 tweets, and ≥1% engagement.
+                              </div>
+                              <div className="text-[10px] text-zinc-500 pt-1 border-t border-zinc-900/80 mt-1">
+                                Current engagement: <span className="text-zinc-300 font-mono">{twitterStats.likes} likes</span> • <span className="text-zinc-300 font-mono">{twitterStats.retweets} retweets</span>
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    )}
+                    
+                    {twitterStatus === "error" && (
+                      <div className="text-[10px] text-rose-500 font-medium animate-slide-fade-in">{twitterError}</div>
+                    )}
+                  </div>
+
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Supply for Airdrop</p>
                     <div className="mt-2.5 flex flex-wrap gap-1.5">
@@ -689,7 +831,7 @@ export default function Home() {
                         return (
                           <button
                             key={option}
-                            className={`flex flex-col items-center justify-center py-2.5 rounded-lg border text-xs transition ${
+                            className={`flex flex-col items-center justify-center h-[54px] rounded-lg border text-xs transition ${
                               option === fdv
                                 ? "border-[#4C9AF8] bg-[#4C9AF8]/10 text-white"
                                 : "border-zinc-900 bg-zinc-900/30 text-zinc-400 hover:border-zinc-800 hover:text-zinc-200"
@@ -697,7 +839,7 @@ export default function Home() {
                             onClick={() => setFdv(option)}
                           >
                             <span className="font-bold">{fdvLabel(option)}</span>
-                            <span className="mt-0.5 text-[9px] text-zinc-500 flex items-center justify-center gap-1">
+                            <span className="mt-0.5 text-[9px] text-zinc-500 flex items-center justify-center gap-1 h-3.5">
                               {hasChance && (
                                 <Image
                                   className="size-2.5 invert opacity-30"
@@ -802,7 +944,7 @@ export default function Home() {
                   </div>
 
                   <div className="flex items-center justify-between border-t border-zinc-900 pt-4 text-[8px] text-zinc-500 font-mono">
-                    <span>Model: {fdvLabel(fdv)} FDV • {airdropPct}% Pool</span>
+                    <span>Model: {fdvLabel(fdv)} FDV • {airdropPct}% Pool{twitterExtraPoints > 0 ? ` • incl. +${formatNumber(twitterExtraPoints)} Extra` : ""}</span>
                     <span>variational.io</span>
                   </div>
                 </div>
