@@ -121,6 +121,7 @@ export default function Home() {
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState("");
 
+  const [isDownloading, setIsDownloading] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const handleCopyReferralCode = () => {
@@ -251,6 +252,175 @@ export default function Home() {
       setSearchError("Failed to lookup wallet. Please try again.");
     } finally {
       setIsSearching(false);
+    }
+  };
+
+  const handleDownloadCard = async () => {
+    setIsDownloading(true);
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1200;
+      canvas.height = 630;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      // 1. Draw Background
+      ctx.fillStyle = "#07080a";
+      ctx.fillRect(0, 0, 1200, 630);
+
+      // Draw subtle background grid
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.015)";
+      ctx.lineWidth = 1;
+      for (let x = 0; x < 1200; x += 40) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, 630);
+        ctx.stroke();
+      }
+      for (let y = 0; y < 630; y += 40) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(1200, y);
+        ctx.stroke();
+      }
+
+      // 2. Draw outline frame
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(40, 40, 1120, 550, 20);
+      ctx.stroke();
+
+      // 3. Draw Header
+      try {
+        const logoImg = new window.Image();
+        await new Promise((resolve, reject) => {
+          logoImg.onload = resolve;
+          logoImg.onerror = reject;
+          logoImg.src = "/brand/variational-logo-white.png";
+        });
+        ctx.drawImage(logoImg, 80, 80, 44, 44);
+      } catch {
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(102, 102, 22, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Wordmark
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 26px sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("VARIATIONAL", 140, 102);
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+      ctx.font = "bold 11px sans-serif";
+      if ('letterSpacing' in ctx) {
+        (ctx as any).letterSpacing = "2px";
+      }
+      ctx.fillText("POINTS ESTIMATOR", 140, 122);
+      if ('letterSpacing' in ctx) {
+        (ctx as any).letterSpacing = "0px";
+      }
+
+      // Tag "TGE ALLOCATION ESTIMATE"
+      ctx.strokeStyle = "rgba(76, 154, 248, 0.2)";
+      ctx.fillStyle = "rgba(76, 154, 248, 0.05)";
+      ctx.beginPath();
+      ctx.roundRect(880, 85, 240, 36, 6);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = "#4C9AF8";
+      ctx.font = "bold 11px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("TGE ALLOCATION ESTIMATE", 1000, 107);
+
+      // Main content divide line
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+      ctx.beginPath();
+      ctx.moveTo(80, 160);
+      ctx.lineTo(1120, 160);
+      ctx.stroke();
+
+      // 4. Center Section: Left Value Box
+      ctx.fillStyle = "rgba(255, 255, 255, 0.015)";
+      ctx.beginPath();
+      ctx.roundRect(80, 200, 520, 280, 12);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+      ctx.font = "bold 13px sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("Estimated TGE Value", 120, 250);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 56px monospace";
+      ctx.fillText(formatUsd(results.expectedValue), 120, 350);
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+      ctx.font = "14px sans-serif";
+      ctx.fillText(`Based on ${fdvLabel(fdv)} FDV & ${airdropPct}% Pool`, 120, 420);
+
+      // Center Section: Right boxes
+      // Pool Share box
+      ctx.fillStyle = "rgba(255, 255, 255, 0.015)";
+      ctx.beginPath();
+      ctx.roundRect(630, 200, 490, 125, 12);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+      ctx.font = "bold 13px sans-serif";
+      ctx.fillText("Pool Share", 670, 245);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 32px monospace";
+      ctx.fillText(`${(results.share * 100).toFixed(6)}%`, 670, 295);
+
+      // Est. Tokens box
+      ctx.fillStyle = "rgba(255, 255, 255, 0.015)";
+      ctx.beginPath();
+      ctx.roundRect(630, 355, 490, 125, 12);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+      ctx.font = "bold 13px sans-serif";
+      ctx.fillText("Estimated Tokens", 670, 400);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 32px monospace";
+      ctx.fillText(formatNumber(results.estimatedTokens, 0), 670, 450);
+
+      // 5. Footer section
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+      ctx.beginPath();
+      ctx.moveTo(80, 520);
+      ctx.lineTo(1120, 520);
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+      ctx.font = "14px monospace";
+      ctx.textAlign = "left";
+      ctx.fillText(`Your Points: ${formatNumber(parsePositive(userPoints))} • Total: ${formatNumber(parsePositive(totalPoints))}`, 80, 560);
+
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+      ctx.textAlign = "right";
+      ctx.fillText("variational.io", 1120, 560);
+
+      const dataUrl = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = `variational-airdrop-estimate-${formatNumber(parsePositive(userPoints))}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error("Failed to generate card:", error);
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -628,6 +798,31 @@ export default function Home() {
                     <span>Model: {fdvLabel(fdv)} FDV • {airdropPct}% Pool</span>
                     <span>variational.io</span>
                   </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <button
+                    disabled={isDownloading}
+                    onClick={handleDownloadCard}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-100 hover:bg-white text-black px-6 py-2.5 text-xs font-bold uppercase tracking-wider transition active:scale-95 disabled:opacity-50"
+                  >
+                    {isDownloading ? (
+                      <>
+                        <svg className="size-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Generating image...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download Share Card
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
