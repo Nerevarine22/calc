@@ -123,6 +123,7 @@ export default function Home() {
 
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareCardTheme, setShareCardTheme] = useState<"dark" | "light">("dark");
+  const [showExtraPoints, setShowExtraPoints] = useState(true);
 
   const [twitterUsername, setTwitterUsername] = useState("");
   const [twitterExtraPoints, setTwitterExtraPoints] = useState(0);
@@ -330,13 +331,6 @@ export default function Home() {
         glowGrad.addColorStop(1, "rgba(76, 154, 248, 0)");
         ctx.fillStyle = glowGrad;
         ctx.fillRect(0, 0, 1200, 630);
-
-        // Frame border
-        ctx.strokeStyle = "rgba(76, 154, 248, 0.15)";
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.roundRect(40, 40, 1120, 550, 20);
-        ctx.stroke();
       } else {
         ctx.fillStyle = "#07080a";
         ctx.fillRect(0, 0, 1200, 630);
@@ -347,14 +341,31 @@ export default function Home() {
         glowGrad.addColorStop(1, "rgba(76, 154, 248, 0)");
         ctx.fillStyle = glowGrad;
         ctx.fillRect(0, 0, 1200, 630);
-
-        // Frame border
-        ctx.strokeStyle = "rgba(76, 154, 248, 0.12)";
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.roundRect(40, 40, 1120, 550, 20);
-        ctx.stroke();
       }
+
+      // Draw background wave image
+      try {
+        const waveImg = new window.Image();
+        await new Promise((resolve, reject) => {
+          waveImg.onload = resolve;
+          waveImg.onerror = reject;
+          waveImg.src = theme === "light" ? "/brand/wave-light.png" : "/brand/wave-dark.png";
+        });
+        ctx.drawImage(waveImg, 0, 0, 1200, 630);
+      } catch (e) {
+        console.error("Failed to load wave background image", e);
+      }
+
+      // Frame border
+      if (theme === "light") {
+        ctx.strokeStyle = "rgba(76, 154, 248, 0.15)";
+      } else {
+        ctx.strokeStyle = "rgba(76, 154, 248, 0.12)";
+      }
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(16, 16, 1168, 598, 24);
+      ctx.stroke();
 
       // Draw subtle background grid
       ctx.strokeStyle = theme === "light" ? "rgba(76, 154, 248, 0.005)" : "rgba(76, 154, 248, 0.008)";
@@ -372,38 +383,36 @@ export default function Home() {
         ctx.stroke();
       }
 
-      // 2. Draw Header Logo
-      try {
-        const logoImg = new window.Image();
-        await new Promise((resolve, reject) => {
-          logoImg.onload = resolve;
-          logoImg.onerror = reject;
-          logoImg.src = "/brand/variational-logo-white.png";
-        });
-        if (theme === "light") {
-          ctx.filter = "invert(0.9) brightness(0.1)";
-        }
-        ctx.drawImage(logoImg, 80, 80, 44, 44);
-        ctx.filter = "none";
-      } catch {
-        ctx.fillStyle = theme === "light" ? "#0b0f19" : "#ffffff";
-        ctx.beginPath();
-        ctx.arc(102, 102, 22, 0, Math.PI * 2);
-        ctx.fill();
-      }
+      // Giant background logo wave on the right (opacity: 0.02)
+      ctx.fillStyle = theme === "light" ? "rgba(0, 0, 0, 0.01)" : "rgba(76, 154, 248, 0.02)";
+      ctx.beginPath();
+      // Wave shape
+      ctx.moveTo(1100, 600);
+      ctx.bezierCurveTo(950, 580, 800, 420, 900, 250);
+      ctx.bezierCurveTo(950, 180, 1100, 220, 1150, 380);
+      ctx.fill();
+
+      // 2. Draw Header Logo Box (just the logo directly, no wrapper box/border)
+      ctx.fillStyle = theme === "light" ? "#0b0f19" : "#ffffff";
+      ctx.save();
+      ctx.translate(52, 60);
+      ctx.scale(30 / 260, 30 / 260); // Keep aspect ratio (uniform scale factor)
+      const p = new Path2D("M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z");
+      ctx.fill(p);
+      ctx.restore();
 
       // Wordmark
       ctx.fillStyle = theme === "light" ? "#0b0f19" : "#ffffff";
-      ctx.font = "bold 26px sans-serif";
+      ctx.font = "bold 22px sans-serif";
       ctx.textAlign = "left";
-      ctx.fillText("VARIATIONAL", 140, 102);
+      ctx.fillText("VARIATIONAL", 107, 71);
 
-      ctx.fillStyle = theme === "light" ? "rgba(11, 15, 25, 0.45)" : "rgba(255, 255, 255, 0.35)";
+      ctx.fillStyle = "#4C9AF8";
       ctx.font = "bold 11px sans-serif";
       if ('letterSpacing' in ctx) {
         (ctx as any).letterSpacing = "2px";
       }
-      ctx.fillText("POINTS ESTIMATOR", 140, 122);
+      ctx.fillText("POINTS ESTIMATOR", 107, 90);
       if ('letterSpacing' in ctx) {
         (ctx as any).letterSpacing = "0px";
       }
@@ -412,103 +421,226 @@ export default function Home() {
       ctx.strokeStyle = "rgba(76, 154, 248, 0.2)";
       ctx.fillStyle = "rgba(76, 154, 248, 0.05)";
       ctx.beginPath();
-      ctx.roundRect(880, 85, 240, 36, 6);
+      ctx.roundRect(858, 52, 290, 40, 20);
       ctx.fill();
       ctx.stroke();
 
       ctx.fillStyle = "#4C9AF8";
       ctx.font = "bold 11px sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText("TGE ALLOCATION ESTIMATE", 1000, 107);
-
-      // Main content divide line
-      ctx.strokeStyle = theme === "light" ? "rgba(76, 154, 248, 0.08)" : "rgba(76, 154, 248, 0.1)";
-      ctx.beginPath();
-      ctx.moveTo(80, 160);
-      ctx.lineTo(1120, 160);
-      ctx.stroke();
+      ctx.fillText("TGE ALLOCATION ESTIMATE", 1003, 76);
+      ctx.textAlign = "left";
 
       // 3. Center Section: Left Value Box
-      ctx.fillStyle = theme === "light" ? "rgba(76, 154, 248, 0.01)" : "rgba(76, 154, 248, 0.02)";
+      const textMuted = theme === "light" ? "rgba(11, 15, 25, 0.45)" : "rgba(255, 255, 255, 0.4)";
+      const textMain = theme === "light" ? "#0b0f19" : "#ffffff";
+      const dividerColor = theme === "light" ? "rgba(11, 15, 25, 0.08)" : "rgba(255, 255, 255, 0.08)";
+
+      ctx.fillStyle = textMuted;
+      ctx.font = "bold 15px sans-serif";
+      ctx.fillText("Estimated TGE Value", 52, 230);
+
+      ctx.fillStyle = textMain;
+      ctx.font = "bold 76px sans-serif";
+      ctx.fillText(formatUsd(results.expectedValue), 52, 335);
+
+      ctx.fillStyle = textMuted;
+      ctx.font = "14px sans-serif";
+      ctx.fillText(`Based on ${fdvLabel(fdv)} FDV & ${airdropPct}% Pool`, 52, 395);
+
+      // Middle Vertical Divider Line
+      ctx.strokeStyle = dividerColor;
+      ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.roundRect(80, 200, 520, 280, 12);
-      ctx.fill();
-      ctx.strokeStyle = theme === "light" ? "rgba(76, 154, 248, 0.1)" : "rgba(76, 154, 248, 0.15)";
+      ctx.moveTo(600, 170);
+      ctx.lineTo(600, 460);
       ctx.stroke();
 
-      ctx.fillStyle = theme === "light" ? "rgba(11, 15, 25, 0.45)" : "rgba(255, 255, 255, 0.4)";
-      ctx.font = "bold 13px sans-serif";
-      ctx.textAlign = "left";
-      ctx.fillText("Estimated TGE Value", 120, 250);
+      // 4. Right Side Layout
+      if (twitterUsername.trim() && showExtraPoints) {
+        // Top Row: Your Points & Pool Share
+        ctx.fillStyle = textMuted;
+        ctx.font = "bold 15px sans-serif";
+        ctx.fillText("Your Points", 640, 230);
 
-      ctx.fillStyle = "#4C9AF8";
-      ctx.font = "bold 56px monospace";
-      ctx.fillText(formatUsd(results.expectedValue), 120, 350);
+        ctx.fillStyle = "#4C9AF8";
+        ctx.font = "bold 32px sans-serif";
+        ctx.fillText(formatNumber(parsePositive(userPoints) + twitterExtraPoints), 640, 283);
 
-      ctx.fillStyle = theme === "light" ? "rgba(11, 15, 25, 0.35)" : "rgba(255, 255, 255, 0.35)";
-      ctx.font = "14px sans-serif";
-      ctx.fillText(`Based on ${fdvLabel(fdv)} FDV & ${airdropPct}% Pool`, 120, 420);
-
-      // 4. Center Section: Right 2x2 Grid of Boxes (or 3-box layout if no twitterUsername)
-      const hasTwitter = !!twitterUsername.trim();
-
-      const drawRightBox = (x: number, y: number, w: number, h: number, label: string, value: string, isExtra: boolean = false) => {
-        ctx.fillStyle = theme === "light" ? "rgba(76, 154, 248, 0.01)" : "rgba(76, 154, 248, 0.02)";
+        // Vertical divider top row
+        ctx.strokeStyle = dividerColor;
+        ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.roundRect(x, y, w, h, 12);
-        ctx.fill();
-        ctx.strokeStyle = theme === "light" ? "rgba(76, 154, 248, 0.1)" : "rgba(76, 154, 248, 0.15)";
+        ctx.moveTo(894, 200);
+        ctx.lineTo(894, 310);
         ctx.stroke();
 
-        ctx.fillStyle = theme === "light" ? "rgba(11, 15, 25, 0.45)" : "rgba(255, 255, 255, 0.4)";
-        ctx.font = "bold 12px sans-serif";
-        ctx.fillText(label, x + 30, y + 45);
+        ctx.fillStyle = textMuted;
+        ctx.font = "bold 15px sans-serif";
+        ctx.fillText("Pool Share", 934, 230);
 
-        if (isExtra && twitterExtraPoints === 0) {
-          ctx.fillStyle = theme === "light" ? "rgba(11, 15, 25, 0.25)" : "rgba(255, 255, 255, 0.2)";
-        } else {
-          ctx.fillStyle = "#4C9AF8";
-        }
-        ctx.font = w > 240 ? "bold 32px monospace" : "bold 26px monospace";
-        ctx.fillText(value, x + 30, y + 90);
-      };
+        // Donut icon top row
+        ctx.strokeStyle = "#4C9AF8";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(949, 275, 10, 0, Math.PI * 2);
+        ctx.globalAlpha = 0.25;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.beginPath();
+        ctx.arc(949, 275, 10, -Math.PI / 2, Math.PI / 2);
+        ctx.stroke();
 
-      if (hasTwitter) {
-        // Top Left: Your Points
-        drawRightBox(630, 200, 235, 130, "Your Points", formatNumber(parsePositive(userPoints) + twitterExtraPoints));
-        // Top Right: Pool Share
-        drawRightBox(885, 200, 235, 130, "Pool Share", `${(results.share * 100).toFixed(5)}%`);
-        // Bottom Left: Est. Tokens
-        drawRightBox(630, 350, 235, 130, "Est. Tokens", formatNumber(results.estimatedTokens, 0));
-        // Bottom Right: Extra Points with 𝕏 handle
-        drawRightBox(885, 350, 235, 130, `𝕏 @${twitterUsername}`, twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0", true);
+        ctx.fillStyle = textMain;
+        ctx.font = "bold 24px sans-serif";
+        ctx.fillText(`${(results.share * 100).toFixed(4)}%`, 972, 283);
+
+        // Horizontal Divider Line
+        ctx.strokeStyle = dividerColor;
+        ctx.beginPath();
+        ctx.moveTo(640, 335);
+        ctx.lineTo(1148, 335);
+        ctx.stroke();
+
+        // Bottom Row: Est. Tokens & Twitter Handle
+        ctx.fillStyle = textMuted;
+        ctx.font = "bold 13px sans-serif";
+        ctx.fillText("Est. Tokens", 640, 375);
+
+        // Draw wallet icon bottom row
+        ctx.strokeStyle = "#4C9AF8";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.roundRect(645, 414, 18, 13, 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(658, 414);
+        ctx.lineTo(658, 410);
+        ctx.quadraticCurveTo(654, 407, 648, 410);
+        ctx.stroke();
+
+        ctx.fillStyle = textMain;
+        ctx.font = "bold 24px sans-serif";
+        ctx.fillText(formatNumber(results.estimatedTokens, 0), 678, 428);
+
+        // Vertical divider bottom row
+        ctx.strokeStyle = dividerColor;
+        ctx.beginPath();
+        ctx.moveTo(894, 360);
+        ctx.lineTo(894, 450);
+        ctx.stroke();
+
+        ctx.fillStyle = textMuted;
+        ctx.font = "bold 13px sans-serif";
+        ctx.fillText(`𝕏 @${twitterUsername}`, 934, 375);
+
+        ctx.fillStyle = twitterExtraPoints > 0 ? "#4C9AF8" : textMuted;
+        ctx.font = "bold 24px sans-serif";
+        ctx.fillText(twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0", 934, 428);
       } else {
-        // Spanned Top Box: Your Points
-        drawRightBox(630, 200, 490, 130, "Your Points", formatNumber(parsePositive(userPoints)));
-        // Bottom Left: Pool Share
-        drawRightBox(630, 350, 235, 130, "Pool Share", `${(results.share * 100).toFixed(5)}%`);
-        // Bottom Right: Est. Tokens
-        drawRightBox(885, 350, 235, 130, "Est. Tokens", formatNumber(results.estimatedTokens, 0));
+        // Your Points (Top Spanned)
+        ctx.fillStyle = textMuted;
+        ctx.font = "bold 15px sans-serif";
+        ctx.fillText("Your Points", 640, 230);
+
+        ctx.fillStyle = "#4C9AF8";
+        ctx.font = "bold 44px sans-serif";
+        ctx.fillText(formatNumber(parsePositive(userPoints)), 640, 290);
+
+        // Horizontal Divider Line
+        ctx.strokeStyle = dividerColor;
+        ctx.beginPath();
+        ctx.moveTo(640, 335);
+        ctx.lineTo(1148, 335);
+        ctx.stroke();
+
+        // Bottom Row: Pool Share & Est. Tokens
+        ctx.fillStyle = textMuted;
+        ctx.font = "bold 13px sans-serif";
+        ctx.fillText("Pool Share", 640, 375);
+
+        // Donut icon bottom row
+        ctx.strokeStyle = "#4C9AF8";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(655, 420, 10, 0, Math.PI * 2);
+        ctx.globalAlpha = 0.25;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.beginPath();
+        ctx.arc(655, 420, 10, -Math.PI / 2, Math.PI / 2);
+        ctx.stroke();
+
+        ctx.fillStyle = textMain;
+        ctx.font = "bold 24px sans-serif";
+        ctx.fillText(`${(results.share * 100).toFixed(4)}%`, 678, 428);
+
+        // Vertical divider bottom row
+        ctx.strokeStyle = dividerColor;
+        ctx.beginPath();
+        ctx.moveTo(894, 360);
+        ctx.lineTo(894, 450);
+        ctx.stroke();
+
+        ctx.fillStyle = textMuted;
+        ctx.font = "bold 13px sans-serif";
+        ctx.fillText("Est. Tokens", 934, 375);
+
+        // Draw wallet icon bottom row
+        ctx.strokeStyle = "#4C9AF8";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.roundRect(939, 414, 18, 13, 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(952, 414);
+        ctx.lineTo(952, 410);
+        ctx.quadraticCurveTo(948, 407, 942, 410);
+        ctx.stroke();
+
+        ctx.fillStyle = textMain;
+        ctx.font = "bold 24px sans-serif";
+        ctx.fillText(formatNumber(results.estimatedTokens, 0), 972, 428);
       }
 
       // 5. Footer section
-      ctx.strokeStyle = theme === "light" ? "rgba(76, 154, 248, 0.08)" : "rgba(76, 154, 248, 0.1)";
+      ctx.strokeStyle = dividerColor;
       ctx.beginPath();
-      ctx.moveTo(80, 520);
-      ctx.lineTo(1120, 520);
+      ctx.moveTo(52, 520);
+      ctx.lineTo(1148, 520);
       ctx.stroke();
 
-      ctx.fillStyle = theme === "light" ? "rgba(11, 15, 25, 0.4)" : "rgba(255, 255, 255, 0.35)";
+      // Segmented coloring for footer text
+      ctx.fillStyle = textMuted;
       ctx.font = "14px monospace";
-      ctx.textAlign = "left";
-      let footerText = `Base Points: ${formatNumber(parsePositive(userPoints))} • Total: ${formatNumber(parsePositive(totalPoints))}`;
-      if (twitterExtraPoints > 0) {
-        footerText += ` • Extra: +${formatNumber(twitterExtraPoints)}`;
-      }
-      ctx.fillText(footerText, 80, 560);
+      ctx.fillText("Base Points: ", 52, 565);
+      
+      let offset = 52 + ctx.measureText("Base Points: ").width;
+      ctx.fillStyle = "#4C9AF8";
+      ctx.fillText(formatNumber(parsePositive(userPoints)), offset, 565);
+      
+      offset += ctx.measureText(formatNumber(parsePositive(userPoints))).width;
+      ctx.fillStyle = textMuted;
+      ctx.fillText("  •  Total: ", offset, 565);
+      
+      offset += ctx.measureText("  •  Total: ").width;
+      ctx.fillStyle = "#4C9AF8";
+      const displayTotal = parsePositive(userPoints) + (showExtraPoints ? twitterExtraPoints : 0);
+      ctx.fillText(formatNumber(displayTotal), offset, 565);
 
+      if (twitterExtraPoints > 0 && showExtraPoints) {
+        offset += ctx.measureText(formatNumber(displayTotal)).width;
+        ctx.fillStyle = textMuted;
+        ctx.fillText("  •  Extra: ", offset, 565);
+        
+        offset += ctx.measureText("  •  Extra: ").width;
+        ctx.fillStyle = "#4C9AF8";
+        ctx.fillText(`+${formatNumber(twitterExtraPoints)}`, offset, 565);
+      }
+
+      ctx.fillStyle = "#4C9AF8";
       ctx.textAlign = "right";
-      ctx.fillText("variational.io", 1120, 560);
+      ctx.fillText("variational.io", 1148, 565);
 
       const dataUrl = canvas.toDataURL("image/png");
       const link = document.createElement("a");
@@ -771,7 +903,7 @@ export default function Home() {
                           className="w-full h-10 rounded-lg bg-zinc-900/60 border-0 pl-7 pr-3.5 font-mono text-xs text-white outline-none focus:ring-1 focus:ring-zinc-600 transition"
                           placeholder="username"
                           value={twitterUsername}
-                          onChange={(e) => setTwitterUsername(e.target.value)}
+                          onChange={(e) => setTwitterUsername(e.target.value.replace(/^@+/, ""))}
                         />
                       </div>
                       <button
@@ -872,25 +1004,29 @@ export default function Home() {
                         return (
                           <button
                             key={option}
-                            className={`flex flex-col items-center justify-center h-[54px] rounded-lg border text-xs transition ${
+                            className={`flex flex-col items-center justify-center h-16 rounded-xl border text-xs transition-all duration-200 cursor-pointer ${
                               option === fdv
-                                ? "border-[#4C9AF8] bg-[#4C9AF8]/10 text-white"
-                                : "border-zinc-900 bg-zinc-900/30 text-zinc-400 hover:border-zinc-800 hover:text-zinc-200"
+                                ? "border-[#4C9AF8] bg-[#4C9AF8]/8 text-white shadow-[0_0_15px_rgba(76,154,248,0.12)]"
+                                : "border-zinc-900 bg-zinc-950/40 text-zinc-400 hover:border-zinc-800 hover:bg-zinc-900/40 hover:text-zinc-200"
                             }`}
                             onClick={() => setFdv(option)}
                           >
-                            <span className="font-bold">{fdvLabel(option)}</span>
-                            <span className="mt-0.5 text-[9px] text-zinc-500 flex items-center justify-center gap-1 h-3.5">
+                            <span className={`text-[15px] font-black tracking-wide ${option === fdv ? "text-white" : "text-zinc-300"}`}>
+                              {fdvLabel(option)}
+                            </span>
+                            <span className="mt-1 text-[9px] flex items-center justify-center gap-1.5 h-4">
                               {hasChance && (
                                 <Image
-                                  className="size-2.5 invert opacity-30"
+                                  className={`size-2.5 transition-opacity ${option === fdv ? "invert opacity-75" : "invert opacity-30"}`}
                                   src="/polymarket-vector.png"
                                   alt="Polymarket"
                                   width={10}
                                   height={10}
                                 />
                               )}
-                              <span>{chanceLabel(market?.yesChance)}</span>
+                              <span className={`font-mono font-medium ${option === fdv ? "text-[#4C9AF8] font-bold" : "text-zinc-500"}`}>
+                                {chanceLabel(market?.yesChance)}
+                              </span>
                             </span>
                           </button>
                         );
@@ -942,61 +1078,153 @@ export default function Home() {
                   <p className="text-xs text-zinc-500 mt-1">Live preview of your estimate to share on X/Twitter.</p>
                 </div>
 
-                <div className="relative overflow-hidden rounded-2xl border border-[#4C9AF8]/20 hover:border-[#4C9AF8]/45 bg-zinc-950 p-6 flex flex-col justify-between aspect-[1.91/1] w-full shadow-2xl transition-all duration-300 hover:shadow-[#4C9AF8]/5">
-                  {/* Card visual details */}
-                  <div className="absolute top-0 right-0 w-[300px] h-[200px] bg-[#4C9AF8]/12 blur-[80px] pointer-events-none" />
-                  
-                  <div className="flex items-center justify-between border-b border-zinc-900 pb-4">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src="/brand/variational-logo-white.png"
-                        alt=""
-                        width={22}
-                        height={22}
-                        className="opacity-90"
-                      />
+                <div 
+                  className="relative overflow-hidden rounded-2xl border border-[#4C9AF8]/15 bg-zinc-950 bg-cover bg-bottom bg-no-repeat p-6 flex flex-col justify-between aspect-[1.91/1] w-full shadow-2xl transition-all duration-300"
+                  style={{ backgroundImage: "url('/brand/wave-dark.png')" }}
+                >
+                  {/* Subtle giant background logo icon */}
+                  <svg className="absolute right-[-40px] bottom-[-20px] opacity-[0.015] text-[#4C9AF8] pointer-events-none scale-150" width="300" height="300" viewBox="0 0 368 260" fill="currentColor">
+                    <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
+                  </svg>
+
+                  {/* Header row */}
+                  <div className="flex items-center justify-between pb-3">
+                    <div className="flex items-center gap-2.5">
+                      <svg className="h-[22px] w-[31px] text-white flex-shrink-0" viewBox="0 0 368 260" fill="currentColor">
+                        <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
+                      </svg>
                       <div className="flex flex-col">
-                        <span className="font-mono text-xs font-bold text-white tracking-wider">VARIATIONAL</span>
-                        <span className="text-[8px] font-bold text-zinc-600 tracking-widest uppercase">Points Estimator</span>
+                        <span className="font-mono text-[10px] font-bold text-white tracking-wider leading-none">VARIATIONAL</span>
+                        <span className="text-[7px] font-bold text-[#4C9AF8] tracking-widest uppercase mt-0.5">Points Estimator</span>
                       </div>
                     </div>
-                    <span className="text-[8px] font-bold tracking-widest text-[#4C9AF8] border border-[#4C9AF8]/20 bg-[#4C9AF8]/5 px-2 py-0.5 rounded uppercase">
-                      TGE ALLOCATION ESTIMATE
-                    </span>
+                    
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[#4C9AF8]/15 bg-[#4C9AF8]/4 text-[7px] font-bold tracking-widest text-[#4C9AF8] uppercase">
+                      TGE Allocation Estimate
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 my-auto">
-                    <div className="bg-zinc-950/60 border border-[#4C9AF8]/15 p-4 rounded-lg flex flex-col justify-center">
+                  {/* Body row: split 2-columns (no outer borders around cards!) */}
+                  <div className="flex items-stretch gap-6 my-auto">
+                    {/* Left: Expected TGE Value */}
+                    <div className="flex-1 flex flex-col justify-center min-h-[90px]">
                       <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Estimated TGE Value</span>
-                      <span className="text-2xl font-bold font-mono text-[#4C9AF8] mt-1">
+                      <span className="text-3xl font-bold font-mono text-white tracking-tight mt-1">
                         <AnimatedNumber value={results.expectedValue} />
                       </span>
+                      <span className="text-[7px] font-semibold text-zinc-500 mt-2">
+                        Based on {fdvLabel(fdv)} FDV & {airdropPct}% Pool
+                      </span>
                     </div>
-                    <div className="grid grid-cols-2 gap-2 h-full">
-                      <div className="bg-zinc-950/60 border border-[#4C9AF8]/15 p-2 rounded-lg flex flex-col justify-center">
-                        <span className="text-[7px] font-bold text-zinc-500 uppercase tracking-wider">Your Points</span>
-                        <span className="text-[10px] font-bold font-mono text-[#4C9AF8] mt-0.5">{formatNumber(parsePositive(userPoints) + twitterExtraPoints)}</span>
-                      </div>
-                      <div className="bg-zinc-950/60 border border-[#4C9AF8]/15 p-2 rounded-lg flex flex-col justify-center">
-                        <span className="text-[7px] font-bold text-zinc-500 uppercase tracking-wider">Pool Share</span>
-                        <span className="text-[10px] font-bold font-mono text-[#4C9AF8] mt-0.5">{(results.share * 100).toFixed(5)}%</span>
-                      </div>
-                      <div className="bg-zinc-950/60 border border-[#4C9AF8]/15 p-2 rounded-lg flex flex-col justify-center">
-                        <span className="text-[7px] font-bold text-zinc-500 uppercase tracking-wider">Est. Tokens</span>
-                        <span className="text-[10px] font-bold font-mono text-[#4C9AF8] mt-0.5">{formatNumber(results.estimatedTokens, 0)}</span>
-                      </div>
-                      <div className="bg-zinc-950/60 border border-[#4C9AF8]/15 p-2 rounded-lg flex flex-col justify-center">
-                        <span className="text-[7px] font-bold text-zinc-500 uppercase tracking-wider">Extra Points</span>
-                        <span className={`text-[10px] font-bold font-mono mt-0.5 ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : "text-zinc-600"}`}>
-                          {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
-                        </span>
+
+                    {/* Middle Vertical line */}
+                    <div className="w-[1px] bg-zinc-900" />
+
+                    {/* Right: Stats Layout */}
+                    <div className="flex-1 flex flex-col justify-between py-1">
+                      {/* Top Row: grid of 2 cols if Twitter entered, else 1 col */}
+                      {twitterUsername.trim() ? (
+                        <div className="grid grid-cols-2 gap-4">
+                          {/* Your Points */}
+                          <div className="flex flex-col">
+                            <span className="text-[7px] font-bold text-zinc-500 uppercase tracking-wider">Your Points</span>
+                            <span className="text-[15px] font-bold font-mono text-[#4C9AF8] mt-0.5">
+                              {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
+                            </span>
+                          </div>
+                          {/* Pool Share */}
+                          <div className="flex flex-col border-l border-zinc-900 pl-3">
+                            <span className="text-[7px] font-bold text-zinc-500 uppercase tracking-wider">Pool Share</span>
+                            <div className="flex items-center gap-1.5 mt-1">
+                              <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                <circle cx="12" cy="12" r="8" className="opacity-20" />
+                                <path d="M12 4a8 8 0 0 1 8 8" strokeLinecap="round" />
+                              </svg>
+                              <span className="text-[9px] font-bold font-mono text-white">{(results.share * 100).toFixed(4)}%</span>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col">
+                          <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Your Points</span>
+                          <span className="text-xl font-bold font-mono text-[#4C9AF8] mt-0.5">
+                            {formatNumber(parsePositive(userPoints))}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Horizontal divide line */}
+                      <div className="h-[1px] bg-zinc-900 my-2" />
+
+                      {/* Bottom Row */}
+                      <div className="grid grid-cols-2 gap-4">
+                        {/* If Twitter is entered: bottom row is Est. Tokens and Twitter handle */}
+                        {twitterUsername.trim() ? (
+                          <>
+                            {/* Est. Tokens */}
+                            <div className="flex flex-col gap-0.5">
+                              <span className="text-[7px] font-bold text-zinc-500 uppercase tracking-wider">Est. Tokens</span>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M19 7h-12a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-10a2 2 0 0 0 -2 -2z" />
+                                  <path d="M16 14h4v-4h-4z" />
+                                  <path d="M19 7v-2a2 2 0 0 0 -2 -2h-12" />
+                                </svg>
+                                <span className="text-[9px] font-bold font-mono text-white">{formatNumber(results.estimatedTokens, 0)}</span>
+                              </div>
+                            </div>
+                            {/* Twitter handle */}
+                            <div className="flex flex-col gap-0.5 border-l border-zinc-900 pl-3">
+                              <span className={`text-[7px] font-bold uppercase tracking-wider flex items-center gap-0.5 truncate text-zinc-500`}>
+                                <span className="font-sans font-black">𝕏</span> @{twitterUsername}
+                              </span>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <span className={`text-[9px] font-bold font-mono ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : "text-zinc-650"}`}>
+                                  {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
+                                </span>
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            {/* Pool Share */}
+                            <div className="flex flex-col gap-0.5">
+                              <span className="text-[7px] font-bold text-zinc-500 uppercase tracking-wider">Pool Share</span>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                  <circle cx="12" cy="12" r="8" className="opacity-20" />
+                                  <path d="M12 4a8 8 0 0 1 8 8" strokeLinecap="round" />
+                                </svg>
+                                <span className="text-[9px] font-bold font-mono text-white">{(results.share * 100).toFixed(4)}%</span>
+                              </div>
+                            </div>
+                            {/* Est. Tokens */}
+                            <div className="flex flex-col gap-0.5 border-l border-zinc-900 pl-3">
+                              <span className="text-[7px] font-bold text-zinc-500 uppercase tracking-wider">Est. Tokens</span>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M19 7h-12a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-10a2 2 0 0 0 -2 -2z" />
+                                  <path d="M16 14h4v-4h-4z" />
+                                  <path d="M19 7v-2a2 2 0 0 0 -2 -2h-12" />
+                                </svg>
+                                <span className="text-[9px] font-bold font-mono text-white">{formatNumber(results.estimatedTokens, 0)}</span>
+                              </div>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between border-t border-zinc-900 pt-4 text-[8px] text-zinc-500 font-mono">
-                    <span>Model: {fdvLabel(fdv)} FDV • {airdropPct}% Pool{twitterExtraPoints > 0 ? ` • incl. +${formatNumber(twitterExtraPoints)} Extra` : ""}</span>
-                    <span>variational.io</span>
+                  {/* Footer line */}
+                  <div className="flex items-center justify-between border-t border-zinc-900 pt-3 text-[8px] font-mono text-zinc-500">
+                    <span>
+                      Base Points: <span className="text-[#4C9AF8] font-bold">{formatNumber(parsePositive(userPoints))}</span> • Total: <span className="text-[#4C9AF8] font-bold">{formatNumber(parsePositive(totalPoints))}</span>
+                      {twitterExtraPoints > 0 ? (
+                        <> • Extra: <span className="text-[#4C9AF8] font-bold">+{formatNumber(twitterExtraPoints)}</span></>
+                      ) : null}
+                    </span>
+                    <span className="text-[#4C9AF8] font-bold">variational.io</span>
                   </div>
                 </div>
 
@@ -1265,7 +1493,7 @@ export default function Home() {
       </section>
       {isShareModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
-          <div className="relative bg-zinc-950 border border-zinc-900 rounded-2xl max-w-3xl w-full p-6 flex flex-col gap-6 animate-slide-fade-in shadow-2xl">
+          <div className="relative bg-zinc-950 border border-zinc-900 rounded-2xl max-w-[840px] w-full p-6 flex flex-col gap-6 animate-slide-fade-in shadow-2xl">
             
             {/* Modal Header */}
             <div className="flex items-center justify-between pb-4 border-b border-zinc-900">
@@ -1274,7 +1502,20 @@ export default function Home() {
                 <p className="text-[10px] text-zinc-500">Configure theme options and download your high-quality card.</p>
               </div>
               
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
+                {/* Toggle Show Extra Points */}
+                {twitterUsername.trim() ? (
+                  <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500 hover:text-zinc-350 cursor-pointer select-none transition">
+                    <input
+                      type="checkbox"
+                      checked={showExtraPoints}
+                      onChange={(e) => setShowExtraPoints(e.target.checked)}
+                      className="rounded border-zinc-800 bg-zinc-900 text-[#4C9AF8] focus:ring-0 focus:ring-offset-0 size-3.5 cursor-pointer accent-[#4C9AF8]"
+                    />
+                    <span>Show Extras</span>
+                  </label>
+                ) : null}
+
                 {/* Embedded Theme Selector */}
                 <div className="flex bg-zinc-900/60 p-0.5 rounded-lg border border-zinc-800/80">
                   <button
@@ -1309,94 +1550,159 @@ export default function Home() {
                 </button>
               </div>
             </div>
-
-            {/* Live Preview Inside Modal - Expanded width */}
+            
             <div className="flex justify-center items-center py-2 overflow-x-auto">
               <div
-                className={`relative overflow-hidden rounded-2xl border flex flex-col justify-between aspect-[1.91/1] w-full max-w-[690px] p-6 shadow-xl transition-all duration-300 ${
+                className={`relative overflow-hidden rounded-2xl border bg-cover bg-bottom bg-no-repeat flex flex-col justify-between aspect-[1.91/1] w-full max-w-[780px] p-6 shadow-xl transition-all duration-300 ${
                   shareCardTheme === "light"
                     ? "bg-slate-50 border-zinc-200/80 text-zinc-900"
                     : "bg-zinc-950 border-[#4C9AF8]/20 text-white"
                 }`}
+                style={{ backgroundImage: shareCardTheme === "light" ? "url('/brand/wave-light.png')" : "url('/brand/wave-dark.png')" }}
               >
-                {/* Subtle Radial Glow */}
-                {shareCardTheme === "dark" && (
-                  <div className="absolute top-0 right-0 w-[150px] h-[100px] bg-[#4C9AF8]/12 blur-[50px] pointer-events-none" />
-                )}
-                {shareCardTheme === "light" && (
-                  <div className="absolute top-0 right-0 w-[150px] h-[100px] bg-[#4C9AF8]/5 blur-[50px] pointer-events-none" />
-                )}
+                {/* Subtle giant background logo icon */}
+                <svg className={`absolute right-[-40px] bottom-[-20px] pointer-events-none scale-150 ${shareCardTheme === "light" ? "text-zinc-900 opacity-[0.01]" : "text-[#4C9AF8] opacity-[0.02]"}`} width="300" height="212" viewBox="0 0 368 260" fill="currentColor">
+                  <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
+                </svg>
 
+                {/* Header row */}
                 <div className={`flex items-center justify-between border-b pb-3 ${shareCardTheme === "light" ? "border-zinc-200" : "border-zinc-900"}`}>
-                  <div className="flex items-center gap-2">
-                    <Image
-                      src="/brand/variational-logo-white.png"
-                      alt=""
-                      width={26}
-                      height={26}
-                      className={`opacity-90 transition ${shareCardTheme === "light" ? "invert brightness-0" : ""}`}
-                    />
+                  <div className="flex items-center gap-2.5">
+                    <svg className={`h-[22px] w-[31px] flex-shrink-0 ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`} viewBox="0 0 368 260" fill="currentColor">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
+                    </svg>
                     <div className="flex flex-col">
-                      <span className="font-mono text-xs font-bold tracking-wider">VARIATIONAL</span>
-                      <span className={`text-[8px] font-bold tracking-widest uppercase ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-650"}`}>Points Estimator</span>
+                      <span className={`font-mono text-[10px] font-bold tracking-wider leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>VARIATIONAL</span>
+                      <span className="text-[7px] font-bold text-[#4C9AF8] tracking-widest uppercase mt-0.5">Points Estimator</span>
                     </div>
                   </div>
-                  <span className="text-[8px] font-bold tracking-widest text-[#4C9AF8] border border-[#4C9AF8]/25 bg-[#4C9AF8]/5 px-2 py-0.5 rounded uppercase">
-                    TGE ALLOCATION ESTIMATE
-                  </span>
+                  
+                  <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[#4C9AF8]/15 bg-[#4C9AF8]/4 text-[7px] font-bold tracking-widest text-[#4C9AF8] uppercase`}>
+                    TGE Allocation Estimate
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 my-auto">
-                  <div className={`border p-4 rounded-lg flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
+                {/* Body row: split 2-columns (no outer borders around cards!) */}
+                <div className="flex items-stretch gap-6 my-auto">
+                  {/* Left: Expected TGE Value */}
+                  <div className="flex-1 flex flex-col justify-center min-h-[90px]">
                     <span className={`text-[8px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Estimated TGE Value</span>
-                    <span className="text-2xl font-bold font-mono text-[#4C9AF8] mt-0.5">
+                    <span className={`text-3xl font-bold font-mono tracking-tight mt-1 ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>
                       {formatUsd(results.expectedValue)}
                     </span>
+                    <span className={`text-[7px] font-semibold mt-2 ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-550"}`}>
+                      Based on {fdvLabel(fdv)} FDV & {airdropPct}% Pool
+                    </span>
                   </div>
-                  {twitterUsername.trim() ? (
-                    <div className="grid grid-cols-2 gap-2 h-full">
-                      <div className={`border p-2 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
-                        <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Your Points</span>
-                        <span className="text-[11px] font-bold font-mono text-[#4C9AF8] mt-0.5">{formatNumber(parsePositive(userPoints) + twitterExtraPoints)}</span>
+
+                  {/* Middle Vertical line */}
+                  <div className={`w-[1px] ${shareCardTheme === "light" ? "bg-zinc-200" : "bg-zinc-900"}`} />
+
+                  {/* Right: Stats Layout */}
+                  <div className="flex-1 flex flex-col justify-between py-1">
+                    {/* Top Row: grid of 2 cols if Twitter entered, else 1 col */}
+                    {twitterUsername.trim() && showExtraPoints ? (
+                      <div className="grid grid-cols-2 gap-4">
+                        {/* Your Points */}
+                        <div className="flex flex-col">
+                          <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Your Points</span>
+                          <span className="text-[15px] font-bold font-mono text-[#4C9AF8] mt-0.5">
+                            {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
+                          </span>
+                        </div>
+                        {/* Pool Share */}
+                        <div className={`flex flex-col border-l pl-3 ${shareCardTheme === "light" ? "border-zinc-200" : "border-zinc-900"}`}>
+                          <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Pool Share</span>
+                          <div className="flex items-center gap-1.5 mt-1">
+                            <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                              <circle cx="12" cy="12" r="8" className="opacity-20" />
+                              <path d="M12 4a8 8 0 0 1 8 8" strokeLinecap="round" />
+                            </svg>
+                            <span className={`text-[9px] font-bold font-mono ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
+                          </div>
+                        </div>
                       </div>
-                      <div className={`border p-2 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
-                        <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Pool Share</span>
-                        <span className="text-[11px] font-bold font-mono text-[#4C9AF8] mt-0.5">{(results.share * 100).toFixed(5)}%</span>
-                      </div>
-                      <div className={`border p-2 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
-                        <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Est. Tokens</span>
-                        <span className="text-[11px] font-bold font-mono text-[#4C9AF8] mt-0.5">{formatNumber(results.estimatedTokens, 0)}</span>
-                      </div>
-                      <div className={`border p-2 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
-                        <span className={`text-[7px] font-bold uppercase tracking-wider flex items-center gap-0.5 truncate ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>
-                          <span className="font-sans font-black">𝕏</span> @{twitterUsername}
+                    ) : (
+                      <div className="flex flex-col">
+                        <span className={`text-[8px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Your Points</span>
+                        <span className="text-xl font-bold font-mono text-[#4C9AF8] mt-0.5">
+                          {formatNumber(parsePositive(userPoints))}
                         </span>
-                        <span className={`text-[11px] font-bold font-mono mt-0.5 ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-650")}`}>
-                          {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
-                        </span>
                       </div>
+                    )}
+
+                    {/* Horizontal divide line */}
+                    <div className={`h-[1px] my-2 ${shareCardTheme === "light" ? "bg-zinc-200" : "bg-zinc-900"}`} />
+
+                    {/* Bottom Row */}
+                    <div className="grid grid-cols-2 gap-4">
+                      {/* If Twitter is entered: bottom row is Est. Tokens and Twitter handle */}
+                      {twitterUsername.trim() && showExtraPoints ? (
+                        <>
+                          {/* Est. Tokens */}
+                          <div className="flex flex-col gap-0.5">
+                            <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Est. Tokens</span>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M19 7h-12a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-10a2 2 0 0 0 -2 -2z" />
+                                <path d="M16 14h4v-4h-4z" />
+                                <path d="M19 7v-2a2 2 0 0 0 -2 -2h-12" />
+                              </svg>
+                              <span className={`text-[9px] font-bold font-mono ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
+                            </div>
+                          </div>
+                          {/* Twitter handle */}
+                          <div className={`flex flex-col gap-0.5 border-l pl-3 ${shareCardTheme === "light" ? "border-zinc-200" : "border-zinc-900"}`}>
+                            <span className={`text-[7px] font-bold uppercase tracking-wider flex items-center gap-0.5 truncate ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>
+                              <span className="font-sans font-black">𝕏</span> @{twitterUsername}
+                            </span>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <span className={`text-[9px] font-bold font-mono ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-350" : "text-zinc-650")}`}>
+                                {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
+                              </span>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          {/* Pool Share */}
+                          <div className="flex flex-col gap-0.5">
+                            <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Pool Share</span>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                <circle cx="12" cy="12" r="8" className="opacity-20" />
+                                <path d="M12 4a8 8 0 0 1 8 8" strokeLinecap="round" />
+                              </svg>
+                              <span className={`text-[9px] font-bold font-mono ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
+                            </div>
+                          </div>
+                          {/* Est. Tokens */}
+                          <div className={`flex flex-col gap-0.5 border-l pl-3 ${shareCardTheme === "light" ? "border-zinc-200" : "border-zinc-900"}`}>
+                            <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Est. Tokens</span>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M19 7h-12a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-10a2 2 0 0 0 -2 -2z" />
+                                <path d="M16 14h4v-4h-4z" />
+                                <path d="M19 7v-2a2 2 0 0 0 -2 -2h-12" />
+                              </svg>
+                              <span className={`text-[9px] font-bold font-mono ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-2 h-full">
-                      <div className={`border p-2 rounded-md flex flex-col justify-center col-span-2 ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
-                        <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Your Points</span>
-                        <span className="text-[12px] font-bold font-mono text-[#4C9AF8] mt-0.5">{formatNumber(parsePositive(userPoints))}</span>
-                      </div>
-                      <div className={`border p-2 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
-                        <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Pool Share</span>
-                        <span className="text-[11px] font-bold font-mono text-[#4C9AF8] mt-0.5">{(results.share * 100).toFixed(5)}%</span>
-                      </div>
-                      <div className={`border p-2 rounded-md flex flex-col justify-center ${shareCardTheme === "light" ? "bg-white border-zinc-200/60" : "bg-zinc-950/60 border-[#4C9AF8]/15"}`}>
-                        <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Est. Tokens</span>
-                        <span className="text-[11px] font-bold font-mono text-[#4C9AF8] mt-0.5">{formatNumber(results.estimatedTokens, 0)}</span>
-                      </div>
-                    </div>
-                  )}
+                  </div>
                 </div>
 
-                <div className={`flex items-center justify-between border-t pt-2 text-[8px] font-mono ${shareCardTheme === "light" ? "border-zinc-200 text-zinc-400" : "border-zinc-900 text-zinc-500"}`}>
-                  <span>Model: {fdvLabel(fdv)} FDV • {airdropPct}% Pool{twitterExtraPoints > 0 ? ` • incl. +${formatNumber(twitterExtraPoints)} Extra` : ""}</span>
-                  <span>variational.io</span>
+                {/* Footer line */}
+                <div className={`flex items-center justify-between border-t pt-3 text-[8px] font-mono ${shareCardTheme === "light" ? "border-zinc-200 text-zinc-400" : "border-zinc-900 text-zinc-500"}`}>
+                  <span>
+                    Base Points: <span className="text-[#4C9AF8] font-bold">{formatNumber(parsePositive(userPoints))}</span> • Total: <span className="text-[#4C9AF8] font-bold">{formatNumber(parsePositive(userPoints) + (showExtraPoints ? twitterExtraPoints : 0))}</span>
+                    {twitterExtraPoints > 0 && showExtraPoints ? (
+                      <> • Extra: <span className="text-[#4C9AF8] font-bold">+{formatNumber(twitterExtraPoints)}</span></>
+                    ) : null}
+                  </span>
+                  <span className="text-[#4C9AF8] font-bold">variational.io</span>
                 </div>
               </div>
             </div>
@@ -1432,7 +1738,6 @@ export default function Home() {
                 )}
               </button>
             </div>
-
           </div>
         </div>
       )}
