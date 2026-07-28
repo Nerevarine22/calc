@@ -726,16 +726,6 @@ export default function Home() {
 
         {activeTab === "estimator" ? (
           <>
-            {/* HERO RESULT CARD */}
-            <div className="flex flex-col items-center text-center py-12 px-4">
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">
-                Estimated Airdrop Value at TGE
-              </span>
-              <div className="mt-4 font-mono text-6xl sm:text-7xl font-bold tracking-tight text-white drop-shadow-sm">
-                <AnimatedNumber value={results.expectedValue} />
-              </div>
-            </div>
-
             {/* INPUTS AND SHARE PREVIEW */}
             <div className="grid gap-12 lg:grid-cols-2 items-start">
               
