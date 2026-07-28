@@ -734,11 +734,6 @@ export default function Home() {
               <div className="mt-4 font-mono text-6xl sm:text-7xl font-bold tracking-tight text-white drop-shadow-sm">
                 <AnimatedNumber value={results.expectedValue} />
               </div>
-              
-              <p className="mt-3 text-xs text-zinc-500 max-w-sm">
-                Based on <span className="text-zinc-300 font-medium">{fdvLabel(fdv)} FDV</span> assumptions and a <span className="text-zinc-300 font-medium">{airdropPct}%</span> airdrop pool.
-              </p>
-
             </div>
 
             {/* INPUTS AND SHARE PREVIEW */}
