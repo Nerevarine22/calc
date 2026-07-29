@@ -1046,7 +1046,7 @@ export default function Home() {
                   </div>
 
                   <div 
-                    className="relative overflow-hidden rounded-lg border border-[#4C9AF8]/15 bg-[#050507] bg-cover bg-bottom bg-no-repeat p-2.5 flex flex-col justify-between aspect-[1.91/1] w-full shadow-lg"
+                    className="relative overflow-hidden rounded-lg border border-[#4C9AF8]/15 bg-[#050507] bg-cover bg-bottom bg-no-repeat p-2.5 flex flex-col justify-between aspect-[1.91/1] w-full shadow-lg flex-shrink-0"
                     style={{ backgroundImage: "url('/brand/wave-dark.png')" }}
                   >
                     {/* Header */}
