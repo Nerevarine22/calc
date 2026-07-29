@@ -706,22 +706,29 @@ export default function Home() {
           </div>
 
           {/* OMNI promo widget */}
-          <div className="hidden lg:flex items-center gap-2.5 px-3 py-1 bg-[#0C0D11]/60 border border-[#1E2026] rounded-lg text-[9px]">
+          <div className="hidden lg:flex items-center gap-2">
             <a
               href="https://omni.variational.io/?ref=OMNIKLJ9FBUC"
               target="_blank"
               rel="noreferrer"
-              className="font-bold text-[#4C9AF8] hover:underline uppercase tracking-wider flex items-center gap-1"
+              className="inline-flex items-center justify-center rounded-full border border-[#4C9AF8]/30 bg-[#0C0D11]/40 px-5 py-1.5 text-[9px] font-extrabold text-[#4C9AF8] hover:bg-[#4C9AF8]/5 hover:border-[#4C9AF8]/50 transition uppercase tracking-[0.06em] gap-2 cursor-pointer"
             >
-              Trade Now: 12% Boost & Bronze Tier ➔
+              <span>Claim +12% Points Boost & Bronze Tier on Omni</span>
+              <span className="text-[10px]">➔</span>
             </a>
-            <span className="h-3 w-px bg-[#1E2026]" />
             <button
               onClick={handleCopyReferralCode}
-              className="font-mono text-[#64748B] hover:text-white transition-colors cursor-pointer flex items-center gap-1 uppercase font-bold"
+              className="group inline-flex items-center justify-center rounded-full border border-[#1E2026] bg-[#0C0D11]/40 px-5 py-1.5 text-[9px] font-bold transition hover:bg-[#1E2026]/30 hover:border-zinc-700 cursor-pointer gap-2"
               title="Click to copy code"
             >
-              Code: <span className="text-[#CBD5E1] font-bold">{copied ? "Copied!" : "OMNIKLJ9FBUC"}</span>
+              <span className="text-[#64748B] font-mono">CODE:</span>
+              <span className="font-mono text-[#CBD5E1] group-hover:text-white font-extrabold transition-colors">
+                {copied ? "COPIED!" : "OMNIKLJ9FBUC"}
+              </span>
+              <svg className="size-3.5 text-[#64748B] group-hover:text-[#CBD5E1] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
             </button>
           </div>
 
