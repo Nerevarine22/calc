@@ -809,8 +809,28 @@ export default function Home() {
                     </button>
                   </div>
                   {twitterStatus === "success" && twitterStats && (
-                    <div className="text-[9px] text-[#4C9AF8] font-bold text-center bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 py-1 rounded">
-                      Earned +{formatNumber(twitterExtraPoints)} Extra Points!
+                    <div className="flex flex-col gap-2 mt-1">
+                      <div className="text-[9px] text-[#4C9AF8] font-bold text-center bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 py-1 rounded">
+                        Earned +{formatNumber(twitterExtraPoints)} Extra Points!
+                      </div>
+                      <div className="flex flex-col gap-1 text-[9px] text-[#64748B] font-mono px-0.5">
+                        <div className="flex justify-between">
+                          <span>Posts:</span>
+                          <span className="text-[#CBD5E1] font-bold">{twitterStats.tweetsCount}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Views:</span>
+                          <span className="text-[#CBD5E1] font-bold">{formatNumber(twitterStats.views)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Likes:</span>
+                          <span className="text-[#CBD5E1] font-bold">{formatNumber(twitterStats.likes)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Retweets:</span>
+                          <span className="text-[#CBD5E1] font-bold">{formatNumber(twitterStats.retweets)}</span>
+                        </div>
+                      </div>
                     </div>
                   )}
                   {twitterStatus === "error" && (
