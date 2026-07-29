@@ -706,26 +706,26 @@ export default function Home() {
           </div>
 
           {/* OMNI promo widget */}
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-1.5">
             <a
               href="https://omni.variational.io/?ref=OMNIKLJ9FBUC"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-full border border-[#4C9AF8]/30 bg-[#0C0D11]/40 px-5 py-1.5 text-[9px] font-extrabold text-[#4C9AF8] hover:bg-[#4C9AF8]/5 hover:border-[#4C9AF8]/50 transition uppercase tracking-[0.06em] gap-2 cursor-pointer"
+              className="inline-flex h-6 items-center justify-center rounded-full border border-[#4C9AF8]/25 bg-[#0C0D11]/40 px-3.5 text-[8px] font-extrabold text-[#4C9AF8] hover:bg-[#4C9AF8]/5 hover:border-[#4C9AF8]/50 transition uppercase tracking-[0.06em] gap-1.5 cursor-pointer"
             >
               <span>Claim +12% Points Boost & Bronze Tier on Omni</span>
-              <span className="text-[10px]">➔</span>
+              <span className="text-[9px]">➔</span>
             </a>
             <button
               onClick={handleCopyReferralCode}
-              className="group inline-flex items-center justify-center rounded-full border border-[#1E2026] bg-[#0C0D11]/40 px-5 py-1.5 text-[9px] font-bold transition hover:bg-[#1E2026]/30 hover:border-zinc-700 cursor-pointer gap-2"
+              className="group inline-flex h-6 items-center justify-center rounded-full border border-[#1E2026] bg-[#0C0D11]/40 px-3.5 text-[8px] font-bold transition hover:bg-[#1E2026]/30 hover:border-zinc-700 cursor-pointer gap-1.5"
               title="Click to copy code"
             >
               <span className="text-[#64748B] font-mono">CODE:</span>
               <span className="font-mono text-[#CBD5E1] group-hover:text-white font-extrabold transition-colors">
                 {copied ? "COPIED!" : "OMNIKLJ9FBUC"}
               </span>
-              <svg className="size-3.5 text-[#64748B] group-hover:text-[#CBD5E1] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg className="size-3 text-[#64748B] group-hover:text-[#CBD5E1] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
               </svg>
@@ -959,14 +959,14 @@ export default function Home() {
                         <th className="px-4 py-2 font-bold uppercase tracking-wider w-10 text-center">Select</th>
                         <th className="px-4 py-2 font-bold uppercase tracking-wider">FDV</th>
                         <th className="px-4 py-2 font-bold uppercase tracking-wider">
-                          <span className="inline-flex items-center gap-1.5">
+                          <span className="inline-flex items-center gap-1">
                             Odds
                             <Image
-                              className="size-3 invert opacity-60"
+                              className="size-2.5 invert opacity-60 object-contain"
                               src="/polymarket-vector.png"
                               alt=""
-                              width={12}
-                              height={12}
+                              width={10}
+                              height={10}
                             />
                           </span>
                         </th>
