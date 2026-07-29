@@ -718,10 +718,10 @@ export default function Home() {
             </a>
             <button
               onClick={handleCopyReferralCode}
-              className="group inline-flex h-6 items-center justify-center rounded-full border border-[#1E2026] bg-[#0C0D11]/40 px-3.5 text-[8px] font-bold transition hover:bg-[#1E2026]/30 hover:border-zinc-700 cursor-pointer gap-1.5"
+              className="group inline-flex h-6 items-center justify-center rounded-full border border-[#1E2026] bg-[#0C0D11]/40 px-3.5 text-[8px] font-extrabold uppercase tracking-[0.06em] transition hover:bg-[#1E2026]/30 hover:border-zinc-700 cursor-pointer gap-1.5"
               title="Click to copy code"
             >
-              <span className="text-[#64748B] font-mono">CODE:</span>
+              <span className="text-[#64748B] font-extrabold">CODE:</span>
               <span className="font-mono text-[#CBD5E1] group-hover:text-white font-extrabold transition-colors">
                 {copied ? "COPIED!" : "OMNIKLJ9FBUC"}
               </span>
@@ -765,7 +765,7 @@ export default function Home() {
                 {/* WALLET LOOKUP */}
                 {hasLeaderboard && (
                   <div className="flex flex-col gap-1.5 border-b border-[#1E2026] pb-3">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#64748B]">Sync via Wallet</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B]">Sync via Wallet</span>
                     <div className="flex gap-1.5">
                       <input
                         className="flex-1 h-8 rounded-md bg-[#121318] border-0 px-2.5 font-mono text-[11px] text-white outline-none focus:ring-1 focus:ring-zinc-700 transition"
@@ -787,7 +787,7 @@ export default function Home() {
 
                 {/* YOUR POINTS */}
                 <div className="flex flex-col gap-1">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
                   <input
                     className="h-9 rounded-md bg-[#121318] border-0 px-3 font-mono text-xs font-semibold text-white outline-none focus:ring-1 focus:ring-zinc-700 transition w-full"
                     inputMode="decimal"
@@ -798,7 +798,7 @@ export default function Home() {
 
                 {/* TOTAL SYSTEM POINTS */}
                 <div className="flex flex-col gap-1">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#64748B]">Total System Points</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B]">Total System Points</span>
                   <input
                     className="h-9 rounded-md bg-[#121318] border-0 px-3 font-mono text-xs font-semibold text-white outline-none focus:ring-1 focus:ring-zinc-700 transition w-full"
                     inputMode="decimal"
@@ -809,7 +809,7 @@ export default function Home() {
 
                 {/* AIRDROP SUPPLY BUTTONS */}
                 <div className="flex flex-col gap-1">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#64748B]">Airdrop Pool Size</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B]">Airdrop Pool Size</span>
                   <div className="grid grid-cols-5 gap-1 mt-1">
                     {airdropOptions.map((option) => (
                       <button
@@ -830,9 +830,9 @@ export default function Home() {
                 {/* TWITTER REACH BONUS */}
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
-                    <div className="flex flex-col">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-[#64748B]">Twitter Reach Bonus</span>
-                      <span className="text-[7px] text-[#64748B]/60 font-mono uppercase tracking-wide">Possible Extra Points</span>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B]">Twitter Reach Bonus</span>
+                      <span className="text-[7.5px] text-[#64748B]/60 font-mono uppercase tracking-wide">(Possible Extra Points)</span>
                     </div>
                     {twitterExtraPoints > 0 && (
                       <span className="text-[9px] font-bold text-[#4C9AF8] self-start mt-0.5">
