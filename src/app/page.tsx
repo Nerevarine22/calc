@@ -823,9 +823,12 @@ export default function Home() {
                 {/* TWITTER REACH BONUS */}
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#64748B]">Twitter Bonus</span>
+                    <div className="flex flex-col">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-[#64748B]">Twitter Reach Bonus</span>
+                      <span className="text-[7px] text-[#64748B]/60 font-mono uppercase tracking-wide">Possible Extra Points</span>
+                    </div>
                     {twitterExtraPoints > 0 && (
-                      <span className="text-[9px] font-bold text-[#4C9AF8]">
+                      <span className="text-[9px] font-bold text-[#4C9AF8] self-start mt-0.5">
                         +{formatNumber(twitterExtraPoints)} pts
                       </span>
                     )}
