@@ -780,6 +780,26 @@ export default function Home() {
                   />
                 </div>
 
+                {/* AIRDROP SUPPLY BUTTONS */}
+                <div className="flex flex-col gap-1">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#64748B]">Airdrop Pool Size</span>
+                  <div className="grid grid-cols-5 gap-1 mt-1">
+                    {airdropOptions.map((option) => (
+                      <button
+                        key={option}
+                        className={`h-7 rounded-md text-[10px] font-bold transition flex items-center justify-center ${
+                          option === airdropPct
+                            ? "bg-white text-black font-extrabold"
+                            : "bg-[#0C0D11] text-[#94A3B8] hover:bg-[#1E2026] hover:text-white"
+                        }`}
+                        onClick={() => setAirdropPct(option)}
+                      >
+                        {option}%
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* TWITTER REACH BONUS */}
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
@@ -836,26 +856,6 @@ export default function Home() {
                   {twitterStatus === "error" && (
                     <div className="text-[9px] text-rose-500 font-medium leading-tight">{twitterError}</div>
                   )}
-                </div>
-
-                {/* AIRDROP SUPPLY BUTTONS */}
-                <div className="flex flex-col gap-1">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#64748B]">Airdrop Pool Size</span>
-                  <div className="grid grid-cols-5 gap-1 mt-1">
-                    {airdropOptions.map((option) => (
-                      <button
-                        key={option}
-                        className={`h-7 rounded-md text-[10px] font-bold transition flex items-center justify-center ${
-                          option === airdropPct
-                            ? "bg-white text-black font-extrabold"
-                            : "bg-[#0C0D11] text-[#94A3B8] hover:bg-[#1E2026] hover:text-white"
-                        }`}
-                        onClick={() => setAirdropPct(option)}
-                      >
-                        {option}%
-                      </button>
-                    ))}
-                  </div>
                 </div>
               </div>
 
