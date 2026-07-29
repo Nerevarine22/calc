@@ -928,7 +928,18 @@ export default function Home() {
                       <tr>
                         <th className="px-4 py-2 font-bold uppercase tracking-wider w-10 text-center">Select</th>
                         <th className="px-4 py-2 font-bold uppercase tracking-wider">FDV</th>
-                        <th className="px-4 py-2 font-bold uppercase tracking-wider">Odds</th>
+                        <th className="px-4 py-2 font-bold uppercase tracking-wider">
+                          <span className="inline-flex items-center gap-1.5">
+                            Odds
+                            <Image
+                              className="size-3 invert opacity-60"
+                              src="/polymarket-vector.png"
+                              alt=""
+                              width={12}
+                              height={12}
+                            />
+                          </span>
+                        </th>
                         <th className="px-4 py-2 font-bold uppercase tracking-wider">Price</th>
                         <th className="px-4 py-2 font-bold uppercase tracking-wider">Allocation</th>
                         <th className="px-4 py-2 font-bold uppercase tracking-wider text-right">Value</th>
