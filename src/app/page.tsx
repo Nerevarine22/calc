@@ -725,8 +725,8 @@ export default function Home() {
               }`}
               title="Click to copy code"
             >
-              <span className={`transition-colors font-extrabold ${copied ? "text-emerald-400/80" : "text-[#64748B]"}`}>CODE:</span>
-              <span className={`transition-colors font-extrabold ${copied ? "text-emerald-400" : "text-[#CBD5E1] group-hover:text-white"}`}>
+              <span className={`text-[8px] transition-colors font-extrabold ${copied ? "text-emerald-400/80" : "text-[#64748B]"}`}>CODE:</span>
+              <span className={`text-[8px] transition-colors font-extrabold ${copied ? "text-emerald-400" : "text-[#CBD5E1] group-hover:text-white"}`}>
                 OMNIKLJ9FBUC
               </span>
               <svg 
