@@ -1,55 +1,73 @@
-@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap');
+﻿@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #010612;
-  --foreground: #ffffff;
+  --bg:              #050507;
+  --bg-card:         #0C0D11;
+  --bg-muted:        #121318;
+  --bg-input:        #121318;
+  --border:          #1E2026;
+  --border-strong:   #2A2D35;
+  --text-primary:    #F8FAFC;
+  --text-secondary:  #CBD5E1;
+  --text-muted:      #64748B;
+  --accent:          #4C9AF8;
+  --accent-pos:      #10B981;
+  --accent-warn:     #F59E0B;
+  --destructive:     #EF4444;
+  --background: var(--bg);
+  --foreground: var(--text-primary);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: 'Satoshi', var(--font-geist-sans), sans-serif;
+  --color-background: var(--bg);
+  --color-foreground: var(--text-primary);
+  --font-sans: 'Satoshi', 'IBM Plex Sans', var(--font-geist-sans), sans-serif;
   --font-mono: 'Space Mono', var(--font-geist-mono), monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: 'Satoshi', var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: 'Satoshi', 'IBM Plex Sans', var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  overflow: hidden;
 }
 
-/* Scaling the root font size programmatically on desktops to achieve the 125% zoom layout */
+@media (max-height: 750px) {
+  body {
+    overflow-y: auto;
+  }
+}
+
+/* 120% Zoom scale on Desktop screens */
 @media (min-width: 1024px) {
   html {
-    font-size: 18px; /* 112.5% scaling */
+    font-size: 19px;
   }
 }
 @media (min-width: 1280px) {
   html {
-    font-size: 20px; /* 125% scaling */
+    font-size: 22px;
   }
 }
 
-button,
-input {
-  font: inherit;
-}
+button, input { font: inherit; }
 
 @utility animate-slide-fade-in {
   animation: slideFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes slideFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

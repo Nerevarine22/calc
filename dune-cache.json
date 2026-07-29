@@ -1,0 +1,13 @@
+{
+  "expiresAt": 1785335218645,
+  "data": {
+    "duneActive": true,
+    "queryId": 6548904,
+    "totalVolume24h": 500.2929804769278,
+    "totalOpenInterest": 678.8087762074081,
+    "activeMarkets": 439,
+    "avgFundingRatePct": -5.375121705426337,
+    "updatedAt": "2026-07-29T08:26:58.645Z",
+    "source": "dune"
+  }
+}

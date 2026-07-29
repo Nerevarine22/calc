@@ -101,8 +101,8 @@ function AnimatedNumber({ value }: { value: number }) {
 function StatLine({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between py-2 text-xs">
-      <span className="text-zinc-500 font-medium">{label}</span>
-      <span className="font-mono font-bold text-zinc-300">{value}</span>
+      <span className="text-[#64748B] font-medium">{label}</span>
+      <span className="font-mono font-bold text-[#CBD5E1]">{value}</span>
     </div>
   );
 }
@@ -332,7 +332,7 @@ export default function Home() {
         ctx.fillStyle = glowGrad;
         ctx.fillRect(0, 0, 1200, 630);
       } else {
-        ctx.fillStyle = "#07080a";
+        ctx.fillStyle = "#050507";
         ctx.fillRect(0, 0, 1200, 630);
 
         // Subtle radial blue glow
@@ -661,7 +661,7 @@ export default function Home() {
   const activeTab = isDuneActive ? tab : "estimator";
 
   return (
-    <main className="relative min-h-screen bg-[#07080a] text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white pb-24">
+    <main className="relative min-h-screen bg-[#050507] text-zinc-100 font-sans antialiased selection:bg-[#1E2026] selection:text-white pb-24">
       {/* Background soft grid */}
       <div 
         className="absolute inset-0 -z-20 opacity-[0.02]" 
@@ -672,10 +672,10 @@ export default function Home() {
       />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 w-full max-w-7xl h-[400px] bg-gradient-to-b from-[#4C9AF8]/3 to-transparent blur-[120px] pointer-events-none" />
 
-      <section className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-6 pt-12 sm:px-8">
+      <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-6 pt-10 sm:px-8">
         
         {/* HEADER */}
-        <header className="flex items-center justify-between border-b border-zinc-900/80 pb-6">
+        <header className="flex items-center justify-between border-b border-[#1E2026]/80 pb-6">
           <div className="flex items-center gap-4">
             <Image
               src="/brand/variational-wordmark-white.svg"
@@ -685,19 +685,19 @@ export default function Home() {
               priority
               className="opacity-90"
             />
-            <span className="hidden sm:inline-block h-4 w-px bg-zinc-800" />
+            <span className="hidden sm:inline-block h-4 w-px bg-[#1E2026]" />
             
             <nav className="flex items-center gap-6 font-mono text-[10px] tracking-[0.2em] uppercase">
               <button 
                 onClick={() => setTab("estimator")}
-                className={`transition font-bold cursor-pointer ${activeTab === "estimator" ? "text-white" : "text-zinc-500 hover:text-zinc-300"}`}
+                className={`transition font-bold cursor-pointer ${activeTab === "estimator" ? "text-white" : "text-[#64748B] hover:text-[#CBD5E1]"}`}
               >
                 Points Estimator
               </button>
               {isDuneActive && (
                 <button 
                   onClick={() => setTab("stats")}
-                  className={`transition font-bold cursor-pointer ${activeTab === "stats" ? "text-white" : "text-zinc-500 hover:text-zinc-300"}`}
+                  className={`transition font-bold cursor-pointer ${activeTab === "stats" ? "text-white" : "text-[#64748B] hover:text-[#CBD5E1]"}`}
                 >
                   Statistics
                 </button>
@@ -710,14 +710,14 @@ export default function Home() {
               href="https://x.com/atoms_res"
               target="_blank"
               rel="noreferrer"
-              className="font-mono text-[10px] sm:text-[11px] font-bold tracking-wider text-zinc-400 hover:text-[#4C9AF8] transition-colors uppercase"
+              className="font-mono text-[10px] sm:text-[11px] font-bold tracking-wider text-[#94A3B8] hover:text-[#4C9AF8] transition-colors uppercase"
             >
               created by @atoms_res
             </a>
-            <span className="hidden sm:inline-block h-3.5 w-px bg-zinc-800" />
+            <span className="hidden sm:inline-block h-3.5 w-px bg-[#1E2026]" />
             <div className="flex items-center gap-2">
               <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="font-mono text-[10px] tracking-wider text-zinc-500 uppercase">
+              <span className="font-mono text-[10px] tracking-wider text-[#64748B] uppercase">
                 {marketStatus === "ready" ? "Prediction Data Active" : "Local Engine"}
               </span>
             </div>
@@ -725,506 +725,355 @@ export default function Home() {
         </header>
 
         {activeTab === "estimator" ? (
-          <>
-            {/* INPUTS AND SHARE PREVIEW */}
-            <div className="grid gap-12 lg:grid-cols-2 items-start">
-              
-              {/* LEFT: SETTINGS & INPUTS */}
-              <div className="flex flex-col gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 w-full items-stretch animate-slide-fade-in">
+
+            {/* COLUMN 1: INPUTS (Span 3) */}
+            <div className="lg:col-span-3 flex flex-col gap-4 bg-[#050507]/40 border border-[#1E2026] p-4 rounded-xl justify-between overflow-y-auto max-h-[calc(100vh-140px)]">
+              <div className="flex flex-col gap-3">
                 <div>
-                  <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Settings</h2>
-                  <p className="text-xs text-zinc-500 mt-1">Configure global supply model assumptions.</p>
+                  <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-[#94A3B8]">Settings</h2>
+                  <p className="text-[10px] text-[#64748B] mt-0.5">Configure model inputs and supply specs.</p>
                 </div>
 
-                <div className="flex flex-col gap-6">
-                  {/* WALLET LOOKUP - Conditionally rendered only when data is available */}
-                  {hasLeaderboard && (
-                    <div className="flex flex-col gap-2 border-b border-zinc-900 pb-5 animate-fade-in">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Sync Points via Wallet</span>
-                      <div className="flex gap-2">
-                        <input
-                          className="flex-1 h-10 rounded-lg bg-zinc-900/60 border-0 px-3.5 font-mono text-xs font-medium text-white outline-none focus:ring-1 focus:ring-zinc-800 transition"
-                          placeholder="Enter wallet address 0x..."
-                          value={searchAddress}
-                          onChange={(e) => setSearchAddress(e.target.value)}
-                        />
-                        <button
-                          onClick={handleWalletLookup}
-                          disabled={isSearching}
-                          className="h-10 px-4 rounded-lg bg-zinc-100 hover:bg-white text-black font-bold text-xs uppercase tracking-wider transition active:scale-95 disabled:opacity-40 cursor-pointer"
-                        >
-                          {isSearching ? "..." : "Sync"}
-                        </button>
-                      </div>
-                      {searchError && <span className="text-[10px] text-rose-500 font-medium">{searchError}</span>}
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <label className="flex flex-col gap-1.5">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Your points</span>
+                {/* WALLET LOOKUP */}
+                {hasLeaderboard && (
+                  <div className="flex flex-col gap-1.5 border-b border-[#1E2026] pb-3">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#64748B]">Sync via Wallet</span>
+                    <div className="flex gap-1.5">
                       <input
-                        className="h-10 rounded-lg bg-zinc-900/60 border-0 px-3.5 font-mono text-sm font-medium text-white outline-none focus:ring-1 focus:ring-zinc-600 transition"
-                        inputMode="decimal"
-                        value={userPoints}
-                        onChange={(event) => setUserPoints(event.target.value)}
+                        className="flex-1 h-8 rounded-md bg-[#121318] border-0 px-2.5 font-mono text-[11px] text-white outline-none focus:ring-1 focus:ring-zinc-700 transition"
+                        placeholder="0x..."
+                        value={searchAddress}
+                        onChange={(e) => setSearchAddress(e.target.value)}
                       />
-                    </label>
-
-                    <label className="flex flex-col gap-1.5">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Total system points</span>
-                      <input
-                        className="h-10 rounded-lg bg-zinc-900/60 border-0 px-3.5 font-mono text-sm font-medium text-white outline-none focus:ring-1 focus:ring-zinc-600 transition"
-                        inputMode="decimal"
-                        value={totalPoints}
-                        onChange={(event) => setTotalPoints(event.target.value)}
-                      />
-                    </label>
-                  </div>
-
-                  <div className="bg-zinc-950/40 border border-zinc-900 rounded-xl p-4 flex flex-col gap-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-white">Twitter Reach Bonus</span>
-                        <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-wider">Possible Extra Points</span>
-                      </div>
-                      {twitterExtraPoints > 0 && (
-                        <span className="text-[10px] font-bold text-[#4C9AF8] bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 px-2 py-0.5 rounded animate-pulse">
-                          +{formatNumber(twitterExtraPoints)} Extra Points
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex gap-2">
-                      <div className="relative flex-1">
-                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-xs font-semibold font-mono">@</span>
-                        <input
-                          className="w-full h-10 rounded-lg bg-zinc-900/60 border-0 pl-7 pr-3.5 font-mono text-xs text-white outline-none focus:ring-1 focus:ring-zinc-600 transition"
-                          placeholder="username"
-                          value={twitterUsername}
-                          onChange={(e) => setTwitterUsername(e.target.value.replace(/^@+/, ""))}
-                        />
-                      </div>
                       <button
-                        onClick={handleCheckTwitterBonus}
-                        disabled={twitterStatus === "checking" || !twitterUsername.trim()}
-                        className="h-10 px-4 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-xs uppercase tracking-wider transition active:scale-95 disabled:opacity-40 cursor-pointer flex items-center justify-center min-w-[100px]"
+                        onClick={handleWalletLookup}
+                        disabled={isSearching}
+                        className="h-8 px-3 rounded-md bg-[#4C9AF8] hover:bg-[#3b8ae8] text-white font-bold text-[10px] uppercase tracking-wider transition active:scale-95 disabled:opacity-40 cursor-pointer flex items-center justify-center"
                       >
-                        {twitterStatus === "checking" ? "..." : "CHECK"}
+                        {isSearching ? "..." : "Sync"}
                       </button>
                     </div>
-                    
-                    {twitterStatus === "success" && twitterStats && (
-                      <div className="border-t border-zinc-900/80 pt-3 mt-1 flex flex-col gap-2.5 animate-slide-fade-in">
-                        <div className="grid grid-cols-3 gap-2">
-                          <div className="bg-zinc-900/40 border border-zinc-800/60 p-2 rounded-lg text-center flex flex-col justify-center">
-                            <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Tweets</span>
-                            <span className="text-sm font-bold font-mono text-white mt-0.5">{twitterStats.tweetsCount}</span>
-                          </div>
-                          
-                          <div className="bg-zinc-900/40 border border-[#4C9AF8]/20 p-2 rounded-lg text-center flex flex-col justify-center">
-                            <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Views</span>
-                            <span className="text-sm font-bold font-mono text-[#4C9AF8] mt-0.5">{formatNumber(twitterStats.views)}</span>
-                          </div>
-                          
-                          <div className="bg-zinc-900/40 border border-zinc-800/60 p-2 rounded-lg text-center flex flex-col justify-center">
-                            <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Engagement</span>
-                            <span className="text-sm font-bold font-mono text-zinc-200 mt-0.5">{twitterStats.likes + twitterStats.retweets}</span>
-                          </div>
-                        </div>
-                        
-                        {twitterExtraPoints > 0 ? (
-                          <div className="text-[10px] text-[#4C9AF8] font-bold text-center bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 py-1.5 rounded-lg">
-                            Earned +{formatNumber(twitterExtraPoints)} Extra Points!
-                          </div>
-                        ) : (() => {
-                          const currentEr = twitterStats.views > 0 ? (twitterStats.likes + twitterStats.retweets) / twitterStats.views : 0;
-                          let reason = "";
-                          if (twitterStats.views < 5000) {
-                            reason = `Not enough views: ${formatNumber(twitterStats.views)} (Needs ≥ 5,000)`;
-                          } else if (twitterStats.tweetsCount < 3) {
-                            reason = `Not enough tweets: ${twitterStats.tweetsCount} (Needs ≥ 3)`;
-                          } else if (currentEr < 0.01) {
-                            reason = `Engagement Rate too low: ${(currentEr * 100).toFixed(2)}% (Needs ≥ 1.00%)`;
-                          } else {
-                            reason = "Does not meet higher tiers requirement.";
-                          }
+                    {searchError && <span className="text-[9px] text-rose-500 font-medium">{searchError}</span>}
+                  </div>
+                )}
 
-                          return (
-                            <div className="flex flex-col gap-1.5 bg-zinc-900/20 border border-zinc-900/60 p-2.5 rounded-lg text-center">
-                              <div className="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider">
-                                Bonus: 0 Extra Points
-                              </div>
-                              <div className="text-[10px] text-rose-400 font-bold leading-normal">
-                                {reason}
-                              </div>
-                              <div className="text-[9px] text-zinc-500 leading-normal">
-                                Rule: Needs ≥5k views, ≥3 tweets, and ≥1% engagement.
-                              </div>
-                              <div className="text-[10px] text-zinc-500 pt-1 border-t border-zinc-900/80 mt-1">
-                                Current engagement: <span className="text-zinc-300 font-mono">{twitterStats.likes} likes</span> • <span className="text-zinc-300 font-mono">{twitterStats.retweets} retweets</span>
-                              </div>
-                            </div>
-                          );
-                        })()}
-                      </div>
-                    )}
-                    
-                    {twitterStatus === "error" && (
-                      <div className="text-[10px] text-rose-500 font-medium animate-slide-fade-in">{twitterError}</div>
+                {/* YOUR POINTS */}
+                <div className="flex flex-col gap-1">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
+                  <input
+                    className="h-9 rounded-md bg-[#121318] border-0 px-3 font-mono text-xs font-semibold text-white outline-none focus:ring-1 focus:ring-zinc-700 transition w-full"
+                    inputMode="decimal"
+                    value={userPoints}
+                    onChange={(event) => setUserPoints(event.target.value)}
+                  />
+                </div>
+
+                {/* TOTAL SYSTEM POINTS */}
+                <div className="flex flex-col gap-1">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#64748B]">Total System Points</span>
+                  <input
+                    className="h-9 rounded-md bg-[#121318] border-0 px-3 font-mono text-xs font-semibold text-white outline-none focus:ring-1 focus:ring-zinc-700 transition w-full"
+                    inputMode="decimal"
+                    value={totalPoints}
+                    onChange={(event) => setTotalPoints(event.target.value)}
+                  />
+                </div>
+
+                {/* TWITTER REACH BONUS */}
+                <div className="flex flex-col gap-1.5 bg-[#0B1120] border border-[#1E2026] p-2.5 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#CBD5E1]">Twitter Bonus</span>
+                    {twitterExtraPoints > 0 && (
+                      <span className="text-[9px] font-bold text-[#4C9AF8]">
+                        +{formatNumber(twitterExtraPoints)} pts
+                      </span>
                     )}
                   </div>
-
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Supply for Airdrop</p>
-                    <div className="mt-2.5 flex flex-wrap gap-1.5">
-                      {airdropOptions.map((option) => (
-                        <button
-                          key={option}
-                          className={`px-3 py-1.5 rounded-md text-xs font-bold transition ${
-                            option === airdropPct
-                              ? "bg-white text-black"
-                              : "bg-zinc-900/40 text-zinc-400 hover:bg-zinc-900/80 hover:text-white"
-                          }`}
-                          onClick={() => setAirdropPct(option)}
-                        >
-                          {option}%
-                        </button>
-                      ))}
+                  <div className="flex gap-1.5">
+                    <div className="relative flex-1">
+                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#64748B] text-[10px] font-mono">@</span>
+                      <input
+                        className="w-full h-8 rounded-md bg-[#121318] border-0 pl-6 pr-2.5 font-mono text-[10px] text-white outline-none focus:ring-1 focus:ring-zinc-700 transition"
+                        placeholder="username"
+                        value={twitterUsername}
+                        onChange={(e) => setTwitterUsername(e.target.value.replace(/^@+/, ""))}
+                      />
                     </div>
+                    <button
+                      onClick={handleCheckTwitterBonus}
+                      disabled={twitterStatus === "checking" || !twitterUsername.trim()}
+                      className="h-8 px-2.5 rounded-md bg-[#1E2026] hover:bg-zinc-700 text-[#CBD5E1] font-bold text-[9px] uppercase tracking-wider transition active:scale-95 disabled:opacity-40 cursor-pointer min-w-[50px]"
+                    >
+                      {twitterStatus === "checking" ? "..." : "CHECK"}
+                    </button>
                   </div>
-
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Select FDV Scenario</p>
-                    <div className="mt-2.5 grid grid-cols-3 gap-2">
-                      {activeFdvOptions.map((option) => {
-                        const market = fdvMarkets.find((m) => m.fdv === option);
-                        const hasChance = market?.yesChance !== null && market?.yesChance !== undefined;
-                        return (
-                          <button
-                            key={option}
-                            className={`flex flex-col items-center justify-center h-16 rounded-xl border text-xs transition-all duration-200 cursor-pointer ${
-                              option === fdv
-                                ? "border-[#4C9AF8] bg-[#4C9AF8]/8 text-white shadow-[0_0_15px_rgba(76,154,248,0.12)]"
-                                : "border-zinc-900 bg-zinc-950/40 text-zinc-400 hover:border-zinc-800 hover:bg-zinc-900/40 hover:text-zinc-200"
-                            }`}
-                            onClick={() => setFdv(option)}
-                          >
-                            <span className={`text-[15px] font-black tracking-wide ${option === fdv ? "text-white" : "text-zinc-300"}`}>
-                              {fdvLabel(option)}
-                            </span>
-                            <span className="mt-1 text-[9px] flex items-center justify-center gap-1.5 h-4">
-                              {hasChance && (
-                                <Image
-                                  className={`size-2.5 transition-opacity ${option === fdv ? "invert opacity-75" : "invert opacity-30"}`}
-                                  src="/polymarket-vector.png"
-                                  alt="Polymarket"
-                                  width={10}
-                                  height={10}
-                                />
-                              )}
-                              <span className={`font-mono font-medium ${option === fdv ? "text-[#4C9AF8] font-bold" : "text-zinc-500"}`}>
-                                {chanceLabel(market?.yesChance)}
-                              </span>
-                            </span>
-                          </button>
-                        );
-                      })}
+                  {twitterStatus === "success" && twitterStats && (
+                    <div className="text-[9px] text-[#4C9AF8] font-bold text-center bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 py-1 rounded">
+                      Earned +{formatNumber(twitterExtraPoints)} Extra Points!
                     </div>
+                  )}
+                  {twitterStatus === "error" && (
+                    <div className="text-[9px] text-rose-500 font-medium leading-tight">{twitterError}</div>
+                  )}
+                </div>
+
+                {/* AIRDROP SUPPLY BUTTONS */}
+                <div className="flex flex-col gap-1">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#64748B]">Airdrop Pool Size</span>
+                  <div className="grid grid-cols-5 gap-1 mt-1">
+                    {airdropOptions.map((option) => (
+                      <button
+                        key={option}
+                        className={`h-7 rounded-md text-[10px] font-bold transition flex items-center justify-center ${
+                          option === airdropPct
+                            ? "bg-white text-black font-extrabold"
+                            : "bg-[#0C0D11] text-[#94A3B8] hover:bg-[#1E2026] hover:text-white"
+                        }`}
+                        onClick={() => setAirdropPct(option)}
+                      >
+                        {option}%
+                      </button>
+                    ))}
                   </div>
-
-                  {selectedMarket ? (
-                    <div className="border-t border-zinc-900 pt-4 flex flex-col gap-2">
-                      <div className="flex items-center justify-between text-[10px] font-bold tracking-wider text-zinc-500 uppercase">
-                        <span className="flex items-center gap-1">
-                          <Image
-                            className="size-3 invert opacity-50"
-                            src="/polymarket-vector.png"
-                            alt=""
-                            width={12}
-                            height={12}
-                          />
-                          <span>Prediction Market Insight</span>
-                        </span>
-                        <a 
-                          href={selectedMarket.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-[#4C9AF8] hover:underline"
-                        >
-                          View Market
-                        </a>
-                      </div>
-                      <p className="text-xs text-zinc-400 font-medium">{selectedMarket.question}</p>
-                      <p className="text-[10px] text-zinc-500">
-                        Implied Odds: <span className="text-zinc-300 font-mono font-bold">{chanceLabel(selectedMarket.yesChance)}</span> • Volume: {formatUsd(selectedMarket.volumeTotal)}
-                      </p>
-                    </div>
-                  ) : null}
-
                 </div>
               </div>
 
-              {/* RIGHT: LIVE SHARE CARD PREVIEW */}
-              <div className="flex flex-col gap-6">
-                <div>
-                  <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Share Card Preview</h2>
-                  <p className="text-xs text-zinc-500 mt-1">Live preview of your estimate to share on X/Twitter.</p>
+              {/* STAT SUMMARY (LOWER SIDEBAR) */}
+              <div className="border-t border-[#1E2026] pt-3 flex flex-col gap-1 text-[10px]">
+                <div className="flex justify-between">
+                  <span className="text-[#64748B]">Total Supply</span>
+                  <span className="font-mono text-white font-semibold">{formatNumber(TOTAL_SUPPLY)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#64748B]">Airdrop Supply</span>
+                  <span className="font-mono text-white font-semibold">{formatNumber(results.airdropSupply)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#64748B]">Token Price @ FDV</span>
+                  <span className="font-mono text-[#4C9AF8] font-semibold">{formatUsd(results.tokenPrice)}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* COLUMN 2: HERO EXPECTED ALLOCATION & GRID SCENARIOS (Span 6) */}
+            <div className="lg:col-span-6 flex flex-col gap-4 max-h-[calc(100vh-140px)]">
+              
+              {/* HERO BLOCK: DENSITY REDUCED & HIGH-IMPACT */}
+              <div className="bg-zinc-950/40 border border-zinc-900 rounded-xl p-5 flex flex-col justify-between min-h-[140px] py-4 relative overflow-hidden">
+                <div className="flex items-start justify-between z-10">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#64748B]">
+                      POSSIBLE AIRDROP ALLOCATION
+                    </span>
+                    <span className="text-[9px] text-[#64748B] mt-0.5">
+                      Expected value at TGE based on chosen scenario
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-extrabold uppercase tracking-wider text-[#4C9AF8] bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 px-2 py-0.5 rounded-md">
+                    {fdvLabel(fdv)} FDV SCENARIO
+                  </span>
                 </div>
 
-                <div 
-                  className="relative overflow-hidden rounded-2xl border border-[#4C9AF8]/15 bg-zinc-950 bg-cover bg-bottom bg-no-repeat p-6 flex flex-col justify-between aspect-[1.91/1] w-full shadow-2xl transition-all duration-300"
-                  style={{ backgroundImage: "url('/brand/wave-dark.png')" }}
-                >
-                  {/* Subtle giant background logo icon */}
-                  <svg className="absolute right-[-40px] bottom-[-20px] opacity-[0.015] text-[#4C9AF8] pointer-events-none scale-150" width="300" height="300" viewBox="0 0 368 260" fill="currentColor">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
-                  </svg>
+                <div className="font-mono font-bold text-[#4C9AF8] tracking-tight text-4xl sm:text-5xl mt-2 z-10">
+                  <AnimatedNumber value={results.expectedValue} />
+                </div>
 
-                  {/* Header row */}
-                  <div className="flex items-center justify-between pb-3">
-                    <div className="flex items-center gap-2.5">
-                      <svg className="h-[22px] w-[31px] text-white flex-shrink-0" viewBox="0 0 368 260" fill="currentColor">
-                        <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
-                      </svg>
-                      <div className="flex flex-col">
-                        <span className="font-mono text-[10px] font-bold text-white tracking-wider leading-none">VARIATIONAL</span>
-                        <span className="text-[7px] font-bold text-[#4C9AF8] tracking-widest uppercase mt-0.5">Points Estimator</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[#4C9AF8]/15 bg-[#4C9AF8]/4 text-[7px] font-bold tracking-widest text-[#4C9AF8] uppercase">
-                      TGE Allocation Estimate
-                    </div>
+                {/* 3 Metrics below */}
+                <div className="grid grid-cols-3 border-t border-[#1E2026] pt-3 mt-2 text-[10px]">
+                  <div>
+                    <span className="text-[#64748B] uppercase tracking-wider text-[8px] font-bold">Pool Share</span>
+                    <p className="font-mono font-bold text-white mt-0.5">{(results.share * 100).toFixed(6)}%</p>
+                  </div>
+                  <div className="border-l border-[#1E2026] pl-4">
+                    <span className="text-[#64748B] uppercase tracking-wider text-[8px] font-bold">Est. Tokens</span>
+                    <p className="font-mono font-bold text-white mt-0.5">{formatNumber(results.estimatedTokens)}</p>
+                  </div>
+                  <div className="border-l border-[#1E2026] pl-4">
+                    <span className="text-[#64748B] uppercase tracking-wider text-[8px] font-bold">Token Price</span>
+                    <p className="font-mono font-bold text-[#4C9AF8] mt-0.5">{formatUsd(results.tokenPrice)}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* TABLE BLOCK: COMPACT TABLE WITH POLYMARKET ODDS */}
+              <div className="bg-[#050507]/40 border border-[#1E2026] rounded-xl flex-1 flex flex-col overflow-hidden">
+                <div className="px-4 py-3 border-b border-[#1E2026] flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">FDV Scenarios Grid</span>
+                  <span className="text-[8px] text-[#64748B] font-mono">Click rows to switch scenario</span>
+                </div>
+                <div className="flex-1 overflow-y-auto">
+                  <table className="w-full border-collapse text-left text-[11px]">
+                    <thead className="border-b border-[#1E2026] bg-[#121318]/40 text-[#64748B]">
+                      <tr>
+                        <th className="px-4 py-2 font-bold uppercase tracking-wider w-10 text-center">Select</th>
+                        <th className="px-4 py-2 font-bold uppercase tracking-wider">FDV</th>
+                        <th className="px-4 py-2 font-bold uppercase tracking-wider">Odds</th>
+                        <th className="px-4 py-2 font-bold uppercase tracking-wider">Price</th>
+                        <th className="px-4 py-2 font-bold uppercase tracking-wider">Allocation</th>
+                        <th className="px-4 py-2 font-bold uppercase tracking-wider text-right">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#1E2026]/40 font-mono">
+                      {results.scenarios.map((scenario) => {
+                        const active = scenario.fdv === fdv;
+                        return (
+                          <tr
+                            key={scenario.fdv}
+                            onClick={() => setFdv(scenario.fdv)}
+                            className={`cursor-pointer transition duration-100 hover:bg-[#1E2026] hover:text-white ${
+                              active ? "bg-[#1E2026]/60 text-white font-bold" : "text-[#94A3B8]"
+                            }`}
+                          >
+                            <td className="px-4 py-2.5 text-center">
+                              <div className="flex items-center justify-center">
+                                <div className={`size-3.5 rounded-full border flex items-center justify-center transition-colors ${
+                                  active ? "border-[#4C9AF8] bg-[#4C9AF8]/10" : "border-[#64748B]/40"
+                                }`}>
+                                  {active && <div className="size-1.5 rounded-full bg-[#4C9AF8]" />}
+                                </div>
+                              </div>
+                            </td>
+                            <td className={`px-4 py-2.5 font-bold ${active ? "text-[#4C9AF8]" : ""}`}>{fdvLabel(scenario.fdv)}</td>
+                            <td className="px-4 py-2.5">
+                              <PolymarketChance 
+                                value={fdvMarkets.find((market) => market.fdv === scenario.fdv)?.yesChance} 
+                                showIcon={false}
+                              />
+                            </td>
+                            <td className="px-4 py-2.5">{formatUsd(scenario.tokenPrice)}</td>
+                            <td className="px-4 py-2.5">{formatNumber(results.estimatedTokens, 0)}</td>
+                            <td className={`px-4 py-2.5 text-right font-bold ${active ? "text-[#4C9AF8]" : "text-[#CBD5E1]"}`}>
+                              {formatUsd(scenario.value)}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            {/* COLUMN 3: SHARE PREVIEW & POLYMARKET INSIGHT (Span 3) */}
+            <div className="lg:col-span-3 flex flex-col gap-4 justify-between max-h-[calc(100vh-140px)]">
+              
+              {/* MINI CARD PREVIEW */}
+              <div className="bg-[#050507]/40 border border-[#1E2026] rounded-xl p-4 flex flex-col justify-between flex-1">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#CBD5E1]">Share Card Preview</span>
+                    <span className="text-[8px] text-[#64748B] font-mono">1.91:1 PNG</span>
                   </div>
 
-                  {/* Body row: split 2-columns (no outer borders around cards!) */}
-                  <div className="flex items-stretch gap-6 my-auto">
-                    {/* Left: Expected TGE Value */}
-                    <div className="flex-1 flex flex-col justify-center min-h-[90px]">
-                      <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Estimated TGE Value</span>
-                      <span className="text-3xl font-bold font-mono text-white tracking-tight mt-1">
+                  <div 
+                    className="relative overflow-hidden rounded-lg border border-[#4C9AF8]/15 bg-[#050507] bg-cover bg-[#0C0D11]ottom bg-no-repeat p-3.5 flex flex-col justify-between aspect-[1.91/1] w-full shadow-lg"
+                    style={{ backgroundImage: "url('/brand/wave-dark.png')" }}
+                  >
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <svg className="h-3.5 w-5 text-white flex-shrink-0" viewBox="0 0 368 260" fill="currentColor">
+                          <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
+                        </svg>
+                        <div className="flex flex-col">
+                          <span className="font-mono text-[7px] font-bold text-white tracking-wider leading-none">VARIATIONAL</span>
+                          <span className="text-[5px] font-bold text-[#4C9AF8] tracking-widest uppercase mt-0.5">Points Estimator</span>
+                        </div>
+                      </div>
+                      <div className="text-[5px] font-bold text-[#4C9AF8] bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 px-1.5 py-0.5 rounded-full uppercase">
+                        Estimate
+                      </div>
+                    </div>
+
+                    {/* Value */}
+                    <div className="my-1.5 flex flex-col justify-center">
+                      <span className="text-[5px] font-bold text-[#64748B] uppercase tracking-wider">Est. TGE Value</span>
+                      <span className="text-[15px] font-bold font-mono text-[#4C9AF8] tracking-tight">
                         <AnimatedNumber value={results.expectedValue} />
                       </span>
-                      <span className="text-[7px] font-semibold text-zinc-500 mt-2">
-                        Based on {fdvLabel(fdv)} FDV & {airdropPct}% Pool
-                      </span>
                     </div>
 
-                    {/* Middle Vertical line */}
-                    <div className="w-[1px] bg-zinc-900" />
-
-                    {/* Right: Stats Layout */}
-                    <div className="flex-1 flex flex-col justify-between py-1">
-                      {/* Top Row: grid of 2 cols if Twitter entered, else 1 col */}
-                      {twitterUsername.trim() ? (
-                        <div className="grid grid-cols-2 gap-4">
-                          {/* Your Points */}
-                          <div className="flex flex-col">
-                            <span className="text-[7px] font-bold text-zinc-500 uppercase tracking-wider">Your Points</span>
-                            <span className="text-[15px] font-bold font-mono text-[#4C9AF8] mt-0.5">
-                              {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
-                            </span>
-                          </div>
-                          {/* Pool Share */}
-                          <div className="flex flex-col border-l border-zinc-900 pl-3">
-                            <span className="text-[7px] font-bold text-zinc-500 uppercase tracking-wider">Pool Share</span>
-                            <div className="flex items-center gap-1.5 mt-1">
-                              <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                                <circle cx="12" cy="12" r="8" className="opacity-20" />
-                                <path d="M12 4a8 8 0 0 1 8 8" strokeLinecap="round" />
-                              </svg>
-                              <span className="text-[9px] font-bold font-mono text-white">{(results.share * 100).toFixed(4)}%</span>
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col">
-                          <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Your Points</span>
-                          <span className="text-xl font-bold font-mono text-[#4C9AF8] mt-0.5">
-                            {formatNumber(parsePositive(userPoints))}
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Horizontal divide line */}
-                      <div className="h-[1px] bg-zinc-900 my-2" />
-
-                      {/* Bottom Row */}
-                      <div className="grid grid-cols-2 gap-4">
-                        {/* If Twitter is entered: bottom row is Est. Tokens and Twitter handle */}
-                        {twitterUsername.trim() ? (
-                          <>
-                            {/* Est. Tokens */}
-                            <div className="flex flex-col gap-0.5">
-                              <span className="text-[7px] font-bold text-zinc-500 uppercase tracking-wider">Est. Tokens</span>
-                              <div className="flex items-center gap-1.5 mt-0.5">
-                                <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                  <path d="M19 7h-12a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-10a2 2 0 0 0 -2 -2z" />
-                                  <path d="M16 14h4v-4h-4z" />
-                                  <path d="M19 7v-2a2 2 0 0 0 -2 -2h-12" />
-                                </svg>
-                                <span className="text-[9px] font-bold font-mono text-white">{formatNumber(results.estimatedTokens, 0)}</span>
-                              </div>
-                            </div>
-                            {/* Twitter handle */}
-                            <div className="flex flex-col gap-0.5 border-l border-zinc-900 pl-3">
-                              <span className={`text-[7px] font-bold uppercase tracking-wider flex items-center gap-0.5 truncate text-zinc-500`}>
-                                <span className="font-sans font-black">𝕏</span> @{twitterUsername}
-                              </span>
-                              <div className="flex items-center gap-1.5 mt-0.5">
-                                <span className={`text-[9px] font-bold font-mono ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : "text-zinc-650"}`}>
-                                  {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
-                                </span>
-                              </div>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            {/* Pool Share */}
-                            <div className="flex flex-col gap-0.5">
-                              <span className="text-[7px] font-bold text-zinc-500 uppercase tracking-wider">Pool Share</span>
-                              <div className="flex items-center gap-1.5 mt-0.5">
-                                <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                                  <circle cx="12" cy="12" r="8" className="opacity-20" />
-                                  <path d="M12 4a8 8 0 0 1 8 8" strokeLinecap="round" />
-                                </svg>
-                                <span className="text-[9px] font-bold font-mono text-white">{(results.share * 100).toFixed(4)}%</span>
-                              </div>
-                            </div>
-                            {/* Est. Tokens */}
-                            <div className="flex flex-col gap-0.5 border-l border-zinc-900 pl-3">
-                              <span className="text-[7px] font-bold text-zinc-500 uppercase tracking-wider">Est. Tokens</span>
-                              <div className="flex items-center gap-1.5 mt-0.5">
-                                <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                  <path d="M19 7h-12a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-10a2 2 0 0 0 -2 -2z" />
-                                  <path d="M16 14h4v-4h-4z" />
-                                  <path d="M19 7v-2a2 2 0 0 0 -2 -2h-12" />
-                                </svg>
-                                <span className="text-[9px] font-bold font-mono text-white">{formatNumber(results.estimatedTokens, 0)}</span>
-                              </div>
-                            </div>
-                          </>
-                        )}
-                      </div>
+                    {/* Footer */}
+                    <div className="flex justify-between border-t border-[#1E2026] pt-1.5 text-[5px] text-[#64748B]">
+                      <span>Pts: {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}</span>
+                      <span className="text-[#4C9AF8] font-bold">variational.io</span>
                     </div>
-                  </div>
-
-                  {/* Footer line */}
-                  <div className="flex items-center justify-between border-t border-zinc-900 pt-3 text-[8px] font-mono text-zinc-500">
-                    <span>
-                      Base Points: <span className="text-[#4C9AF8] font-bold">{formatNumber(parsePositive(userPoints))}</span> • Total: <span className="text-[#4C9AF8] font-bold">{formatNumber(parsePositive(totalPoints))}</span>
-                      {twitterExtraPoints > 0 ? (
-                        <> • Extra: <span className="text-[#4C9AF8] font-bold">+{formatNumber(twitterExtraPoints)}</span></>
-                      ) : null}
-                    </span>
-                    <span className="text-[#4C9AF8] font-bold">variational.io</span>
                   </div>
                 </div>
 
-                <div className="flex justify-end">
+                <div className="mt-4 flex flex-col gap-2">
                   <button
                     onClick={() => setIsShareModalOpen(true)}
-                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-zinc-100 hover:bg-white text-black px-4 py-2 text-[10px] font-bold uppercase tracking-wider transition active:scale-95 cursor-pointer"
+                    className="w-full inline-flex items-center justify-center rounded-md bg-[#4C9AF8] hover:bg-[#3b8ae8] text-white px-3 py-2 text-[10px] font-bold uppercase tracking-wider transition active:scale-95 cursor-pointer"
                   >
                     Show & Export Card
                   </button>
                 </div>
               </div>
+
+              {/* POLYMARKET INSIGHT */}
+              {selectedMarket && (
+                <div className="bg-[#050507]/40 border border-[#1E2026] rounded-xl p-4 flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-1.5 text-[9px] font-bold tracking-wider text-[#64748B] uppercase">
+                      <Image className="size-3.5 invert opacity-50" src="/polymarket-vector.png" alt="" width={14} height={14} />
+                      Prediction Insight
+                    </span>
+                    <a href={selectedMarket.url} target="_blank" rel="noreferrer" className="text-[9px] text-[#4C9AF8] hover:underline font-bold">
+                      View Market
+                    </a>
+                  </div>
+                  <p className="text-[10px] text-[#94A3B8] font-medium leading-snug">{selectedMarket.question}</p>
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-mono text-2xl font-bold text-[#4C9AF8]">{chanceLabel(selectedMarket.yesChance)}</span>
+                    <span className="text-[8px] text-[#64748B]">chance • Vol: {formatUsd(selectedMarket.volumeTotal)}</span>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* FDV SCENARIOS TABLE */}
-            <div className="flex flex-col gap-6">
-              <div>
-                <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">FDV Scenarios Grid</h2>
-                <p className="text-xs text-zinc-500 mt-1">Comparison of total valuation outcomes and expected returns.</p>
-              </div>
+          </div>
 
-              <div className="overflow-x-auto border border-zinc-900 bg-zinc-950/40 rounded-xl">
-                <table className="w-full border-collapse text-left text-xs">
-                  <thead className="border-b border-zinc-900 bg-zinc-900/10 text-zinc-500">
-                    <tr>
-                      <th className="px-6 py-3.5 font-bold uppercase tracking-wider">FDV</th>
-                      <th className="px-6 py-3.5 font-bold uppercase tracking-wider">
-                        <div className="flex items-center gap-1.5">
-                          <span>Prediction Chance</span>
-                          <Image
-                            className="size-3.5 invert opacity-50"
-                            src="/polymarket-vector.png"
-                            alt="Polymarket"
-                            width={14}
-                            height={14}
-                          />
-                        </div>
-                      </th>
-                      <th className="px-6 py-3.5 font-bold uppercase tracking-wider">Token price</th>
-                      <th className="px-6 py-3.5 font-bold uppercase tracking-wider">Your Allocation</th>
-                      <th className="px-6 py-3.5 font-bold uppercase tracking-wider">Estimated TGE Value</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-zinc-900/60 font-mono">
-                    {results.scenarios.map((scenario) => (
-                      <tr
-                        key={scenario.fdv}
-                        onClick={() => setFdv(scenario.fdv)}
-                        className={`cursor-pointer transition hover:bg-zinc-900/20 ${scenario.fdv === fdv ? "bg-zinc-900/40 text-white font-bold" : "text-zinc-400"}`}
-                      >
-                        <td className="px-6 py-4 font-bold">{fdvLabel(scenario.fdv)}</td>
-                        <td className="px-6 py-4">
-                          <PolymarketChance 
-                            value={fdvMarkets.find((market) => market.fdv === scenario.fdv)?.yesChance} 
-                            showIcon={false}
-                          />
-                        </td>
-                        <td className="px-6 py-4">{formatUsd(scenario.tokenPrice)}</td>
-                        <td className="px-6 py-4">{formatNumber(results.estimatedTokens, 0)}</td>
-                        <td className={`px-6 py-4 font-bold ${scenario.fdv === fdv ? "text-[#4C9AF8]" : "text-zinc-300"}`}>
-                          {formatUsd(scenario.value)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </>
+
         ) : (
           <div className="flex flex-col gap-12 animate-fade-in">
             {/* STATS OVERVIEW CARDS */}
             <div className={`grid gap-6 ${isDuneActive ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-2"}`}>
-              <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl">
-                <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Implied Expected FDV</span>
+              <div className="bg-[#050507]/40 border border-[#1E2026] p-6 rounded-xl">
+                <span className="text-[10px] font-bold tracking-wider text-[#64748B] uppercase">Implied Expected FDV</span>
                 <div className="mt-2.5 font-mono text-2xl font-bold text-white">
                   {formatUsd(stats.expectedFdv)}
                 </div>
-                <p className="text-[9px] text-zinc-500 mt-1">Weighted expectation across odds.</p>
+                <p className="text-[9px] text-[#64748B] mt-1">Weighted expectation across odds.</p>
               </div>
               
-              <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl">
-                <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Leading FDV Scenario</span>
+              <div className="bg-[#050507]/40 border border-[#1E2026] p-6 rounded-xl">
+                <span className="text-[10px] font-bold tracking-wider text-[#64748B] uppercase">Leading FDV Scenario</span>
                 <div className="mt-2.5 font-mono text-2xl font-bold text-[#4C9AF8]">
                   {stats.leadingScenario ? fdvLabel(stats.leadingScenario.fdv) : "$500M"}
                 </div>
-                <p className="text-[9px] text-zinc-500 mt-1">
+                <p className="text-[9px] text-[#64748B] mt-1">
                   Highest probability: {stats.leadingScenario ? chanceLabel(stats.leadingScenario.yesChance) : "n/a"}
                 </p>
               </div>
 
               {isDuneActive && (
                 <>
-                  <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl animate-fade-in">
-                    <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">24h Trading Volume</span>
+                  <div className="bg-[#050507]/40 border border-[#1E2026] p-6 rounded-xl animate-fade-in">
+                    <span className="text-[10px] font-bold tracking-wider text-[#64748B] uppercase">24h Trading Volume</span>
                     <div className="mt-2.5 font-mono text-2xl font-bold text-zinc-200">
                       {formatUsd(duneData.totalVolume24h)}
                     </div>
-                    <p className="text-[9px] text-zinc-500 mt-1">Real-time cleared volume (Dune).</p>
+                    <p className="text-[9px] text-[#64748B] mt-1">Real-time cleared volume (Dune).</p>
                   </div>
 
-                  <div className="bg-zinc-950/40 border border-zinc-900 p-6 rounded-xl animate-fade-in">
-                    <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Open Interest</span>
+                  <div className="bg-[#050507]/40 border border-[#1E2026] p-6 rounded-xl animate-fade-in">
+                    <span className="text-[10px] font-bold tracking-wider text-[#64748B] uppercase">Open Interest</span>
                     <div className="mt-2.5 font-mono text-2xl font-bold text-zinc-200">
                       {formatUsd(duneData.totalOpenInterest)}
                     </div>
-                    <p className="text-[9px] text-zinc-500 mt-1">Active contract positions (Dune).</p>
+                    <p className="text-[9px] text-[#64748B] mt-1">Active contract positions (Dune).</p>
                   </div>
                 </>
               )}
@@ -1232,10 +1081,10 @@ export default function Home() {
 
             <div className="grid gap-8 lg:grid-cols-12 items-start">
               {/* Left: Probability Weight Distribution Chart */}
-              <div className={isDuneActive ? "lg:col-span-7 flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl" : "lg:col-span-12 flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl"}>
+              <div className={isDuneActive ? "lg:col-span-7 flex flex-col gap-6 bg-[#050507]/20 border border-[#1E2026] p-6 rounded-xl" : "lg:col-span-12 flex flex-col gap-6 bg-[#050507]/20 border border-[#1E2026] p-6 rounded-xl"}>
                 <div>
-                  <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">FDV Probability Curve</h3>
-                  <p className="text-xs text-zinc-500 mt-1">Relative chance of each FDV scenario based on prediction odds.</p>
+                  <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-[#94A3B8]">FDV Probability Curve</h3>
+                  <p className="text-xs text-[#64748B] mt-1">Relative chance of each FDV scenario based on prediction odds.</p>
                 </div>
 
                 <div className="flex flex-col gap-4 pt-2">
@@ -1246,7 +1095,7 @@ export default function Home() {
                     return (
                       <div key={option} className="flex flex-col gap-1.5">
                         <div className="flex justify-between text-xs font-mono">
-                          <span className="text-zinc-300 font-bold">{fdvLabel(option)} FDV</span>
+                          <span className="text-[#CBD5E1] font-bold">{fdvLabel(option)} FDV</span>
                           <span className="text-[#4C9AF8] font-bold">{pct}% Chance</span>
                         </div>
                         <div className="h-1.5 w-full bg-zinc-900 rounded-full overflow-hidden">
@@ -1263,33 +1112,33 @@ export default function Home() {
 
               {/* Right: Top Points Leaderboard or Protocol Health Details */}
               {hasLeaderboard ? (
-                <div className="lg:col-span-5 flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl animate-fade-in">
+                <div className="lg:col-span-5 flex flex-col gap-6 bg-[#050507]/20 border border-[#1E2026] p-6 rounded-xl animate-fade-in">
                   <div>
-                    <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Top Points Leaderboard</h3>
-                    <p className="text-xs text-zinc-500 mt-1">Leaderboard positions synced from Dune Analytics.</p>
+                    <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-[#94A3B8]">Top Points Leaderboard</h3>
+                    <p className="text-xs text-[#64748B] mt-1">Leaderboard positions synced from Dune Analytics.</p>
                   </div>
 
                   <div className="overflow-y-auto max-h-[220px] pr-1.5 scrollbar-thin">
                     <table className="w-full text-left text-xs font-mono">
                       <thead>
-                        <tr className="border-b border-zinc-900 text-zinc-500 pb-2">
+                        <tr className="border-b border-[#1E2026] text-[#64748B] pb-2">
                           <th className="pb-2 font-bold uppercase">Rank</th>
                           <th className="pb-2 font-bold uppercase">Address</th>
                           <th className="pb-2 font-bold uppercase text-right">Points</th>
                           <th className="pb-2 font-bold uppercase text-right">Tier</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-zinc-900/40">
+                      <tbody className="divide-y divide-[#1E2026]/40">
                         {duneData.leaderboard.map((user: any) => (
                           <tr key={user.rank} className="hover:bg-zinc-900/10">
-                            <td className="py-2 text-zinc-400">#{user.rank}</td>
-                            <td className="py-2 text-zinc-300">{user.address}</td>
+                            <td className="py-2 text-[#94A3B8]">#{user.rank}</td>
+                            <td className="py-2 text-[#CBD5E1]">{user.address}</td>
                             <td className="py-2 text-right font-bold text-zinc-200">{formatNumber(user.points)}</td>
                             <td className="py-2 text-right">
                               <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
-                                user.tier === "Gold" ? "bg-amber-500/10 text-amber-400" :
-                                user.tier === "Silver" ? "bg-zinc-400/10 text-zinc-300" :
-                                "bg-amber-800/10 text-amber-700"
+                                user.tier === "Gold" ? "bg-[#121318]mber-500/10 text-amber-400" :
+                                user.tier === "Silver" ? "bg-zinc-400/10 text-[#CBD5E1]" :
+                                "bg-[#121318]mber-800/10 text-amber-700"
                               }`}>
                                 {user.tier}
                               </span>
@@ -1300,40 +1149,40 @@ export default function Home() {
                     </table>
                   </div>
                   
-                  <div className="flex items-center justify-between text-[9px] text-zinc-500 border-t border-zinc-900 pt-3">
+                  <div className="flex items-center justify-between text-[9px] text-[#64748B] border-t border-[#1E2026] pt-3">
                     <span>Source: Dune Analytics</span>
                     <span>Status: Live Sync</span>
                   </div>
                 </div>
               ) : (
-                <div className="lg:col-span-5 flex flex-col gap-6 bg-zinc-950/20 border border-zinc-900 p-6 rounded-xl animate-fade-in">
+                <div className="lg:col-span-5 flex flex-col gap-6 bg-[#050507]/20 border border-[#1E2026] p-6 rounded-xl animate-fade-in">
                   <div>
-                    <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Protocol Statistics</h3>
-                    <p className="text-xs text-zinc-500 mt-1">Real-time trading and infrastructure health metrics from Dune.</p>
+                    <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-[#94A3B8]">Protocol Statistics</h3>
+                    <p className="text-xs text-[#64748B] mt-1">Real-time trading and infrastructure health metrics from Dune.</p>
                   </div>
 
                   <div className="flex flex-col gap-4 font-mono">
-                    <div className="flex items-center justify-between py-2 border-b border-zinc-900">
-                      <span className="text-[10px] text-zinc-500 uppercase font-sans font-bold">Active Markets</span>
-                      <span className="text-xs font-bold text-zinc-300">{duneData?.activeMarkets ?? 0}</span>
+                    <div className="flex items-center justify-between py-2 border-b border-[#1E2026]">
+                      <span className="text-[10px] text-[#64748B] uppercase font-sans font-bold">Active Markets</span>
+                      <span className="text-xs font-bold text-[#CBD5E1]">{duneData?.activeMarkets ?? 0}</span>
                     </div>
-                    <div className="flex items-center justify-between py-2 border-b border-zinc-900">
-                      <span className="text-[10px] text-zinc-500 uppercase font-sans font-bold">Avg Funding Rate</span>
+                    <div className="flex items-center justify-between py-2 border-b border-[#1E2026]">
+                      <span className="text-[10px] text-[#64748B] uppercase font-sans font-bold">Avg Funding Rate</span>
                       <span className="text-xs font-bold text-[#4C9AF8]">
                         {(duneData?.avgFundingRatePct ?? 0).toFixed(4)}%
                       </span>
                     </div>
-                    <div className="flex items-center justify-between py-2 border-b border-zinc-900">
-                      <span className="text-[10px] text-zinc-500 uppercase font-sans font-bold">Data Status</span>
+                    <div className="flex items-center justify-between py-2 border-b border-[#1E2026]">
+                      <span className="text-[10px] text-[#64748B] uppercase font-sans font-bold">Data Status</span>
                       <span className="text-xs font-bold text-emerald-500">Live Sync</span>
                     </div>
                     <div className="flex items-center justify-between py-2">
-                      <span className="text-[10px] text-zinc-500 uppercase font-sans font-bold">Dune Source</span>
-                      <span className="text-xs text-zinc-400">Query #{duneData?.queryId || 6548904}</span>
+                      <span className="text-[10px] text-[#64748B] uppercase font-sans font-bold">Dune Source</span>
+                      <span className="text-xs text-[#94A3B8]">Query #{duneData?.queryId || 6548904}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between text-[9px] text-zinc-500 border-t border-zinc-900 pt-3">
+                  <div className="flex items-center justify-between text-[9px] text-[#64748B] border-t border-[#1E2026] pt-3">
                     <span>Source: Dune Analytics</span>
                     <span>Status: Connected</span>
                   </div>
@@ -1342,12 +1191,12 @@ export default function Home() {
             </div>
 
             {/* Prediction Markets Activity (Secondary) */}
-            <div className="border-t border-zinc-900/80 pt-8 mt-4">
+            <div className="border-t border-[#1E2026]/80 pt-8 mt-4">
               <div className="flex flex-col gap-1.5 mb-6">
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#64748B]">
                   Prediction Markets Insights
                 </h3>
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-[#64748B]">
                   Secondary market statistics and implied contract pricing for the Variational token.
                 </p>
               </div>
@@ -1357,10 +1206,10 @@ export default function Home() {
                   fdvMarkets.map((market) => (
                     <div 
                       key={market.conditionId}
-                      className="border border-zinc-900/50 bg-zinc-950/20 p-4 rounded-lg flex flex-col justify-between gap-3 text-[11px]"
+                      className="border border-[#1E2026]/50 bg-[#050507]/20 p-4 rounded-lg flex flex-col justify-between gap-3 text-[11px]"
                     >
-                      <p className="text-zinc-400 font-medium leading-relaxed">{market.question}</p>
-                      <div className="flex items-center justify-between border-t border-zinc-900/30 pt-2 text-[10px] text-zinc-500 font-mono">
+                      <p className="text-[#94A3B8] font-medium leading-relaxed">{market.question}</p>
+                      <div className="flex items-center justify-between border-t border-[#1E2026]/30 pt-2 text-[10px] text-[#64748B] font-mono">
                         <span>Implied: <strong className="text-[#4C9AF8]">{chanceLabel(market.yesChance)}</strong></span>
                         <a 
                           href={market.url}
@@ -1374,7 +1223,7 @@ export default function Home() {
                     </div>
                   ))
                 ) : (
-                  <div className="col-span-full text-center py-8 border border-zinc-900 rounded-xl text-zinc-500 text-xs">
+                  <div className="col-span-full text-center py-8 border border-[#1E2026] rounded-xl text-[#64748B] text-xs">
                     No prediction market data available at this time.
                   </div>
                 )}
@@ -1385,38 +1234,38 @@ export default function Home() {
 
       </section>
       {isShareModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
-          <div className="relative bg-zinc-950 border border-zinc-900 rounded-2xl max-w-[840px] w-full p-6 flex flex-col gap-6 animate-slide-fade-in shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0C0D11]lack/85 backdrop-blur-md animate-fade-in">
+          <div className="relative bg-[#050507] border border-[#1E2026] rounded-2xl max-w-[840px] w-full p-6 flex flex-col gap-6 animate-slide-fade-in shadow-2xl">
             
             {/* Modal Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-zinc-900">
+            <div className="flex items-center justify-between pb-4 border-b border-[#1E2026]">
               <div className="flex flex-col gap-0.5">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-white">Export Estimate Card</h3>
-                <p className="text-[10px] text-zinc-500">Configure theme options and download your high-quality card.</p>
+                <p className="text-[10px] text-[#64748B]">Configure theme options and download your high-quality card.</p>
               </div>
               
               <div className="flex items-center gap-4">
                 {/* Toggle Show Extra Points */}
                 {twitterUsername.trim() ? (
-                  <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500 hover:text-zinc-350 cursor-pointer select-none transition">
+                  <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[#64748B] hover:text-zinc-350 cursor-pointer select-none transition">
                     <input
                       type="checkbox"
                       checked={showExtraPoints}
                       onChange={(e) => setShowExtraPoints(e.target.checked)}
-                      className="rounded border-zinc-800 bg-zinc-900 text-[#4C9AF8] focus:ring-0 focus:ring-offset-0 size-3.5 cursor-pointer accent-[#4C9AF8]"
+                      className="rounded border-[#1E2026] bg-zinc-900 text-[#4C9AF8] focus:ring-0 focus:ring-offset-0 size-3.5 cursor-pointer accent-[#4C9AF8]"
                     />
                     <span>Show Extras</span>
                   </label>
                 ) : null}
 
                 {/* Embedded Theme Selector */}
-                <div className="flex bg-zinc-900/60 p-0.5 rounded-lg border border-zinc-800/80">
+                <div className="flex bg-[#121318] p-0.5 rounded-lg border border-[#1E2026]/80">
                   <button
                     onClick={() => setShareCardTheme("dark")}
                     className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider transition cursor-pointer ${
                       shareCardTheme === "dark"
                         ? "bg-[#4C9AF8] text-white"
-                        : "text-zinc-400 hover:text-white"
+                        : "text-[#94A3B8] hover:text-white"
                     }`}
                   >
                     Dark
@@ -1426,7 +1275,7 @@ export default function Home() {
                     className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider transition cursor-pointer ${
                       shareCardTheme === "light"
                         ? "bg-[#4C9AF8] text-white"
-                        : "text-zinc-400 hover:text-white"
+                        : "text-[#94A3B8] hover:text-white"
                     }`}
                   >
                     Light
@@ -1435,7 +1284,7 @@ export default function Home() {
 
                 <button
                   onClick={() => setIsShareModalOpen(false)}
-                  className="p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-850 text-zinc-400 hover:text-white border border-zinc-800 transition cursor-pointer"
+                  className="p-1.5 rounded-lg bg-zinc-900 hover:bg-[#1E2026] text-[#94A3B8] hover:text-white border border-[#1E2026] transition cursor-pointer"
                 >
                   <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -1446,10 +1295,10 @@ export default function Home() {
             
             <div className="flex justify-center items-center py-2 overflow-x-auto">
               <div
-                className={`relative overflow-hidden rounded-2xl border bg-cover bg-bottom bg-no-repeat flex flex-col justify-between aspect-[1.91/1] w-full max-w-[780px] p-6 shadow-xl transition-all duration-300 ${
+                className={`relative overflow-hidden rounded-2xl border bg-cover bg-[#0C0D11]ottom bg-no-repeat flex flex-col justify-between aspect-[1.91/1] w-full max-w-[780px] p-6 shadow-xl transition-all duration-300 ${
                   shareCardTheme === "light"
                     ? "bg-slate-50 border-zinc-200/80 text-zinc-900"
-                    : "bg-zinc-950 border-[#4C9AF8]/20 text-white"
+                    : "bg-[#050507] border-[#4C9AF8]/20 text-white"
                 }`}
                 style={{ backgroundImage: shareCardTheme === "light" ? "url('/brand/wave-light.png')" : "url('/brand/wave-dark.png')" }}
               >
@@ -1459,7 +1308,7 @@ export default function Home() {
                 </svg>
 
                 {/* Header row */}
-                <div className={`flex items-center justify-between border-b pb-3 ${shareCardTheme === "light" ? "border-zinc-200" : "border-zinc-900"}`}>
+                <div className={`flex items-center justify-between border-b pb-3 ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
                   <div className="flex items-center gap-2.5">
                     <svg className={`h-[22px] w-[31px] flex-shrink-0 ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`} viewBox="0 0 368 260" fill="currentColor">
                       <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
@@ -1479,11 +1328,11 @@ export default function Home() {
                 <div className="flex items-stretch gap-6 my-auto">
                   {/* Left: Expected TGE Value */}
                   <div className="flex-1 flex flex-col justify-center min-h-[90px]">
-                    <span className={`text-[8px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Estimated TGE Value</span>
+                    <span className={`text-[8px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Estimated TGE Value</span>
                     <span className={`text-3xl font-bold font-mono tracking-tight mt-1 ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>
                       {formatUsd(results.expectedValue)}
                     </span>
-                    <span className={`text-[7px] font-semibold mt-2 ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-550"}`}>
+                    <span className={`text-[7px] font-semibold mt-2 ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-zinc-550"}`}>
                       Based on {fdvLabel(fdv)} FDV & {airdropPct}% Pool
                     </span>
                   </div>
@@ -1498,14 +1347,14 @@ export default function Home() {
                       <div className="grid grid-cols-2 gap-4">
                         {/* Your Points */}
                         <div className="flex flex-col">
-                          <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Your Points</span>
+                          <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
                           <span className="text-[15px] font-bold font-mono text-[#4C9AF8] mt-0.5">
                             {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
                           </span>
                         </div>
                         {/* Pool Share */}
-                        <div className={`flex flex-col border-l pl-3 ${shareCardTheme === "light" ? "border-zinc-200" : "border-zinc-900"}`}>
-                          <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Pool Share</span>
+                        <div className={`flex flex-col border-l pl-3 ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
+                          <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
                           <div className="flex items-center gap-1.5 mt-1">
                             <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                               <circle cx="12" cy="12" r="8" className="opacity-20" />
@@ -1517,7 +1366,7 @@ export default function Home() {
                       </div>
                     ) : (
                       <div className="flex flex-col">
-                        <span className={`text-[8px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Your Points</span>
+                        <span className={`text-[8px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
                         <span className="text-xl font-bold font-mono text-[#4C9AF8] mt-0.5">
                           {formatNumber(parsePositive(userPoints))}
                         </span>
@@ -1534,7 +1383,7 @@ export default function Home() {
                         <>
                           {/* Est. Tokens */}
                           <div className="flex flex-col gap-0.5">
-                            <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Est. Tokens</span>
+                            <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
                             <div className="flex items-center gap-1.5 mt-0.5">
                               <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M19 7h-12a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-10a2 2 0 0 0 -2 -2z" />
@@ -1545,8 +1394,8 @@ export default function Home() {
                             </div>
                           </div>
                           {/* Twitter handle */}
-                          <div className={`flex flex-col gap-0.5 border-l pl-3 ${shareCardTheme === "light" ? "border-zinc-200" : "border-zinc-900"}`}>
-                            <span className={`text-[7px] font-bold uppercase tracking-wider flex items-center gap-0.5 truncate ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>
+                          <div className={`flex flex-col gap-0.5 border-l pl-3 ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
+                            <span className={`text-[7px] font-bold uppercase tracking-wider flex items-center gap-0.5 truncate ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>
                               <span className="font-sans font-black">𝕏</span> @{twitterUsername}
                             </span>
                             <div className="flex items-center gap-1.5 mt-0.5">
@@ -1560,7 +1409,7 @@ export default function Home() {
                         <>
                           {/* Pool Share */}
                           <div className="flex flex-col gap-0.5">
-                            <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Pool Share</span>
+                            <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
                             <div className="flex items-center gap-1.5 mt-0.5">
                               <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                                 <circle cx="12" cy="12" r="8" className="opacity-20" />
@@ -1570,8 +1419,8 @@ export default function Home() {
                             </div>
                           </div>
                           {/* Est. Tokens */}
-                          <div className={`flex flex-col gap-0.5 border-l pl-3 ${shareCardTheme === "light" ? "border-zinc-200" : "border-zinc-900"}`}>
-                            <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-zinc-400" : "text-zinc-500"}`}>Est. Tokens</span>
+                          <div className={`flex flex-col gap-0.5 border-l pl-3 ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
+                            <span className={`text-[7px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
                             <div className="flex items-center gap-1.5 mt-0.5">
                               <svg className="size-3 text-[#4C9AF8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M19 7h-12a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-10a2 2 0 0 0 -2 -2z" />
@@ -1588,7 +1437,7 @@ export default function Home() {
                 </div>
 
                 {/* Footer line */}
-                <div className={`flex items-center justify-between border-t pt-3 text-[8px] font-mono ${shareCardTheme === "light" ? "border-zinc-200 text-zinc-400" : "border-zinc-900 text-zinc-500"}`}>
+                <div className={`flex items-center justify-between border-t pt-3 text-[8px] font-mono ${shareCardTheme === "light" ? "border-zinc-200 text-[#94A3B8]" : "border-[#1E2026] text-[#64748B]"}`}>
                   <span>
                     Base Points: <span className="text-[#4C9AF8] font-bold">{formatNumber(parsePositive(userPoints))}</span> • Total: <span className="text-[#4C9AF8] font-bold">{formatNumber(parsePositive(userPoints) + (showExtraPoints ? twitterExtraPoints : 0))}</span>
                     {twitterExtraPoints > 0 && showExtraPoints ? (
@@ -1601,10 +1450,10 @@ export default function Home() {
             </div>
 
             {/* Action Buttons - Compact Right Aligned */}
-            <div className="flex justify-end gap-2.5 border-t border-zinc-900 pt-4">
+            <div className="flex justify-end gap-2.5 border-t border-[#1E2026] pt-4">
               <button
                 onClick={() => setIsShareModalOpen(false)}
-                className="px-4 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-850 text-zinc-400 hover:text-white font-bold text-[10px] uppercase tracking-wider border border-zinc-800 transition active:scale-95 cursor-pointer"
+                className="px-4 py-1.5 rounded-lg bg-zinc-900 hover:bg-[#1E2026] text-[#94A3B8] hover:text-white font-bold text-[10px] uppercase tracking-wider border border-[#1E2026] transition active:scale-95 cursor-pointer"
               >
                 Close
               </button>
