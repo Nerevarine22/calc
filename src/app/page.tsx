@@ -728,7 +728,7 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 w-full items-stretch animate-slide-fade-in">
 
             {/* COLUMN 1: INPUTS (Span 3) */}
-            <div className="lg:col-span-3 flex flex-col gap-4 bg-[#050507]/40 border border-[#1E2026] p-4 rounded-xl justify-between overflow-y-auto max-h-[calc(100vh-140px)]">
+            <div className="lg:col-span-3 flex flex-col gap-4 bg-[#050507]/40 p-4 rounded-xl justify-between overflow-y-auto max-h-[calc(100vh-140px)]">
               <div className="flex flex-col gap-3">
                 <div>
                   <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-[#94A3B8]">Settings</h2>
@@ -781,7 +781,7 @@ export default function Home() {
                 </div>
 
                 {/* TWITTER REACH BONUS */}
-                <div className="flex flex-col gap-1.5 bg-[#0B1120] border border-[#1E2026] p-2.5 rounded-lg">
+                <div className="flex flex-col gap-1.5 bg-[#0B1120] p-2.5 rounded-lg">
                   <div className="flex items-center justify-between">
                     <span className="text-[9px] font-bold uppercase tracking-wider text-[#CBD5E1]">Twitter Bonus</span>
                     {twitterExtraPoints > 0 && (
@@ -860,7 +860,7 @@ export default function Home() {
             <div className="lg:col-span-6 flex flex-col gap-4 max-h-[calc(100vh-140px)]">
               
               {/* HERO BLOCK: DENSITY REDUCED & HIGH-IMPACT */}
-              <div className="bg-zinc-950/40 border border-zinc-900 rounded-xl p-5 flex flex-col justify-between min-h-[140px] py-4 relative overflow-hidden">
+              <div className="bg-zinc-950/40 rounded-xl p-5 flex flex-col justify-between min-h-[140px] py-4 relative overflow-hidden">
                 <div className="flex items-start justify-between z-10">
                   <div className="flex flex-col">
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#64748B]">
@@ -897,7 +897,7 @@ export default function Home() {
               </div>
 
               {/* TABLE BLOCK: COMPACT TABLE WITH POLYMARKET ODDS */}
-              <div className="bg-[#050507]/40 border border-[#1E2026] rounded-xl flex-1 flex flex-col overflow-hidden">
+              <div className="bg-[#050507]/40 rounded-xl flex-1 flex flex-col overflow-hidden">
                 <div className="px-4 py-3 border-b border-[#1E2026] flex items-center justify-between">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">FDV Scenarios Grid</span>
                   <span className="text-[8px] text-[#64748B] font-mono">Click rows to switch scenario</span>
@@ -959,7 +959,7 @@ export default function Home() {
             <div className="lg:col-span-3 flex flex-col gap-4 justify-between max-h-[calc(100vh-140px)]">
               
               {/* MINI CARD PREVIEW */}
-              <div className="bg-[#050507]/40 border border-[#1E2026] rounded-xl p-4 flex flex-col justify-between flex-1">
+              <div className="bg-[#050507]/40 rounded-xl p-4 flex flex-col justify-between flex-1">
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[9px] font-bold uppercase tracking-wider text-[#CBD5E1]">Share Card Preview</span>
@@ -1014,7 +1014,7 @@ export default function Home() {
 
               {/* POLYMARKET INSIGHT */}
               {selectedMarket && (
-                <div className="bg-[#050507]/40 border border-[#1E2026] rounded-xl p-4 flex flex-col gap-2">
+                <div className="bg-[#050507]/40 rounded-xl p-4 flex flex-col gap-2">
                   <div className="flex items-center justify-between">
                     <span className="flex items-center gap-1.5 text-[9px] font-bold tracking-wider text-[#64748B] uppercase">
                       <Image className="size-3.5 invert opacity-50" src="/polymarket-vector.png" alt="" width={14} height={14} />
@@ -1040,7 +1040,7 @@ export default function Home() {
           <div className="flex flex-col gap-12 animate-fade-in">
             {/* STATS OVERVIEW CARDS */}
             <div className={`grid gap-6 ${isDuneActive ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-2"}`}>
-              <div className="bg-[#050507]/40 border border-[#1E2026] p-6 rounded-xl">
+              <div className="bg-[#050507]/40 p-6 rounded-xl">
                 <span className="text-[10px] font-bold tracking-wider text-[#64748B] uppercase">Implied Expected FDV</span>
                 <div className="mt-2.5 font-mono text-2xl font-bold text-white">
                   {formatUsd(stats.expectedFdv)}
@@ -1048,7 +1048,7 @@ export default function Home() {
                 <p className="text-[9px] text-[#64748B] mt-1">Weighted expectation across odds.</p>
               </div>
               
-              <div className="bg-[#050507]/40 border border-[#1E2026] p-6 rounded-xl">
+              <div className="bg-[#050507]/40 p-6 rounded-xl">
                 <span className="text-[10px] font-bold tracking-wider text-[#64748B] uppercase">Leading FDV Scenario</span>
                 <div className="mt-2.5 font-mono text-2xl font-bold text-[#4C9AF8]">
                   {stats.leadingScenario ? fdvLabel(stats.leadingScenario.fdv) : "$500M"}
@@ -1060,7 +1060,7 @@ export default function Home() {
 
               {isDuneActive && (
                 <>
-                  <div className="bg-[#050507]/40 border border-[#1E2026] p-6 rounded-xl animate-fade-in">
+                  <div className="bg-[#050507]/40 p-6 rounded-xl animate-fade-in">
                     <span className="text-[10px] font-bold tracking-wider text-[#64748B] uppercase">24h Trading Volume</span>
                     <div className="mt-2.5 font-mono text-2xl font-bold text-zinc-200">
                       {formatUsd(duneData.totalVolume24h)}
@@ -1068,7 +1068,7 @@ export default function Home() {
                     <p className="text-[9px] text-[#64748B] mt-1">Real-time cleared volume (Dune).</p>
                   </div>
 
-                  <div className="bg-[#050507]/40 border border-[#1E2026] p-6 rounded-xl animate-fade-in">
+                  <div className="bg-[#050507]/40 p-6 rounded-xl animate-fade-in">
                     <span className="text-[10px] font-bold tracking-wider text-[#64748B] uppercase">Open Interest</span>
                     <div className="mt-2.5 font-mono text-2xl font-bold text-zinc-200">
                       {formatUsd(duneData.totalOpenInterest)}
@@ -1081,7 +1081,7 @@ export default function Home() {
 
             <div className="grid gap-8 lg:grid-cols-12 items-start">
               {/* Left: Probability Weight Distribution Chart */}
-              <div className={isDuneActive ? "lg:col-span-7 flex flex-col gap-6 bg-[#050507]/20 border border-[#1E2026] p-6 rounded-xl" : "lg:col-span-12 flex flex-col gap-6 bg-[#050507]/20 border border-[#1E2026] p-6 rounded-xl"}>
+              <div className={isDuneActive ? "lg:col-span-7 flex flex-col gap-6 bg-[#050507]/20 p-6 rounded-xl" : "lg:col-span-12 flex flex-col gap-6 bg-[#050507]/20 p-6 rounded-xl"}>
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-[#94A3B8]">FDV Probability Curve</h3>
                   <p className="text-xs text-[#64748B] mt-1">Relative chance of each FDV scenario based on prediction odds.</p>
@@ -1112,7 +1112,7 @@ export default function Home() {
 
               {/* Right: Top Points Leaderboard or Protocol Health Details */}
               {hasLeaderboard ? (
-                <div className="lg:col-span-5 flex flex-col gap-6 bg-[#050507]/20 border border-[#1E2026] p-6 rounded-xl animate-fade-in">
+                <div className="lg:col-span-5 flex flex-col gap-6 bg-[#050507]/20 p-6 rounded-xl animate-fade-in">
                   <div>
                     <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-[#94A3B8]">Top Points Leaderboard</h3>
                     <p className="text-xs text-[#64748B] mt-1">Leaderboard positions synced from Dune Analytics.</p>
@@ -1155,7 +1155,7 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-                <div className="lg:col-span-5 flex flex-col gap-6 bg-[#050507]/20 border border-[#1E2026] p-6 rounded-xl animate-fade-in">
+                <div className="lg:col-span-5 flex flex-col gap-6 bg-[#050507]/20 p-6 rounded-xl animate-fade-in">
                   <div>
                     <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-[#94A3B8]">Protocol Statistics</h3>
                     <p className="text-xs text-[#64748B] mt-1">Real-time trading and infrastructure health metrics from Dune.</p>
@@ -1206,7 +1206,7 @@ export default function Home() {
                   fdvMarkets.map((market) => (
                     <div 
                       key={market.conditionId}
-                      className="border border-[#1E2026]/50 bg-[#050507]/20 p-4 rounded-lg flex flex-col justify-between gap-3 text-[11px]"
+                      className="bg-[#050507]/20 p-4 rounded-lg flex flex-col justify-between gap-3 text-[11px]"
                     >
                       <p className="text-[#94A3B8] font-medium leading-relaxed">{market.question}</p>
                       <div className="flex items-center justify-between border-t border-[#1E2026]/30 pt-2 text-[10px] text-[#64748B] font-mono">
@@ -1223,7 +1223,7 @@ export default function Home() {
                     </div>
                   ))
                 ) : (
-                  <div className="col-span-full text-center py-8 border border-[#1E2026] rounded-xl text-[#64748B] text-xs">
+                  <div className="col-span-full text-center py-8 bg-[#050507]/20 rounded-xl text-[#64748B] text-xs">
                     No prediction market data available at this time.
                   </div>
                 )}
