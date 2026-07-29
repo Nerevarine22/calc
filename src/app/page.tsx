@@ -718,16 +718,34 @@ export default function Home() {
             </a>
             <button
               onClick={handleCopyReferralCode}
-              className="group inline-flex h-6 items-center justify-center rounded-full border border-[#1E2026] bg-[#0C0D11]/40 px-3.5 text-[8px] font-extrabold uppercase tracking-[0.06em] transition hover:bg-[#1E2026]/30 hover:border-zinc-700 cursor-pointer gap-1.5"
+              className={`group inline-flex h-6 items-center justify-center rounded-full border bg-[#0C0D11]/40 px-3.5 text-[8px] font-extrabold uppercase tracking-[0.06em] transition cursor-pointer gap-1.5 ${
+                copied
+                  ? "border-emerald-500/50 bg-emerald-500/5"
+                  : "border-[#1E2026] hover:bg-[#1E2026]/30 hover:border-zinc-700"
+              }`}
               title="Click to copy code"
             >
-              <span className="text-[#64748B] font-extrabold">CODE:</span>
-              <span className="text-[#CBD5E1] group-hover:text-white font-extrabold transition-colors">
-                {copied ? "COPIED!" : "OMNIKLJ9FBUC"}
+              <span className={`transition-colors font-extrabold ${copied ? "text-emerald-400/80" : "text-[#64748B]"}`}>CODE:</span>
+              <span className={`transition-colors font-extrabold ${copied ? "text-emerald-400" : "text-[#CBD5E1] group-hover:text-white"}`}>
+                OMNIKLJ9FBUC
               </span>
-              <svg className="size-3 text-[#64748B] group-hover:text-[#CBD5E1] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              <svg 
+                className={`size-3 transition-colors ${copied ? "text-emerald-400" : "text-[#64748B] group-hover:text-[#CBD5E1]"}`} 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2.5" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                {copied ? (
+                  <path d="M20 6 9 17l-5-5" />
+                ) : (
+                  <>
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </>
+                )}
               </svg>
             </button>
           </div>
