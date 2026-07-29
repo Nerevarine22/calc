@@ -658,7 +658,7 @@ export default function Home() {
 
   const isDuneActive = duneData && duneData.duneActive === true;
   const hasLeaderboard = isDuneActive && duneData.leaderboard && duneData.leaderboard.length > 0;
-  const activeTab = isDuneActive ? tab : "estimator";
+  const activeTab = "estimator";
 
   return (
     <main className="relative min-h-screen bg-[#050507] text-zinc-100 font-sans antialiased selection:bg-[#1E2026] selection:text-white pb-24">
@@ -694,14 +694,14 @@ export default function Home() {
               >
                 Points Estimator
               </button>
-              {isDuneActive && (
+              {/* {isDuneActive && (
                 <button 
                   onClick={() => setTab("stats")}
                   className={`transition font-bold cursor-pointer ${activeTab === "stats" ? "text-white" : "text-[#64748B] hover:text-[#CBD5E1]"}`}
                 >
                   Statistics
                 </button>
-              )}
+              )} */}
             </nav>
           </div>
 
@@ -1025,7 +1025,7 @@ export default function Home() {
                 <div className="mt-4 flex flex-col gap-2">
                   <button
                     onClick={() => setIsShareModalOpen(true)}
-                    className="w-fit self-center inline-flex items-center justify-center rounded-lg bg-[#4C9AF8] hover:bg-[#3b8ae8] text-white px-4 py-1.5 text-[9px] font-bold uppercase tracking-wider transition active:scale-95 cursor-pointer"
+                    className="w-full inline-flex items-center justify-center rounded-lg bg-[#4C9AF8] hover:bg-[#3b8ae8] text-white py-1.5 text-[8.5px] font-bold uppercase tracking-[0.16em] transition active:scale-95 cursor-pointer"
                   >
                     Show & Export Card
                   </button>
