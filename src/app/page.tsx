@@ -722,7 +722,7 @@ export default function Home() {
               title="Click to copy code"
             >
               <span className="text-[#64748B] font-extrabold">CODE:</span>
-              <span className="font-mono text-[#CBD5E1] group-hover:text-white font-extrabold transition-colors">
+              <span className="text-[#CBD5E1] group-hover:text-white font-extrabold transition-colors">
                 {copied ? "COPIED!" : "OMNIKLJ9FBUC"}
               </span>
               <svg className="size-3 text-[#64748B] group-hover:text-[#CBD5E1] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
