@@ -1005,7 +1005,7 @@ export default function Home() {
                 <div className="mt-4 flex flex-col gap-2">
                   <button
                     onClick={() => setIsShareModalOpen(true)}
-                    className="w-full inline-flex items-center justify-center rounded-md bg-[#4C9AF8] hover:bg-[#3b8ae8] text-white px-3 py-2 text-[10px] font-bold uppercase tracking-wider transition active:scale-95 cursor-pointer"
+                    className="w-fit self-center inline-flex items-center justify-center rounded-lg bg-[#4C9AF8] hover:bg-[#3b8ae8] text-white px-4 py-1.5 text-[9px] font-bold uppercase tracking-wider transition active:scale-95 cursor-pointer"
                   >
                     Show & Export Card
                   </button>
