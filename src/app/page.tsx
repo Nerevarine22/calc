@@ -770,7 +770,8 @@ export default function Home() {
         </header>
 
         {activeTab === "estimator" ? (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 w-full items-stretch animate-slide-fade-in">
+          <div className="flex flex-col gap-6 w-full animate-slide-fade-in">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 w-full items-stretch">
 
             {/* COLUMN 1: INPUTS (Span 3) */}
             <div className="lg:col-span-3 flex flex-col gap-4 bg-[#050507]/40 p-4 rounded-xl justify-between overflow-y-auto lg:max-h-[calc(100vh-140px)]">
@@ -1184,6 +1185,44 @@ export default function Home() {
                   </div>
                 </div>
               )}
+            </div>
+            </div>
+
+            {/* PROGRESS BAR */}
+            <div className="w-full flex flex-col gap-2 pt-2">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col">
+                  <span className="text-[8px] font-bold tracking-wider text-[#64748B] uppercase">Points Distributed</span>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="font-mono text-sm sm:text-base font-bold text-white">7,900,000</span>
+                    <span className="text-[8px] text-[#64748B] font-mono">/ {formatNumber(parsePositive(totalPoints))}</span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end">
+                  <span className="text-[8px] font-bold tracking-wider text-[#64748B] uppercase">Remaining</span>
+                  <span className="font-mono text-sm sm:text-base font-bold text-[#4C9AF8]">
+                    {formatNumber(Math.max(0, parsePositive(totalPoints) - 7900000))}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="relative w-full h-[2px] bg-[#121318] rounded-full overflow-hidden">
+                <div 
+                  className="absolute top-0 left-0 h-full bg-[#4C9AF8] transition-all duration-1000 ease-out"
+                  style={{ width: `${Math.min(100, (7900000 / Math.max(1, parsePositive(totalPoints))) * 100)}%` }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/20" />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-mono text-[#64748B]">
+                  ~{formatUsd((7900000 / Math.max(1, parsePositive(totalPoints))) * results.airdropSupply * results.tokenPrice)}
+                </span>
+                <span className="text-[9px] font-mono text-[#4C9AF8]/70">
+                  ~{formatUsd((Math.max(0, parsePositive(totalPoints) - 7900000) / Math.max(1, parsePositive(totalPoints))) * results.airdropSupply * results.tokenPrice)}
+                </span>
+              </div>
             </div>
 
           </div>
