@@ -48,11 +48,15 @@ button, input { font: inherit; }
 }
 
 @media (min-width: 1024px) {
-  html { font-size: 19px; }
+  html { font-size: 14px; }
 }
 
 @media (min-width: 1280px) {
-  html { font-size: 22px; }
+  html { font-size: 18px; }
+}
+
+@media (min-width: 1536px) {
+  html { font-size: 21px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
