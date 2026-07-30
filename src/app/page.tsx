@@ -711,7 +711,7 @@ export default function Home() {
               href="https://omni.variational.io/?ref=OMNIKLJ9FBUC"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex h-6 items-center justify-center rounded-full border border-[#4C9AF8]/25 bg-[#0C0D11]/40 px-3.5 text-[8px] font-extrabold text-[#4C9AF8] hover:bg-[#4C9AF8]/5 hover:border-[#4C9AF8]/50 transition uppercase tracking-[0.06em] gap-1.5 cursor-pointer"
+              className="inline-flex h-6 items-center justify-center rounded-full border border-[#4C9AF8]/25 bg-[#0C0D11]/40 px-3.5 text-[8px] font-extrabold text-[#4C9AF8] hover:bg-[#4C9AF8]/5 hover:border-[#4C9AF8]/50 transition uppercase tracking-[0.06em] gap-1.5 cursor-pointer whitespace-nowrap"
             >
               <span>Claim +12% Points Boost & Bronze Tier on Omni</span>
               <span className="text-[9px]">➔</span>
@@ -755,14 +755,14 @@ export default function Home() {
               href="https://x.com/atoms_res"
               target="_blank"
               rel="noreferrer"
-              className="font-mono text-[10px] sm:text-[11px] font-bold tracking-wider text-[#94A3B8] hover:text-[#4C9AF8] transition-colors uppercase"
+              className="font-mono text-[10px] sm:text-[11px] font-bold tracking-wider text-[#94A3B8] hover:text-[#4C9AF8] transition-colors uppercase whitespace-nowrap"
             >
               created by @atoms_res
             </a>
             <span className="hidden sm:inline-block h-3.5 w-px bg-[#1E2026]" />
             <div className="flex items-center gap-2">
-              <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="font-mono text-[10px] tracking-wider text-[#64748B] uppercase">
+              <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
+              <span className="font-mono text-[10px] tracking-wider text-[#64748B] uppercase whitespace-nowrap">
                 {marketStatus === "ready" ? "Prediction Data Active" : "Local Engine"}
               </span>
             </div>
