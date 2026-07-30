@@ -672,7 +672,7 @@ export default function Home() {
       />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 w-full max-w-7xl h-[400px] bg-gradient-to-b from-[#4C9AF8]/3 to-transparent blur-[120px] pointer-events-none" />
 
-      <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-6 pt-10 sm:px-8">
+      <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 sm:px-8 md:px-10 lg:px-12 pt-8 sm:pt-10">
         
         {/* HEADER */}
         <header className="flex items-center justify-between border-b border-[#1E2026]/40 pb-6">
@@ -773,7 +773,7 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 w-full items-stretch animate-slide-fade-in">
 
             {/* COLUMN 1: INPUTS (Span 3) */}
-            <div className="lg:col-span-3 flex flex-col gap-4 bg-[#050507]/40 p-4 rounded-xl justify-between overflow-y-auto max-h-[calc(100vh-140px)]">
+            <div className="lg:col-span-3 flex flex-col gap-4 bg-[#050507]/40 p-4 rounded-xl justify-between overflow-y-auto lg:max-h-[calc(100vh-140px)]">
               <div className="flex flex-col gap-3">
                 <div>
                   <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-[#94A3B8]">Settings</h2>
@@ -832,9 +832,9 @@ export default function Home() {
                     {airdropOptions.map((option) => (
                       <button
                         key={option}
-                        className={`h-7 rounded-md text-[10px] font-bold transition flex items-center justify-center ${
+                        className={`h-7 rounded-md text-[10px] font-bold transition flex items-center justify-center cursor-pointer ${
                           option === airdropPct
-                            ? "bg-white text-black font-extrabold"
+                            ? "bg-[#4C9AF8] text-white font-extrabold"
                             : "bg-[#0C0D11] text-[#94A3B8] hover:bg-[#1E2026] hover:text-white"
                         }`}
                         onClick={() => setAirdropPct(option)}
@@ -1035,7 +1035,7 @@ export default function Home() {
             </div>
 
             {/* COLUMN 3: SHARE PREVIEW & POLYMARKET INSIGHT (Span 3) */}
-            <div className="lg:col-span-3 flex flex-col gap-4 justify-between max-h-[calc(100vh-140px)]">
+            <div className="lg:col-span-3 flex flex-col gap-4 justify-between lg:max-h-[calc(100vh-140px)]">
               
               {/* MINI CARD PREVIEW */}
               <div className="bg-[#050507]/40 rounded-xl p-4 flex flex-col justify-between flex-1">
@@ -1156,7 +1156,7 @@ export default function Home() {
                 <div className="mt-4 flex flex-col gap-2">
                   <button
                     onClick={() => setIsShareModalOpen(true)}
-                    className="w-full inline-flex items-center justify-center rounded-lg bg-[#4C9AF8] hover:bg-[#3b8ae8] text-white py-1.5 text-[8.5px] font-bold uppercase tracking-[0.16em] transition active:scale-95 cursor-pointer"
+                    className="w-full h-8 inline-flex items-center justify-center rounded-lg bg-[#4C9AF8] hover:bg-[#3b8ae8] text-white text-[9px] font-bold uppercase tracking-wider whitespace-nowrap transition active:scale-95 cursor-pointer"
                   >
                     Show & Export Card
                   </button>
