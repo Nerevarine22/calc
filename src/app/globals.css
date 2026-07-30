@@ -1,4 +1,4 @@
-﻿@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
 @import "tailwindcss";
@@ -32,25 +32,8 @@ body {
   background: var(--bg);
   color: var(--text-primary);
   font-family: 'Satoshi', 'IBM Plex Sans', var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  overflow: hidden;
-}
-
-@media (max-height: 750px) {
-  body {
-    overflow-y: auto;
-  }
-}
-
-/* 120% Zoom scale on Desktop screens */
-@media (min-width: 1024px) {
-  html {
-    font-size: 19px;
-  }
-}
-@media (min-width: 1280px) {
-  html {
-    font-size: 22px;
-  }
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 button, input { font: inherit; }

@@ -970,13 +970,13 @@ export default function Home() {
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">FDV Scenarios Grid</span>
                   <span className="text-[8px] text-[#64748B] font-mono">Click rows to switch scenario</span>
                 </div>
-                <div className="flex-1 overflow-y-auto">
-                  <table className="w-full border-collapse text-left text-[11px]">
+                <div className="flex-1 overflow-y-auto overflow-x-hidden">
+                  <table className="w-full border-collapse text-left text-[10px] sm:text-[11px]">
                     <thead className="border-b border-[#1E2026] bg-[#121318]/40 text-[#64748B]">
                       <tr>
-                        <th className="px-4 py-2 font-bold uppercase tracking-wider w-10 text-center">Select</th>
-                        <th className="px-4 py-2 font-bold uppercase tracking-wider">FDV</th>
-                        <th className="px-4 py-2 font-bold uppercase tracking-wider">
+                        <th className="px-2 sm:px-3 py-2 font-bold uppercase tracking-wider w-8 sm:w-10 text-center">Select</th>
+                        <th className="px-2 sm:px-3 py-2 font-bold uppercase tracking-wider">FDV</th>
+                        <th className="px-2 sm:px-3 py-2 font-bold uppercase tracking-wider">
                           <span className="inline-flex items-center gap-1">
                             Odds
                             <Image
@@ -988,9 +988,9 @@ export default function Home() {
                             />
                           </span>
                         </th>
-                        <th className="px-4 py-2 font-bold uppercase tracking-wider">Price</th>
-                        <th className="px-4 py-2 font-bold uppercase tracking-wider">Allocation</th>
-                        <th className="px-4 py-2 font-bold uppercase tracking-wider text-right">Value</th>
+                        <th className="px-2 sm:px-3 py-2 font-bold uppercase tracking-wider">Price</th>
+                        <th className="px-2 sm:px-3 py-2 font-bold uppercase tracking-wider">Allocation</th>
+                        <th className="px-2 sm:px-3 py-2 font-bold uppercase tracking-wider text-right">Value</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[#1E2026]/40 font-mono">
@@ -1004,7 +1004,7 @@ export default function Home() {
                               active ? "bg-[#1E2026]/60 text-white font-bold" : "text-[#94A3B8]"
                             }`}
                           >
-                            <td className="px-4 py-2.5 text-center">
+                            <td className="px-2 sm:px-3 py-2.5 text-center">
                               <div className="flex items-center justify-center">
                                 <div className={`size-3.5 rounded-full border flex items-center justify-center transition-colors ${
                                   active ? "border-[#4C9AF8] bg-[#4C9AF8]/10" : "border-[#64748B]/40"
@@ -1013,16 +1013,16 @@ export default function Home() {
                                 </div>
                               </div>
                             </td>
-                            <td className={`px-4 py-2.5 font-bold ${active ? "text-[#4C9AF8]" : ""}`}>{fdvLabel(scenario.fdv)}</td>
-                            <td className="px-4 py-2.5">
+                            <td className={`px-2 sm:px-3 py-2.5 font-bold ${active ? "text-[#4C9AF8]" : ""}`}>{fdvLabel(scenario.fdv)}</td>
+                            <td className="px-2 sm:px-3 py-2.5">
                               <PolymarketChance 
                                 value={fdvMarkets.find((market) => market.fdv === scenario.fdv)?.yesChance} 
                                 showIcon={false}
                               />
                             </td>
-                            <td className="px-4 py-2.5">{formatUsd(scenario.tokenPrice)}</td>
-                            <td className="px-4 py-2.5">{formatNumber(results.estimatedTokens, 0)}</td>
-                            <td className={`px-4 py-2.5 text-right font-bold ${active ? "text-[#4C9AF8]" : "text-[#CBD5E1]"}`}>
+                            <td className="px-2 sm:px-3 py-2.5">{formatUsd(scenario.tokenPrice)}</td>
+                            <td className="px-2 sm:px-3 py-2.5">{formatNumber(results.estimatedTokens, 0)}</td>
+                            <td className={`px-2 sm:px-3 py-2.5 text-right font-bold ${active ? "text-[#4C9AF8]" : "text-[#CBD5E1]"}`}>
                               {formatUsd(scenario.value)}
                             </td>
                           </tr>
@@ -1156,7 +1156,7 @@ export default function Home() {
                 <div className="mt-4 flex flex-col gap-2">
                   <button
                     onClick={() => setIsShareModalOpen(true)}
-                    className="w-full h-8 inline-flex items-center justify-center rounded-lg bg-[#4C9AF8] hover:bg-[#3b8ae8] text-white text-[9px] font-bold uppercase tracking-wider whitespace-nowrap transition active:scale-95 cursor-pointer"
+                    className="w-full h-8 px-2 inline-flex items-center justify-center rounded-lg bg-[#4C9AF8] hover:bg-[#3b8ae8] text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider whitespace-nowrap overflow-hidden text-ellipsis transition active:scale-95 cursor-pointer"
                   >
                     Show & Export Card
                   </button>
