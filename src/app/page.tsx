@@ -1046,96 +1046,96 @@ export default function Home() {
                   </div>
 
                   <div 
-                    className="relative overflow-hidden rounded-lg border border-[#4C9AF8]/15 bg-[#050507] bg-cover bg-bottom bg-no-repeat p-2.5 flex flex-col justify-between aspect-[1.91/1] w-full shadow-lg flex-shrink-0"
+                    className="@container relative overflow-hidden rounded-lg border border-[#4C9AF8]/15 bg-[#050507] bg-cover bg-bottom bg-no-repeat p-[3.3cqw] flex flex-col justify-between aspect-[1.91/1] w-full shadow-lg flex-shrink-0"
                     style={{ backgroundImage: "url('/brand/wave-dark.png')" }}
                   >
                     {/* Header */}
-                    <div className="flex items-center justify-between border-b border-[#1E2026]/40 pb-1">
-                      <div className="flex items-center gap-1">
-                        <svg className="h-2.5 w-3 text-white flex-shrink-0" viewBox="0 0 368 260" fill="currentColor">
+                    <div className="flex items-center justify-between border-b border-[#1E2026]/40 pb-[1.3cqw]">
+                      <div className="flex items-center gap-[1.3cqw]">
+                        <svg className="h-[3.3cqw] w-[4cqw] text-white flex-shrink-0" viewBox="0 0 368 260" fill="currentColor">
                           <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
                         </svg>
                         <div className="flex flex-col">
-                          <span className="font-mono text-[5px] font-bold text-white leading-none">VARIATIONAL</span>
-                          <span className="text-[3.5px] font-bold text-[#4C9AF8] tracking-widest uppercase mt-0.5">Points Estimator</span>
+                          <span className="font-mono text-[1.6cqw] font-bold text-white leading-none">VARIATIONAL</span>
+                          <span className="text-[1.1cqw] font-bold text-[#4C9AF8] tracking-widest uppercase mt-[0.6cqw]">Points Estimator</span>
                         </div>
                       </div>
-                      <div className="text-[4px] font-bold text-[#4C9AF8] bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 px-1 py-0.5 rounded-full uppercase leading-none">
+                      <div className="text-[1.3cqw] font-bold text-[#4C9AF8] bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 px-[1.3cqw] py-[0.6cqw] rounded-full uppercase leading-none">
                         TGE Allocation Estimate
                       </div>
                     </div>
 
                     {/* Body */}
-                    <div className="flex items-stretch gap-2.5 my-auto">
+                    <div className="flex items-stretch gap-[3.3cqw] my-auto">
                       {/* Left: Expected TGE Value */}
                       <div className="flex-1 flex flex-col justify-center">
-                        <span className="text-[4.5px] font-bold uppercase tracking-wider text-[#64748B]">Estimated TGE Value</span>
-                        <span className="text-[12px] font-bold font-mono tracking-tight text-[#4C9AF8] leading-tight mt-0.5">
+                        <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Estimated TGE Value</span>
+                        <span className="text-[4cqw] font-bold font-mono tracking-tight text-[#4C9AF8] leading-tight mt-[0.6cqw]">
                           <AnimatedNumber value={results.expectedValue} />
                         </span>
-                        <span className="text-[4px] font-semibold text-zinc-500 mt-1">
+                        <span className="text-[1.3cqw] font-semibold text-zinc-500 mt-[1.3cqw]">
                           Based on {fdvLabel(fdv)} FDV & {airdropPct}% Pool
                         </span>
                       </div>
 
                       {/* Middle Vertical line */}
-                      <div className="w-[0.5px] bg-[#1E2026]" />
+                      <div className="w-[0.16cqw] bg-[#1E2026]" />
 
                       {/* Right: Stats Layout */}
-                      <div className="flex-1 flex flex-col justify-between py-0.5">
+                      <div className="flex-1 flex flex-col justify-between py-[0.6cqw]">
                         {twitterUsername.trim() && showExtraPoints ? (
-                          <div className="grid grid-cols-2 gap-1.5">
+                          <div className="grid grid-cols-2 gap-[1.3cqw].5">
                             {/* Your Points */}
                             <div className="flex flex-col">
-                              <span className="text-[4.5px] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
-                              <span className="text-[8px] font-bold font-mono text-[#4C9AF8] leading-none mt-0.5">
+                              <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
+                              <span className="text-[2.6cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.6cqw]">
                                 {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
                               </span>
                             </div>
                             {/* Pool Share */}
-                            <div className="flex flex-col border-l border-[#1E2026] pl-1.5">
-                              <span className="text-[4.5px] font-bold uppercase tracking-wider text-[#64748B]">Pool Share</span>
-                              <span className="text-[6.5px] font-bold font-mono text-white leading-none mt-0.5">{(results.share * 100).toFixed(4)}%</span>
+                            <div className="flex flex-col border-l border-[#1E2026] pl-[2cqw]">
+                              <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Pool Share</span>
+                              <span className="text-[2.1cqw] font-bold font-mono text-white leading-none mt-[0.6cqw]">{(results.share * 100).toFixed(4)}%</span>
                             </div>
                           </div>
                         ) : (
                           <div className="flex flex-col">
-                            <span className="text-[4.5px] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
-                            <span className="text-[10px] font-bold font-mono text-[#4C9AF8] leading-none mt-0.5">
+                            <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
+                            <span className="text-[3.3cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.6cqw]">
                               {formatNumber(parsePositive(userPoints))}
                             </span>
                           </div>
                         )}
 
                         {/* Horizontal divide line */}
-                        <div className="h-[0.5px] bg-[#1E2026] my-1" />
+                        <div className="h-[0.16cqw] bg-[#1E2026] my-[1.3cqw]" />
 
                         {/* Bottom Row */}
-                        <div className="grid grid-cols-2 gap-1.5">
+                        <div className="grid grid-cols-2 gap-[1.3cqw].5">
                           {twitterUsername.trim() && showExtraPoints ? (
                             <>
                               {/* Est. Tokens */}
                               <div className="flex flex-col">
-                                <span className="text-[4.5px] font-bold uppercase tracking-wider text-[#64748B]">Est. Tokens</span>
-                                <span className="text-[6.5px] font-bold font-mono text-white leading-none mt-0.5">{formatNumber(results.estimatedTokens, 0)}</span>
+                                <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Est. Tokens</span>
+                                <span className="text-[2.1cqw] font-bold font-mono text-white leading-none mt-[0.6cqw]">{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                               {/* Twitter handle */}
-                              <div className="flex flex-col border-l border-[#1E2026] pl-1.5 truncate">
-                                <span className="text-[4.5px] font-bold uppercase tracking-wider text-[#64748B] truncate">𝕏 @{twitterUsername}</span>
-                                <span className="text-[6.5px] font-bold font-mono text-[#4C9AF8] leading-none mt-0.5">+{formatNumber(twitterExtraPoints)}</span>
+                              <div className="flex flex-col border-l border-[#1E2026] pl-[2cqw] truncate">
+                                <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B] truncate">𝕏 @{twitterUsername}</span>
+                                <span className="text-[2.1cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.6cqw]">+{formatNumber(twitterExtraPoints)}</span>
                               </div>
                             </>
                           ) : (
                             <>
                               {/* Pool Share */}
                               <div className="flex flex-col">
-                                <span className="text-[4.5px] font-bold uppercase tracking-wider text-[#64748B]">Pool Share</span>
-                                <span className="text-[6.5px] font-bold font-mono text-white leading-none mt-0.5">{(results.share * 100).toFixed(4)}%</span>
+                                <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Pool Share</span>
+                                <span className="text-[2.1cqw] font-bold font-mono text-white leading-none mt-[0.6cqw]">{(results.share * 100).toFixed(4)}%</span>
                               </div>
                               {/* Est. Tokens */}
-                              <div className="flex flex-col border-l border-[#1E2026] pl-1.5">
-                                <span className="text-[4.5px] font-bold uppercase tracking-wider text-[#64748B]">Est. Tokens</span>
-                                <span className="text-[6.5px] font-bold font-mono text-white leading-none mt-0.5">{formatNumber(results.estimatedTokens, 0)}</span>
+                              <div className="flex flex-col border-l border-[#1E2026] pl-[2cqw]">
+                                <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Est. Tokens</span>
+                                <span className="text-[2.1cqw] font-bold font-mono text-white leading-none mt-[0.6cqw]">{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                             </>
                           )}
@@ -1144,7 +1144,7 @@ export default function Home() {
                     </div>
 
                     {/* Footer */}
-                    <div className="flex justify-between border-t border-[#1E2026]/40 pt-1 text-[4px] text-[#64748B] font-mono leading-none">
+                    <div className="flex justify-between border-t border-[#1E2026]/40 pt-[1.3cqw] text-[1.3cqw] text-[#64748B] font-mono leading-none">
                       <span>
                         Base Pts: <span className="text-[#4C9AF8] font-bold">{formatNumber(parsePositive(userPoints))}</span> • Total: <span className="text-[#4C9AF8] font-bold">{formatNumber(parsePositive(userPoints) + (showExtraPoints ? twitterExtraPoints : 0))}</span>
                       </span>
