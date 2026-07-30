@@ -1045,10 +1045,11 @@ export default function Home() {
                     <span className="text-[8px] text-[#64748B] font-mono">1.91:1 PNG</span>
                   </div>
 
-                  <div 
-                    className="@container relative overflow-hidden rounded-lg border border-[#4C9AF8]/15 bg-[#050507] bg-cover bg-bottom bg-no-repeat p-[3.3cqw] flex flex-col justify-between aspect-[1.91/1] w-full shadow-lg flex-shrink-0"
-                    style={{ backgroundImage: "url('/brand/wave-dark.png')" }}
-                  >
+                  <div className="@container w-full">
+                    <div 
+                      className="relative overflow-hidden rounded-lg border border-[#4C9AF8]/15 bg-[#050507] bg-cover bg-bottom bg-no-repeat p-[3.3cqw] flex flex-col justify-between aspect-[1.91/1] w-full shadow-lg flex-shrink-0"
+                      style={{ backgroundImage: "url('/brand/wave-dark.png')" }}
+                    >
                     {/* Header */}
                     <div className="flex items-center justify-between border-b border-[#1E2026]/40 pb-[1.3cqw]">
                       <div className="flex items-center gap-[1.3cqw]">
@@ -1149,6 +1150,7 @@ export default function Home() {
                         Base Pts: <span className="text-[#4C9AF8] font-bold">{formatNumber(parsePositive(userPoints))}</span> • Total: <span className="text-[#4C9AF8] font-bold">{formatNumber(parsePositive(userPoints) + (showExtraPoints ? twitterExtraPoints : 0))}</span>
                       </span>
                       <span className="text-[#4C9AF8] font-bold">variational.io</span>
+                    </div>
                     </div>
                   </div>
                 </div>
