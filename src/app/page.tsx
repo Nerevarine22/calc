@@ -152,7 +152,7 @@ const CustomTooltip = ({
 
 export default function Home() {
   const [tab, setTab] = useState<"estimator" | "stats">("estimator");
-  const [totalPoints, setTotalPoints] = useState("9000000");
+  const [totalPoints, setTotalPoints] = useState("9150000");
   const [userPoints, setUserPoints] = useState("");
   const [airdropPct, setAirdropPct] = useState(40);
   const [fdv, setFdv] = useState(500_000_000);
