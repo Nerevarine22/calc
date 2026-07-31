@@ -701,7 +701,7 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between lg:justify-end w-full lg:w-auto gap-3 sm:gap-4">
             {/* OMNI promo widget */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 hide-scrollbar w-full sm:w-auto">
+            <div className="flex flex-wrap justify-center sm:justify-start items-center gap-1.5 pb-1 sm:pb-0 w-full sm:w-auto">
               <a
                 href="https://omni.variational.io/?ref=OMNIKLJ9FBUC"
                 target="_blank"
@@ -926,7 +926,7 @@ export default function Home() {
               
               {/* HERO BLOCK: DENSITY REDUCED & HIGH-IMPACT */}
               <div className="bg-zinc-950/40 rounded-xl p-5 flex flex-col justify-between min-h-[140px] py-4 relative overflow-hidden">
-                <div className="flex items-start justify-between z-10">
+                <div className="flex items-start justify-between z-10 gap-2">
                   <div className="flex flex-col">
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#64748B]">
                       POSSIBLE AIRDROP ALLOCATION
@@ -935,7 +935,7 @@ export default function Home() {
                       Expected value at TGE based on chosen scenario
                     </span>
                   </div>
-                  <span className="text-[9px] font-extrabold uppercase tracking-wider text-[#4C9AF8] bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 px-2 py-0.5 rounded-md">
+                  <span className="text-[7.5px] sm:text-[9px] font-extrabold uppercase tracking-wider text-[#4C9AF8] bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 px-1.5 sm:px-2 py-0.5 rounded-md whitespace-nowrap text-center">
                     {fdvLabel(fdv)} FDV SCENARIO
                   </span>
                 </div>
