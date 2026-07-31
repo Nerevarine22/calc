@@ -1035,7 +1035,7 @@ export default function Home() {
                       <div className="text-[9px] text-[#4C9AF8] font-bold text-center bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 py-1 rounded">
                         Eligible for +{formatNumber(twitterExtraPoints)} Extra Points!
                       </div>
-                      <div className="flex flex-col gap-1 text-[9px] text-[#64748B] font-mono px-0.5">
+                      <div className="flex flex-col gap-1.5 text-[11px] text-[#64748B] font-mono px-0.5 mt-2">
                         <div className="flex justify-between">
                           <span>Posts:</span>
                           <span className="text-[#CBD5E1] font-bold">{twitterStats.tweetsCount}</span>
@@ -1062,7 +1062,7 @@ export default function Home() {
               </div>
 
               {/* STAT SUMMARY (LOWER SIDEBAR) */}
-              <div className="border-t border-[#1E2026] pt-3 flex flex-col gap-1 text-[10px]">
+              <div className="border-t border-[#1E2026] pt-4 flex flex-col gap-2 text-[11px]">
                 <div className="flex justify-between">
                   <span className="text-[#64748B]">Total Supply</span>
                   <span className="font-mono text-white font-semibold">{formatNumber(TOTAL_SUPPLY)}</span>
