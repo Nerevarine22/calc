@@ -12,8 +12,8 @@ export async function GET(request: Request) {
   try {
     const apiKey = "new1_11159716a5c644a7af4d58d8357a36c2";
     // Search query: from:username (variational OR @variational_io)
-    // Standard twitter search is case-insensitive.
-    const queryStr = `from:${username} (variational OR @variational_io)`;
+    // Standard twitter search is case-insensitive. We also exclude replies at the API level to not waste the 20-tweet limit.
+    const queryStr = `from:${username} (variational OR @variational_io) -filter:replies`;
     const targetUrl = `https://api.twitterapi.io/twitter/tweet/advanced_search?query=${encodeURIComponent(queryStr)}&queryType=Top`;
     
     const res = await fetch(targetUrl, {
