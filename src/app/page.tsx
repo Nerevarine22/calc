@@ -1489,7 +1489,7 @@ export default function Home() {
               </div>
             </div>
             
-            <div ref={modalContainerRef} className="flex justify-center items-center py-2 w-full overflow-hidden" style={{ height: `${408 * modalScale + 16}px` }}>
+            <div ref={modalContainerRef} className="flex justify-center items-start py-2 w-full overflow-hidden" style={{ height: `${408 * modalScale + 16}px` }}>
               <div 
                 style={{ 
                   transform: `scale(${modalScale})`, 
