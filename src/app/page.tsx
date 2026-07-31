@@ -793,7 +793,7 @@ export default function Home() {
           continuous={true}
           showSkipButton={true}
           showProgress={true}
-          scrollToFirstStep={true}
+          scrollToFirstStep={false}
           scrollOffset={150}
           tooltipComponent={CustomTooltip}
           callback={handleJoyrideCallback}
@@ -1118,8 +1118,8 @@ export default function Home() {
 
               {/* TABLE BLOCK: COMPACT TABLE WITH POLYMARKET ODDS */}
               <div className="bg-[#050507]/40 rounded-xl flex-1 flex flex-col overflow-hidden">
-                <div className="px-4 py-3 border-b border-[#1E2026] flex items-center justify-between" id="tour-fdv">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">FDV Scenarios Grid</span>
+                <div className="px-4 py-3 border-b border-[#1E2026] flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]" id="tour-fdv">FDV Scenarios Grid</span>
                   <span className="text-[8px] text-[#64748B] font-mono">Click rows to switch scenario</span>
                 </div>
                 <div className="flex-1 overflow-y-auto overflow-x-auto">
