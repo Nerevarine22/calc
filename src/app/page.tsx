@@ -1033,7 +1033,7 @@ export default function Home() {
                   {twitterStatus === "success" && twitterStats && (
                     <div className="flex flex-col gap-2 mt-1">
                       <div className="text-[9px] text-[#4C9AF8] font-bold text-center bg-[#4C9AF8]/10 border border-[#4C9AF8]/20 py-1 rounded">
-                        Earned +{formatNumber(twitterExtraPoints)} Extra Points!
+                        Eligible for +{formatNumber(twitterExtraPoints)} Extra Points!
                       </div>
                       <div className="flex flex-col gap-1 text-[9px] text-[#64748B] font-mono px-0.5">
                         <div className="flex justify-between">
