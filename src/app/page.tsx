@@ -178,7 +178,7 @@ export default function Home() {
     }
   };
 
-  const tourSteps: Step[] = [
+  const tourSteps: any[] = [
     {
       target: '#tour-points-input',
       content: 'Enter your total Variational points here.',
