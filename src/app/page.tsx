@@ -692,92 +692,90 @@ export default function Home() {
       <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 sm:px-8 md:px-10 lg:px-12 pt-8 sm:pt-10">
         
         {/* HEADER */}
-        <header className="flex flex-col lg:flex-row lg:items-center justify-between border-b border-[#1E2026]/40 pb-4 lg:pb-6 gap-4 sm:gap-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full lg:w-auto gap-4">
-            <div className="flex items-center gap-4">
-              <Image
-                src="/brand/variational-wordmark-white.svg"
-                alt="Variational"
-                width={140}
-                height={20}
-                priority
-                className="opacity-90 w-[120px] sm:w-[140px]"
-              />
-              <span className="h-4 w-px bg-[#1E2026]" />
-              
-              <nav className="flex items-center gap-4 sm:gap-6 font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase">
-                <button 
-                  onClick={() => setTab("estimator")}
-                  className={`transition font-bold cursor-pointer ${activeTab === "estimator" ? "text-white" : "text-[#64748B] hover:text-[#CBD5E1]"}`}
-                >
-                  Points Estimator
-                </button>
-              </nav>
-            </div>
+        <header className="flex flex-wrap items-center border-b border-[#1E2026]/40 pb-4 lg:pb-6 gap-y-4 gap-x-6">
+          
+          {/* 1. Logo */}
+          <div className="flex items-center gap-4 order-1 w-auto">
+            <Image
+              src="/brand/variational-wordmark-white.svg"
+              alt="Variational"
+              width={140}
+              height={20}
+              priority
+              className="opacity-90 w-[120px] sm:w-[140px]"
+            />
+            <span className="h-4 w-px bg-[#1E2026]" />
+            <nav className="flex items-center gap-4 sm:gap-6 font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase">
+              <button 
+                onClick={() => setTab("estimator")}
+                className={`transition font-bold cursor-pointer ${activeTab === "estimator" ? "text-white" : "text-[#64748B] hover:text-[#CBD5E1]"}`}
+              >
+                Points Estimator
+              </button>
+            </nav>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between lg:justify-end w-full lg:w-auto gap-3 sm:gap-4">
-            {/* OMNI promo widget */}
-            <div className="flex flex-wrap justify-center sm:justify-start items-center gap-1.5 pb-1 sm:pb-0 w-full sm:w-auto">
-              <a
-                href="https://omni.variational.io/?ref=OMNIKLJ9FBUC"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex h-6 items-center justify-center rounded-full border border-[#4C9AF8]/25 bg-[#0C0D11]/40 px-3.5 text-[8px] font-extrabold text-[#4C9AF8] hover:bg-[#4C9AF8]/5 hover:border-[#4C9AF8]/50 transition uppercase tracking-[0.06em] gap-1.5 cursor-pointer whitespace-nowrap flex-shrink-0"
+          {/* 2. Omni promo widget (Bottom on mobile, Middle-Right on Desktop) */}
+          <div className="flex flex-wrap items-center gap-1.5 order-3 lg:order-2 w-full lg:w-auto lg:ml-auto mt-1 lg:mt-0">
+            <a
+              href="https://omni.variational.io/?ref=OMNIKLJ9FBUC"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-6 items-center justify-center rounded-full border border-[#4C9AF8]/25 bg-[#0C0D11]/40 px-3.5 text-[8px] font-extrabold text-[#4C9AF8] hover:bg-[#4C9AF8]/5 hover:border-[#4C9AF8]/50 transition uppercase tracking-[0.06em] gap-1.5 cursor-pointer whitespace-nowrap flex-shrink-0"
+            >
+              <span>Claim +12% Points Boost & Bronze Tier on Omni</span>
+              <span className="text-[9px]">➔</span>
+            </a>
+            <button
+              onClick={handleCopyReferralCode}
+              className={`group inline-flex h-6 items-center justify-center rounded-full border bg-[#0C0D11]/40 px-3.5 text-[8px] font-extrabold uppercase tracking-[0.06em] transition cursor-pointer gap-1.5 flex-shrink-0 ${
+                copied
+                  ? "border-emerald-500/50 bg-emerald-500/5"
+                  : "border-[#1E2026] hover:bg-[#1E2026]/30 hover:border-zinc-700"
+              }`}
+              title="Click to copy code"
+            >
+              <span className={`text-[8px] transition-colors font-extrabold ${copied ? "text-emerald-400/80" : "text-[#64748B]"}`}>CODE:</span>
+              <span className={`text-[8px] transition-colors font-extrabold ${copied ? "text-emerald-400" : "text-[#CBD5E1] group-hover:text-white"}`}>
+                OMNIKLJ9FBUC
+              </span>
+              <svg 
+                className={`size-3 transition-colors ${copied ? "text-emerald-400" : "text-[#64748B] group-hover:text-[#CBD5E1]"}`} 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2.5" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
               >
-                <span>Claim +12% Points Boost & Bronze Tier on Omni</span>
-                <span className="text-[9px]">➔</span>
-              </a>
-              <button
-                onClick={handleCopyReferralCode}
-                className={`group inline-flex h-6 items-center justify-center rounded-full border bg-[#0C0D11]/40 px-3.5 text-[8px] font-extrabold uppercase tracking-[0.06em] transition cursor-pointer gap-1.5 flex-shrink-0 ${
-                  copied
-                    ? "border-emerald-500/50 bg-emerald-500/5"
-                    : "border-[#1E2026] hover:bg-[#1E2026]/30 hover:border-zinc-700"
-                }`}
-                title="Click to copy code"
-              >
-                <span className={`text-[8px] transition-colors font-extrabold ${copied ? "text-emerald-400/80" : "text-[#64748B]"}`}>CODE:</span>
-                <span className={`text-[8px] transition-colors font-extrabold ${copied ? "text-emerald-400" : "text-[#CBD5E1] group-hover:text-white"}`}>
-                  OMNIKLJ9FBUC
-                </span>
-                <svg 
-                  className={`size-3 transition-colors ${copied ? "text-emerald-400" : "text-[#64748B] group-hover:text-[#CBD5E1]"}`} 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2.5" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                >
-                  {copied ? (
-                    <path d="M20 6 9 17l-5-5" />
-                  ) : (
-                    <>
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                    </>
-                  )}
-                </svg>
-              </button>
-            </div>
+                {copied ? (
+                  <path d="M20 6 9 17l-5-5" />
+                ) : (
+                  <>
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </>
+                )}
+              </svg>
+            </button>
+          </div>
 
-            <div className="flex items-center gap-3 sm:gap-4 justify-between sm:justify-start border-t border-[#1E2026]/40 pt-3 sm:border-t-0 sm:pt-0 w-full sm:w-auto">
-              <a
-                href="https://x.com/atoms_res"
-                target="_blank"
-                rel="noreferrer"
-                className="font-mono text-[9px] sm:text-[10px] sm:text-[11px] font-bold tracking-wider text-[#94A3B8] hover:text-[#4C9AF8] transition-colors uppercase whitespace-nowrap"
-              >
-                created by @atoms_res
-              </a>
-              <span className="hidden sm:inline-block h-3.5 w-px bg-[#1E2026]" />
-              <div className="flex items-center gap-2">
-                <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
-                <span className="font-mono text-[9px] sm:text-[10px] tracking-wider text-[#64748B] uppercase whitespace-nowrap">
-                  {marketStatus === "ready" ? "Prediction Data Active" : "Local Engine"}
-                </span>
-              </div>
+          {/* 3. Created by & Prediction Data Active (Top Right on mobile, Far Right on Desktop) */}
+          <div className="flex items-center justify-end gap-3 sm:gap-4 order-2 lg:order-3 ml-auto lg:ml-0 w-auto">
+            <a
+              href="https://x.com/atoms_res"
+              target="_blank"
+              rel="noreferrer"
+              className="font-mono text-[9px] sm:text-[10px] sm:text-[11px] font-bold tracking-wider text-[#94A3B8] hover:text-[#4C9AF8] transition-colors uppercase whitespace-nowrap"
+            >
+              created by @atoms_res
+            </a>
+            <span className="hidden sm:inline-block h-3.5 w-px bg-[#1E2026]" />
+            <div className="flex items-center gap-2">
+              <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
+              <span className="hidden lg:inline font-mono text-[9px] sm:text-[10px] tracking-wider text-[#64748B] uppercase whitespace-nowrap">
+                {marketStatus === "ready" ? "Prediction Data Active" : "Local Engine"}
+              </span>
             </div>
           </div>
         </header>
