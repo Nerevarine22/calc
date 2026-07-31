@@ -61,24 +61,22 @@ export async function GET(request: Request) {
     // Engagement rate
     const engagementRate = totalViews > 0 ? (totalLikes + totalRetweets) / totalViews : 0;
 
-    // Calculate extra points based on:
+    // Calculate bonus percentage based on:
     // - < 5 000 views -> 0
-    // - 5k - 20k, >=3 tweets, >=1% engagement -> +5 - 15 points
-    // - 20k - 80k, >=5 tweets, >=1% engagement -> +20 - 40 points
-    // - 80k - 300k, >=8 tweets, >=0.8% engagement -> +50 - 100 points
-    // - > 300k, >=10 tweets, >=0.7% engagement -> +120 - 250 points
-    let extraPoints = 0;
+    // - 5k - 20k, >=3 tweets, >=1% engagement -> 3%
+    // - 20k - 80k, >=5 tweets, >=1% engagement -> 5%
+    // - 80k - 300k, >=8 tweets, >=0.8% engagement -> 7%
+    // - > 300k, >=10 tweets, >=0.7% engagement -> 10%
+    let bonusPct = 0;
     if (totalViews >= 300000 && matchingTweetsCount >= 10 && engagementRate >= 0.007) {
-      extraPoints = Math.min(250, 120 + ((totalViews - 300000) / 700000) * 130);
+      bonusPct = 0.10;
     } else if (totalViews >= 80000 && matchingTweetsCount >= 8 && engagementRate >= 0.008) {
-      extraPoints = 50 + ((totalViews - 80000) / 220000) * 50;
+      bonusPct = 0.07;
     } else if (totalViews >= 20000 && matchingTweetsCount >= 5 && engagementRate >= 0.01) {
-      extraPoints = 20 + ((totalViews - 20000) / 60000) * 20;
+      bonusPct = 0.05;
     } else if (totalViews >= 5000 && matchingTweetsCount >= 3 && engagementRate >= 0.01) {
-      extraPoints = 5 + ((totalViews - 5000) / 15000) * 10;
+      bonusPct = 0.03;
     }
-
-    extraPoints = Math.round(extraPoints);
 
     return NextResponse.json({
       username,
@@ -87,7 +85,7 @@ export async function GET(request: Request) {
       totalLikes,
       totalRetweets,
       engagementRate,
-      extraPoints,
+      bonusPct,
     });
   } catch (error) {
     console.error("Twitter check error:", error);

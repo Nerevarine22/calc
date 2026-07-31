@@ -110,7 +110,7 @@ function StatLine({ label, value }: { label: string; value: string }) {
 export default function Home() {
   const [tab, setTab] = useState<"estimator" | "stats">("estimator");
   const [totalPoints, setTotalPoints] = useState("9000000");
-  const [userPoints, setUserPoints] = useState("10000");
+  const [userPoints, setUserPoints] = useState("");
   const [airdropPct, setAirdropPct] = useState(40);
   const [fdv, setFdv] = useState(500_000_000);
   const [fdvMarkets, setFdvMarkets] = useState<FdvMarket[]>([]);
@@ -126,7 +126,8 @@ export default function Home() {
   const [showExtraPoints, setShowExtraPoints] = useState(true);
 
   const [twitterUsername, setTwitterUsername] = useState("");
-  const [twitterExtraPoints, setTwitterExtraPoints] = useState(0);
+  const [twitterBonusPct, setTwitterBonusPct] = useState(0);
+  const twitterExtraPoints = Math.round(parsePositive(userPoints) * twitterBonusPct);
   const [twitterStatus, setTwitterStatus] = useState<"idle" | "checking" | "success" | "error">("idle");
   const [twitterStats, setTwitterStats] = useState<{
     tweetsCount: number;
@@ -143,7 +144,7 @@ export default function Home() {
     setTwitterStatus("checking");
     setTwitterError("");
     setTwitterStats(null);
-    setTwitterExtraPoints(0);
+    setTwitterBonusPct(0);
 
     try {
       const response = await fetch(`/api/check-twitter?username=${encodeURIComponent(username)}`);
@@ -161,7 +162,7 @@ export default function Home() {
           likes: json.totalLikes,
           retweets: json.totalRetweets,
         });
-        setTwitterExtraPoints(json.extraPoints);
+        setTwitterBonusPct(json.bonusPct);
       } else {
         setTwitterStatus("error");
         setTwitterError(`No tweets mentioning Variational found for @${json.username}. Try posting first!`);
@@ -877,17 +878,18 @@ export default function Home() {
                   </div>
                   <div className="flex gap-1.5">
                     <div className="relative flex-1">
-                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#64748B] text-[10px] font-mono">@</span>
+                      <span className={`absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono ${parsePositive(userPoints) === 0 ? "text-[#64748B]/50" : "text-[#64748B]"}`}>@</span>
                       <input
-                        className="w-full h-8 rounded-md bg-[#121318] border-0 pl-6 pr-2.5 font-mono text-[10px] text-white outline-none focus:ring-1 focus:ring-zinc-700 transition"
-                        placeholder="username"
+                        className="w-full h-8 rounded-md bg-[#121318] border-0 pl-6 pr-2.5 font-mono text-[10px] text-white outline-none focus:ring-1 focus:ring-zinc-700 transition disabled:opacity-50 cursor-text disabled:cursor-not-allowed"
+                        placeholder={parsePositive(userPoints) > 0 ? "username" : "Enter points first"}
                         value={twitterUsername}
+                        disabled={parsePositive(userPoints) === 0}
                         onChange={(e) => setTwitterUsername(e.target.value.replace(/^@+/, ""))}
                       />
                     </div>
                     <button
                       onClick={handleCheckTwitterBonus}
-                      disabled={twitterStatus === "checking" || !twitterUsername.trim()}
+                      disabled={twitterStatus === "checking" || !twitterUsername.trim() || parsePositive(userPoints) === 0}
                       className="h-8 px-2.5 rounded-md bg-[#1E2026] hover:bg-zinc-700 text-[#CBD5E1] font-bold text-[9px] uppercase tracking-wider transition active:scale-95 disabled:opacity-40 cursor-pointer min-w-[50px]"
                     >
                       {twitterStatus === "checking" ? "..." : "CHECK"}
