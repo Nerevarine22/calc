@@ -800,7 +800,7 @@ export default function Home() {
           tooltipComponent={CustomTooltip}
           callback={handleJoyrideCallback}
           floaterProps={{
-            hideArrow: true,
+            hideArrow: false,
             disableAnimation: true,
             styles: {
               floater: {
@@ -827,6 +827,11 @@ export default function Home() {
         />
       )}
     <main className="relative min-h-screen bg-[#050507] text-zinc-100 font-sans antialiased selection:bg-[#1E2026] selection:text-white pb-24">
+      <style>{`
+        .__floater__arrow polygon {
+          fill: #4C9AF8 !important;
+        }
+      `}</style>
       {/* Background soft grid */}
       <div 
         className="absolute inset-0 -z-20 opacity-[0.02]" 
