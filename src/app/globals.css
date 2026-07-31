@@ -67,4 +67,19 @@ button, input { font: inherit; }
   }
 }
 
-.__floater__arrow svg polygon, .__floater__arrow svg path { fill: #4C9AF8 !important; }
+/* Force Joyride Arrow Color */
+.__floater__arrow svg polygon,
+.__floater__arrow svg path,
+[class*="__floater__arrow"] svg polygon,
+[class*="__floater__arrow"] svg path,
+[class*="react-joyride"] [class*="arrow"] svg polygon,
+[class*="react-joyride"] [class*="arrow"] svg path { 
+  fill: #4C9AF8 !important; 
+  stroke: #4C9AF8 !important;
+}
+
+/* Fallback for CSS-border arrows if Floater uses them */
+.__floater__arrow span::before,
+.__floater__arrow span::after {
+  border-color: #4C9AF8 transparent transparent transparent !important;
+}
