@@ -449,6 +449,12 @@ export default function Home() {
       ctx.textAlign = "left";
 
       // 3. Center Section: Left Value Box
+      const tmpEl = document.createElement('span');
+      tmpEl.className = 'font-mono';
+      document.body.appendChild(tmpEl);
+      const monoFontFamily = getComputedStyle(tmpEl).fontFamily;
+      document.body.removeChild(tmpEl);
+
       const textMuted = theme === "light" ? "rgba(11, 15, 25, 0.45)" : "rgba(255, 255, 255, 0.4)";
       const textMain = theme === "light" ? "#0b0f19" : "#ffffff";
       const dividerColor = theme === "light" ? "rgba(11, 15, 25, 0.08)" : "rgba(255, 255, 255, 0.08)";
@@ -458,7 +464,7 @@ export default function Home() {
       ctx.fillText("Estimated TGE Value", 52, 230);
 
       ctx.fillStyle = textMain;
-      ctx.font = "bold 76px sans-serif";
+      ctx.font = `bold 96px ${monoFontFamily}`;
       ctx.fillText(formatUsd(results.expectedValue), 52, 335);
 
       ctx.fillStyle = textMuted;
@@ -481,7 +487,7 @@ export default function Home() {
         ctx.fillText("Your Points", 640, 230);
 
         ctx.fillStyle = "#4C9AF8";
-        ctx.font = "bold 32px sans-serif";
+        ctx.font = `bold 42px ${monoFontFamily}`;
         ctx.fillText(formatNumber(parsePositive(userPoints) + twitterExtraPoints), 640, 283);
 
         // Vertical divider top row
@@ -509,7 +515,7 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = "bold 24px sans-serif";
+        ctx.font = `bold 34px ${monoFontFamily}`;
         ctx.fillText(`${(results.share * 100).toFixed(4)}%`, 972, 283);
 
         // Horizontal Divider Line
@@ -537,7 +543,7 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = "bold 24px sans-serif";
+        ctx.font = `bold 34px ${monoFontFamily}`;
         ctx.fillText(formatNumber(results.estimatedTokens, 0), 678, 428);
 
         // Vertical divider bottom row
@@ -552,7 +558,7 @@ export default function Home() {
         ctx.fillText(`𝕏 @${twitterUsername}`, 934, 375);
 
         ctx.fillStyle = twitterExtraPoints > 0 ? "#4C9AF8" : textMuted;
-        ctx.font = "bold 24px sans-serif";
+        ctx.font = `bold 34px ${monoFontFamily}`;
         ctx.fillText(twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0", 934, 428);
       } else {
         // Your Points (Top Spanned)
@@ -561,7 +567,7 @@ export default function Home() {
         ctx.fillText("Your Points", 640, 230);
 
         ctx.fillStyle = "#4C9AF8";
-        ctx.font = "bold 44px sans-serif";
+        ctx.font = `bold 64px ${monoFontFamily}`;
         ctx.fillText(formatNumber(parsePositive(userPoints)), 640, 290);
 
         // Horizontal Divider Line
@@ -589,7 +595,7 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = "bold 24px sans-serif";
+        ctx.font = `bold 34px ${monoFontFamily}`;
         ctx.fillText(`${(results.share * 100).toFixed(4)}%`, 678, 428);
 
         // Vertical divider bottom row
@@ -616,8 +622,8 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = "bold 24px sans-serif";
-        ctx.fillText(formatNumber(results.estimatedTokens, 0), 972, 428);
+        ctx.font = `bold 34px ${monoFontFamily}`;
+        ctx.fillText(formatNumber(results.estimatedTokens, 0), 934, 428);
       }
 
       // 5. Footer section
@@ -1534,7 +1540,7 @@ export default function Home() {
                     {/* Left: Expected TGE Value */}
                     <div className="flex-1 flex flex-col justify-center">
                       <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Estimated TGE Value</span>
-                      <span className={`text-[56px] sm:text-[64px] font-bold font-mono tracking-tight mt-[4px] leading-tight ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>
+                      <span className={`text-[48px] sm:text-[56px] font-bold font-mono tracking-tight mt-[4px] leading-tight ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>
                         {formatUsd(results.expectedValue)}
                       </span>
                       <span className={`text-[13px] font-semibold mt-[12px] ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>
@@ -1553,7 +1559,7 @@ export default function Home() {
                           {/* Your Points */}
                           <div className="flex flex-col">
                             <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
-                            <span className="text-[32px] sm:text-[40px] font-bold font-mono text-[#4C9AF8] mt-[4px] leading-none">
+                            <span className="text-[28px] sm:text-[36px] font-bold font-mono text-[#4C9AF8] mt-[4px] leading-none">
                               {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
                             </span>
                           </div>
@@ -1561,14 +1567,14 @@ export default function Home() {
                           <div className={`flex flex-col border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
                             <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
                             <div className="flex items-center gap-[4px] mt-[4px]">
-                              <span className={`text-[24px] sm:text-[28px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
+                              <span className={`text-[20px] sm:text-[24px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
                             </div>
                           </div>
                         </div>
                       ) : (
                         <div className="flex flex-col">
                           <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
-                          <span className="text-[44px] sm:text-[56px] font-bold font-mono text-[#4C9AF8] mt-[4px] leading-none">
+                          <span className="text-[36px] sm:text-[44px] font-bold font-mono text-[#4C9AF8] mt-[4px] leading-none">
                             {formatNumber(parsePositive(userPoints))}
                           </span>
                         </div>
@@ -1584,7 +1590,7 @@ export default function Home() {
                             <div className="flex flex-col gap-[2px]">
                               <span className={`text-[12px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[24px] sm:text-[28px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
+                                <span className={`text-[20px] sm:text-[24px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                             </div>
                             <div className={`flex flex-col gap-[2px] border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
@@ -1592,7 +1598,7 @@ export default function Home() {
                                 <span className="font-sans font-black">𝕏</span> @{twitterUsername}
                               </span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[24px] sm:text-[28px] font-bold font-mono leading-none ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
+                                <span className={`text-[20px] sm:text-[24px] font-bold font-mono leading-none ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
                                   {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
                                 </span>
                               </div>
@@ -1603,13 +1609,13 @@ export default function Home() {
                             <div className="flex flex-col gap-[2px]">
                               <span className={`text-[12px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[24px] sm:text-[28px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
+                                <span className={`text-[20px] sm:text-[24px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
                               </div>
                             </div>
                             <div className={`flex flex-col gap-[2px] border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
                               <span className={`text-[12px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[24px] sm:text-[28px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
+                                <span className={`text-[20px] sm:text-[24px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                             </div>
                           </>
