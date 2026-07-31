@@ -805,6 +805,9 @@ export default function Home() {
             styles: {
               floater: {
                 filter: 'drop-shadow(0 20px 25px rgba(0, 0, 0, 0.5))'
+              },
+              arrow: {
+                color: '#4C9AF8'
               }
             }
           }}
