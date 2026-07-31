@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     // Search query: from:username (variational OR @variational_io)
     // Standard twitter search is case-insensitive.
     const queryStr = `from:${username} (variational OR @variational_io)`;
-    const targetUrl = `https://api.twitterapi.io/twitter/tweet/advanced_search?query=${encodeURIComponent(queryStr)}&queryType=Latest`;
+    const targetUrl = `https://api.twitterapi.io/twitter/tweet/advanced_search?query=${encodeURIComponent(queryStr)}&queryType=Top`;
     
     const res = await fetch(targetUrl, {
       headers: {
