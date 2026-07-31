@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState, useRef } from "react";
+import { Joyride, Step, STATUS } from "react-joyride";
 
 const TOTAL_SUPPLY = 1_000_000_000;
 const fdvOptions = [100_000_000, 200_000_000, 300_000_000, 500_000_000, 800_000_000, 1_000_000_000, 2_000_000_000];
@@ -107,6 +108,48 @@ function StatLine({ label, value }: { label: string; value: string }) {
   );
 }
 
+const CustomTooltip = ({
+  continuous,
+  index,
+  step,
+  backProps,
+  closeProps,
+  primaryProps,
+  skipProps,
+  tooltipProps,
+}: any) => {
+  return (
+    <div {...tooltipProps} className="bg-[#050507] border border-[#4C9AF8]/50 rounded-xl p-4 shadow-2xl max-w-[320px] flex flex-col gap-3 font-sans text-white relative">
+      <div className="flex justify-between items-start">
+        <div className="flex flex-col gap-1.5 pr-4">
+          {step.title && <h3 className="text-[12px] font-bold uppercase tracking-wider text-white">{step.title}</h3>}
+          <div className="text-[13px] text-[#CBD5E1] leading-relaxed">
+            {step.content}
+          </div>
+        </div>
+        <button onClick={skipProps.onClick} aria-label={skipProps['aria-label']} className="text-[#64748B] hover:text-white transition p-1 absolute top-3 right-3 cursor-pointer">
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div className="flex items-center justify-between mt-2 pt-2">
+        <span className="text-[10px] font-mono text-[#64748B]">Step {index + 1} of 5</span>
+        <div className="flex items-center gap-2">
+          {index > 0 && (
+            <button onClick={backProps.onClick} aria-label={backProps['aria-label']} className="px-3 py-1 text-[10px] font-bold text-[#64748B] hover:text-[#CBD5E1] transition cursor-pointer">
+              Back
+            </button>
+          )}
+          <button onClick={primaryProps.onClick} aria-label={primaryProps['aria-label']} className="px-3 py-1 rounded-md bg-[#4C9AF8] hover:bg-[#3b8ae8] text-white text-[10px] font-bold uppercase tracking-wider transition cursor-pointer shadow-md">
+            {continuous && index < 4 ? 'Next' : 'Got it'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function Home() {
   const [tab, setTab] = useState<"estimator" | "stats">("estimator");
   const [totalPoints, setTotalPoints] = useState("9000000");
@@ -116,6 +159,57 @@ export default function Home() {
   const [fdvMarkets, setFdvMarkets] = useState<FdvMarket[]>([]);
   const [marketStatus, setMarketStatus] = useState<"loading" | "ready" | "unavailable">("loading");
   const [duneData, setDuneData] = useState<any>(null);
+
+  const [isMounted, setIsMounted] = useState(false);
+  const [runTour, setRunTour] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    if (!localStorage.getItem("hasSeenTour")) {
+      setRunTour(true);
+    }
+  }, []);
+
+  const handleJoyrideCallback = (data: any) => {
+    const { status } = data;
+    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
+      setRunTour(false);
+      localStorage.setItem("hasSeenTour", "true");
+    }
+  };
+
+  const tourSteps: Step[] = [
+    {
+      target: '#tour-points-input',
+      content: 'Enter your total Variational points here.',
+      disableBeacon: false,
+      placement: 'auto'
+    },
+    {
+      target: '#tour-pool-size',
+      content: 'Select the expected Airdrop Pool Size. Note: the official project docs mention an allocation of up to 50%.',
+      disableBeacon: true,
+      placement: 'auto'
+    },
+    {
+      target: '#tour-fdv',
+      content: 'Choose an FDV scenario. The percentages shown here represent the current chances derived from Polymarket.',
+      disableBeacon: true,
+      placement: 'bottom'
+    },
+    {
+      target: '#tour-twitter',
+      content: 'Check your possible bonus points for Twitter activity related to Variational.',
+      disableBeacon: true,
+      placement: 'auto'
+    },
+    {
+      target: '#tour-export',
+      content: 'Share your estimated results! Configure the theme and download your card.',
+      disableBeacon: true,
+      placement: 'auto'
+    }
+  ];
 
   const [searchAddress, setSearchAddress] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -691,6 +785,45 @@ export default function Home() {
   const activeTab = "estimator";
 
   return (
+    <>
+      {isMounted && (
+        <Joyride
+          steps={tourSteps}
+          run={runTour}
+          continuous={true}
+          showSkipButton={true}
+          showProgress={true}
+          scrollToFirstStep={true}
+          scrollOffset={150}
+          tooltipComponent={CustomTooltip}
+          callback={handleJoyrideCallback}
+          floaterProps={{
+            hideArrow: true,
+            disableAnimation: true,
+            styles: {
+              floater: {
+                filter: 'drop-shadow(0 20px 25px rgba(0, 0, 0, 0.5))'
+              }
+            }
+          }}
+          styles={{
+            options: {
+              zIndex: 10000,
+              primaryColor: '#4C9AF8',
+              backgroundColor: '#050507',
+              textColor: '#ffffff',
+              arrowColor: '#4C9AF8',
+            },
+            beaconInner: {
+              backgroundColor: '#4C9AF8',
+            },
+            beaconOuter: {
+              borderColor: '#4C9AF8',
+              backgroundColor: 'rgba(76, 154, 248, 0.2)',
+            }
+          }}
+        />
+      )}
     <main className="relative min-h-screen bg-[#050507] text-zinc-100 font-sans antialiased selection:bg-[#1E2026] selection:text-white pb-24">
       {/* Background soft grid */}
       <div 
@@ -822,7 +955,7 @@ export default function Home() {
                 )}
 
                 {/* YOUR POINTS */}
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1" id="tour-points-input">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
                   <input
                     className="h-9 rounded-md bg-[#121318] border-0 px-3 font-mono text-xs font-semibold text-white outline-none focus:ring-1 focus:ring-zinc-700 transition w-full"
@@ -844,7 +977,7 @@ export default function Home() {
                 </div>
 
                 {/* AIRDROP SUPPLY BUTTONS */}
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1" id="tour-pool-size">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B]">Airdrop Pool Size</span>
                   <div className="grid grid-cols-5 gap-1 mt-1">
                     {airdropOptions.map((option) => (
@@ -864,7 +997,7 @@ export default function Home() {
                 </div>
 
                 {/* TWITTER REACH BONUS */}
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1.5" id="tour-twitter">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B]">Twitter Reach Bonus</span>
@@ -985,7 +1118,7 @@ export default function Home() {
 
               {/* TABLE BLOCK: COMPACT TABLE WITH POLYMARKET ODDS */}
               <div className="bg-[#050507]/40 rounded-xl flex-1 flex flex-col overflow-hidden">
-                <div className="px-4 py-3 border-b border-[#1E2026] flex items-center justify-between">
+                <div className="px-4 py-3 border-b border-[#1E2026] flex items-center justify-between" id="tour-fdv">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">FDV Scenarios Grid</span>
                   <span className="text-[8px] text-[#64748B] font-mono">Click rows to switch scenario</span>
                 </div>
@@ -1176,6 +1309,7 @@ export default function Home() {
 
                 <div className="mt-4 flex flex-col gap-2">
                   <button
+                    id="tour-export"
                     onClick={() => setIsShareModalOpen(true)}
                     className="w-full h-8 px-2 inline-flex items-center justify-center rounded-lg bg-[#4C9AF8] hover:bg-[#3b8ae8] text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider whitespace-nowrap overflow-hidden text-ellipsis transition active:scale-95 cursor-pointer"
                   >
@@ -1680,5 +1814,6 @@ export default function Home() {
         </div>
       )}
     </main>
+    </>
   );
 }
