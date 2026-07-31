@@ -183,11 +183,7 @@ export default function Home() {
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const width = entry.contentRect.width;
-        if (width < 780) {
-          setModalScale(width / 780);
-        } else {
-          setModalScale(1);
-        }
+        setModalScale(width / 780);
       }
     });
     if (modalContainerRef.current) {
@@ -1502,7 +1498,7 @@ export default function Home() {
               </div>
             </div>
             
-            <div ref={modalContainerRef} className="flex justify-center items-center py-2 w-full overflow-hidden" style={{ height: `${Math.min(408, 408 * modalScale) + 16}px` }}>
+            <div ref={modalContainerRef} className="flex justify-center items-center py-2 w-full overflow-hidden" style={{ height: `${408 * modalScale + 16}px` }}>
               <div 
                 style={{ 
                   transform: `scale(${modalScale})`, 
