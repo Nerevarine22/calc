@@ -821,7 +821,7 @@ export default function Home() {
               borderColor: '#4C9AF8',
               backgroundColor: 'rgba(76, 154, 248, 0.2)',
             }
-          }}
+          } as any}
         />
       )}
     <main className="relative min-h-screen bg-[#050507] text-zinc-100 font-sans antialiased selection:bg-[#1E2026] selection:text-white pb-24">
