@@ -689,7 +689,7 @@ export default function Home() {
       />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 w-full max-w-7xl h-[400px] bg-gradient-to-b from-[#4C9AF8]/3 to-transparent blur-[120px] pointer-events-none" />
 
-      <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 sm:px-8 md:px-10 lg:px-12 pt-8 sm:pt-10">
+      <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-2 sm:px-8 md:px-10 lg:px-12 pt-8 sm:pt-10">
         
         {/* HEADER */}
         <header className="flex flex-wrap items-center border-b border-[#1E2026]/40 pb-4 lg:pb-6 gap-y-4 gap-x-6">
@@ -930,7 +930,7 @@ export default function Home() {
             </div>
 
             {/* COLUMN 2: HERO EXPECTED ALLOCATION & GRID SCENARIOS (Span 6) */}
-            <div className="lg:col-span-6 flex flex-col gap-4 max-h-[calc(100vh-140px)]">
+            <div className="lg:col-span-6 flex flex-col gap-4 lg:max-h-[calc(100vh-140px)]">
               
               {/* HERO BLOCK: DENSITY REDUCED & HIGH-IMPACT */}
               <div className="bg-zinc-950/40 rounded-xl p-5 flex flex-col justify-between min-h-[140px] py-4 relative overflow-hidden">
@@ -975,7 +975,7 @@ export default function Home() {
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">FDV Scenarios Grid</span>
                   <span className="text-[8px] text-[#64748B] font-mono">Click rows to switch scenario</span>
                 </div>
-                <div className="flex-1 overflow-y-auto overflow-x-hidden">
+                <div className="flex-1 overflow-y-auto overflow-x-auto">
                   <table className="w-full border-collapse text-left text-[10px] sm:text-[11px]">
                     <thead className="border-b border-[#1E2026] bg-[#121318]/40 text-[#64748B]">
                       <tr>
@@ -1434,13 +1434,13 @@ export default function Home() {
           <div className="relative bg-[#050507] border border-[#1E2026] rounded-2xl max-w-[840px] w-full p-6 flex flex-col gap-6 animate-slide-fade-in shadow-2xl">
             
             {/* Modal Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-[#1E2026]">
-              <div className="flex flex-col gap-0.5">
+            <div className="flex flex-wrap items-start sm:items-center justify-between pb-4 border-b border-[#1E2026] gap-y-4 gap-x-4">
+              <div className="flex flex-col gap-0.5 order-1 w-[calc(100%-3rem)] sm:w-auto">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-white">Export Estimate Card</h3>
                 <p className="text-[10px] text-[#64748B]">Configure theme options and download your high-quality card.</p>
               </div>
               
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 order-3 sm:order-2 w-full sm:w-auto sm:ml-auto">
                 {/* Toggle Show Extra Points */}
                 {twitterUsername.trim() ? (
                   <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[#64748B] hover:text-zinc-350 cursor-pointer select-none transition">
@@ -1480,7 +1480,7 @@ export default function Home() {
 
                 <button
                   onClick={() => setIsShareModalOpen(false)}
-                  className="p-1.5 rounded-lg bg-zinc-900 hover:bg-[#1E2026] text-[#94A3B8] hover:text-white border border-[#1E2026] transition cursor-pointer"
+                  className="p-1.5 rounded-lg bg-zinc-900 hover:bg-[#1E2026] text-[#94A3B8] hover:text-white border border-[#1E2026] transition cursor-pointer order-2 sm:order-3 ml-auto sm:ml-0 flex-shrink-0"
                 >
                   <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
