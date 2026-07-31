@@ -760,8 +760,8 @@ export default function Home() {
             </button>
           </div>
 
-          {/* 3. Created by (Top Right on mobile, Far Right on Desktop) */}
-          <div className="flex items-center justify-end gap-3 sm:gap-4 order-2 lg:order-3 ml-auto lg:ml-0 w-auto">
+          {/* 3. Created by (Hidden on mobile, Far Right on Desktop) */}
+          <div className="hidden lg:flex items-center justify-end gap-3 sm:gap-4 order-2 lg:order-3 ml-auto lg:ml-0 w-auto">
             <a
               href="https://x.com/atoms_res"
               target="_blank"
