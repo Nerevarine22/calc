@@ -1348,7 +1348,7 @@ export default function Home() {
                 <div className="flex flex-col">
                   <span className="text-[8px] font-bold tracking-wider text-[#64748B] uppercase">Points Distributed</span>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="font-mono text-sm sm:text-base font-bold text-white">7,900,000</span>
+                    <span className="font-mono text-sm sm:text-base font-bold text-white">7,950,000</span>
                     <span className="text-[8px] text-[#64748B] font-mono">/ {formatNumber(parsePositive(totalPoints))}</span>
                   </div>
                 </div>
