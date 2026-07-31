@@ -464,8 +464,14 @@ export default function Home() {
       ctx.fillText("Estimated TGE Value", 52, 230);
 
       ctx.fillStyle = textMain;
-      ctx.font = `bold 96px ${monoFontFamily}`;
-      ctx.fillText(formatUsd(results.expectedValue), 52, 335);
+      let tgeFontSize = 76;
+      ctx.font = `bold ${tgeFontSize}px ${monoFontFamily}`;
+      let tgeText = formatUsd(results.expectedValue);
+      while (ctx.measureText(tgeText).width > 520 && tgeFontSize > 40) {
+        tgeFontSize -= 2;
+        ctx.font = `bold ${tgeFontSize}px ${monoFontFamily}`;
+      }
+      ctx.fillText(tgeText, 52, 335);
 
       ctx.fillStyle = textMuted;
       ctx.font = "14px sans-serif";
@@ -487,7 +493,7 @@ export default function Home() {
         ctx.fillText("Your Points", 640, 230);
 
         ctx.fillStyle = "#4C9AF8";
-        ctx.font = `bold 42px ${monoFontFamily}`;
+        ctx.font = `bold 36px ${monoFontFamily}`;
         ctx.fillText(formatNumber(parsePositive(userPoints) + twitterExtraPoints), 640, 283);
 
         // Vertical divider top row
@@ -515,7 +521,7 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = `bold 34px ${monoFontFamily}`;
+        ctx.font = `bold 28px ${monoFontFamily}`;
         ctx.fillText(`${(results.share * 100).toFixed(4)}%`, 972, 283);
 
         // Horizontal Divider Line
@@ -543,7 +549,7 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = `bold 34px ${monoFontFamily}`;
+        ctx.font = `bold 28px ${monoFontFamily}`;
         ctx.fillText(formatNumber(results.estimatedTokens, 0), 678, 428);
 
         // Vertical divider bottom row
@@ -558,7 +564,7 @@ export default function Home() {
         ctx.fillText(`𝕏 @${twitterUsername}`, 934, 375);
 
         ctx.fillStyle = twitterExtraPoints > 0 ? "#4C9AF8" : textMuted;
-        ctx.font = `bold 34px ${monoFontFamily}`;
+        ctx.font = `bold 28px ${monoFontFamily}`;
         ctx.fillText(twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0", 934, 428);
       } else {
         // Your Points (Top Spanned)
@@ -567,7 +573,7 @@ export default function Home() {
         ctx.fillText("Your Points", 640, 230);
 
         ctx.fillStyle = "#4C9AF8";
-        ctx.font = `bold 64px ${monoFontFamily}`;
+        ctx.font = `bold 52px ${monoFontFamily}`;
         ctx.fillText(formatNumber(parsePositive(userPoints)), 640, 290);
 
         // Horizontal Divider Line
@@ -595,7 +601,7 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = `bold 34px ${monoFontFamily}`;
+        ctx.font = `bold 28px ${monoFontFamily}`;
         ctx.fillText(`${(results.share * 100).toFixed(4)}%`, 678, 428);
 
         // Vertical divider bottom row
@@ -622,8 +628,8 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = `bold 34px ${monoFontFamily}`;
-        ctx.fillText(formatNumber(results.estimatedTokens, 0), 934, 428);
+        ctx.font = `bold 28px ${monoFontFamily}`;
+        ctx.fillText(formatNumber(results.estimatedTokens, 0), 972, 428);
       }
 
       // 5. Footer section
