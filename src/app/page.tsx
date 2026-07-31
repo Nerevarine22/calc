@@ -152,7 +152,7 @@ const CustomTooltip = ({
 
 export default function Home() {
   const [tab, setTab] = useState<"estimator" | "stats">("estimator");
-  const [totalPoints, setTotalPoints] = useState("9150000");
+  const [totalPoints, setTotalPoints] = useState("9000000");
   const [userPoints, setUserPoints] = useState("");
   const [airdropPct, setAirdropPct] = useState(40);
   const [fdv, setFdv] = useState(500_000_000);
@@ -1355,7 +1355,7 @@ export default function Home() {
                 <div className="flex flex-col items-end">
                   <span className="text-[8px] font-bold tracking-wider text-[#64748B] uppercase">Remaining</span>
                   <span className="font-mono text-sm sm:text-base font-bold text-[#4C9AF8]">
-                    {formatNumber(Math.max(0, parsePositive(totalPoints) - 8050000))}
+                    {formatNumber(Math.max(0, parsePositive(totalPoints) - 7950000))}
                   </span>
                 </div>
               </div>
@@ -1363,7 +1363,7 @@ export default function Home() {
               <div className="relative w-full h-[2px] bg-[#121318] rounded-full overflow-hidden">
                 <div 
                   className="absolute top-0 left-0 h-full bg-[#4C9AF8] transition-all duration-1000 ease-out"
-                  style={{ width: `${Math.min(100, (8050000 / Math.max(1, parsePositive(totalPoints))) * 100)}%` }}
+                  style={{ width: `${Math.min(100, (7950000 / Math.max(1, parsePositive(totalPoints))) * 100)}%` }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/20" />
                 </div>
@@ -1371,10 +1371,10 @@ export default function Home() {
 
               <div className="flex items-center justify-between">
                 <span className="text-[9px] font-mono text-[#64748B]">
-                  ~{formatUsd((8050000 / Math.max(1, parsePositive(totalPoints))) * results.airdropSupply * results.tokenPrice)}
+                  ~{formatUsd((7950000 / Math.max(1, parsePositive(totalPoints))) * results.airdropSupply * results.tokenPrice)}
                 </span>
                 <span className="text-[9px] font-mono text-[#4C9AF8]/70">
-                  ~{formatUsd((Math.max(0, parsePositive(totalPoints) - 8050000) / Math.max(1, parsePositive(totalPoints))) * results.airdropSupply * results.tokenPrice)}
+                  ~{formatUsd((Math.max(0, parsePositive(totalPoints) - 7950000) / Math.max(1, parsePositive(totalPoints))) * results.airdropSupply * results.tokenPrice)}
                 </span>
               </div>
             </div>
