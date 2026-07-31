@@ -715,8 +715,8 @@ export default function Home() {
             </nav>
           </div>
 
-          {/* 2. Omni promo widget (Bottom on mobile, Middle-Right on Desktop) */}
-          <div className="flex flex-wrap items-center gap-1.5 order-3 lg:order-2 w-full lg:w-auto lg:ml-auto mt-1 lg:mt-0">
+          {/* 2. Omni promo widget (Bottom on mobile, Middle on Desktop) */}
+          <div className="flex flex-wrap justify-center items-center gap-1.5 order-3 lg:order-2 w-full lg:w-auto lg:mx-auto mt-1 lg:mt-0">
             <a
               href="https://omni.variational.io/?ref=OMNIKLJ9FBUC"
               target="_blank"
@@ -760,7 +760,7 @@ export default function Home() {
             </button>
           </div>
 
-          {/* 3. Created by & Prediction Data Active (Top Right on mobile, Far Right on Desktop) */}
+          {/* 3. Created by (Top Right on mobile, Far Right on Desktop) */}
           <div className="flex items-center justify-end gap-3 sm:gap-4 order-2 lg:order-3 ml-auto lg:ml-0 w-auto">
             <a
               href="https://x.com/atoms_res"
@@ -770,13 +770,6 @@ export default function Home() {
             >
               created by @atoms_res
             </a>
-            <span className="hidden sm:inline-block h-3.5 w-px bg-[#1E2026]" />
-            <div className="flex items-center gap-2">
-              <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
-              <span className="hidden lg:inline font-mono text-[9px] sm:text-[10px] tracking-wider text-[#64748B] uppercase whitespace-nowrap">
-                {marketStatus === "ready" ? "Prediction Data Active" : "Local Engine"}
-              </span>
-            </div>
           </div>
         </header>
 
