@@ -791,10 +791,12 @@ export default function Home() {
           steps={tourSteps}
           run={runTour}
           continuous={true}
-          showSkipButton={true}
-          showProgress={true}
-          scrollToFirstStep={false}
-          scrollOffset={150}
+          {...({
+            showSkipButton: true,
+            showProgress: true,
+            scrollToFirstStep: false,
+            scrollOffset: 150
+          } as any)}
           tooltipComponent={CustomTooltip}
           callback={handleJoyrideCallback}
           floaterProps={{
