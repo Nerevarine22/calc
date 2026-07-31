@@ -837,10 +837,10 @@ export default function Home() {
       />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 w-full max-w-7xl h-[400px] bg-gradient-to-b from-[#4C9AF8]/3 to-transparent blur-[120px] pointer-events-none" />
 
-      <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-2 sm:px-8 md:px-10 lg:px-12 pt-8 sm:pt-10">
+      <section className="mx-auto flex w-full max-w-7xl flex-col gap-6 sm:gap-8 px-2 sm:px-8 md:px-10 lg:px-12 pt-8 sm:pt-10">
         
         {/* HEADER */}
-        <header className="flex flex-wrap items-center lg:border-b border-[#1E2026]/40 pb-2 lg:pb-6 gap-y-6 lg:gap-y-4 gap-x-6">
+        <header className="flex flex-wrap items-center lg:border-b border-[#1E2026]/40 pb-0 lg:pb-6 gap-y-6 lg:gap-y-4 gap-x-6">
           
           {/* 1. Logo */}
           <div className="flex items-center gap-4 order-1 w-auto">
@@ -864,7 +864,7 @@ export default function Home() {
           </div>
 
           {/* 2. Omni promo widget (Bottom on mobile, Middle on Desktop) */}
-          <div className="flex flex-wrap justify-center items-center gap-1.5 order-3 lg:order-2 w-full lg:w-auto lg:mx-auto mt-1 lg:mt-0">
+          <div className="flex flex-wrap justify-center items-center gap-1.5 order-3 lg:order-2 w-full lg:w-auto lg:mx-auto mt-0">
             <a
               href="https://omni.variational.io/?ref=OMNIKLJ9FBUC"
               target="_blank"
