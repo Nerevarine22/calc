@@ -119,7 +119,7 @@ const CustomTooltip = ({
   tooltipProps,
 }: any) => {
   return (
-    <div {...tooltipProps} className="bg-[#050507] border border-[#4C9AF8]/50 rounded-xl p-4 shadow-2xl max-w-[320px] flex flex-col gap-3 font-sans text-white relative">
+    <div {...tooltipProps} className="bg-[#050507] border-2 border-[#4C9AF8]/50 rounded-xl p-4 shadow-2xl max-w-[320px] flex flex-col gap-3 font-sans text-white relative">
       <div className="flex justify-between items-start">
         <div className="flex flex-col gap-1.5 pr-4">
           {step.title && <h3 className="text-[12px] font-bold uppercase tracking-wider text-white">{step.title}</h3>}
