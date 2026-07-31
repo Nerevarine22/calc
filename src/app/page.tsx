@@ -838,7 +838,7 @@ export default function Home() {
       <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-2 sm:px-8 md:px-10 lg:px-12 pt-8 sm:pt-10">
         
         {/* HEADER */}
-        <header className="flex flex-wrap items-center border-b border-[#1E2026]/40 pb-4 lg:pb-6 gap-y-4 gap-x-6">
+        <header className="flex flex-wrap items-center lg:border-b border-[#1E2026]/40 pb-2 lg:pb-6 gap-y-6 lg:gap-y-4 gap-x-6">
           
           {/* 1. Logo */}
           <div className="flex items-center gap-4 order-1 w-auto">
