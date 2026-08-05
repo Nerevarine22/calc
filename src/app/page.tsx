@@ -166,13 +166,13 @@ const CustomTooltip = ({
 };
 
 const DEFAULT_FDV_MARKETS: FdvMarket[] = [
-  { conditionId: "1", question: "Variational FDV > $100M", slug: "100m", fdv: 100_000_000, volumeTotal: 0, yesChance: null, source: "gamma", url: "https://polymarket.com/event/variational-fdv-above-one-day-after-launch" },
-  { conditionId: "2", question: "Variational FDV > $200M", slug: "200m", fdv: 200_000_000, volumeTotal: 0, yesChance: null, source: "gamma", url: "https://polymarket.com/event/variational-fdv-above-one-day-after-launch" },
-  { conditionId: "3", question: "Variational FDV > $300M", slug: "300m", fdv: 300_000_000, volumeTotal: 0, yesChance: null, source: "gamma", url: "https://polymarket.com/event/variational-fdv-above-one-day-after-launch" },
-  { conditionId: "4", question: "Variational FDV > $500M", slug: "500m", fdv: 500_000_000, volumeTotal: 0, yesChance: null, source: "gamma", url: "https://polymarket.com/event/variational-fdv-above-one-day-after-launch" },
-  { conditionId: "5", question: "Variational FDV > $800M", slug: "800m", fdv: 800_000_000, volumeTotal: 0, yesChance: null, source: "gamma", url: "https://polymarket.com/event/variational-fdv-above-one-day-after-launch" },
-  { conditionId: "6", question: "Variational FDV > $1B", slug: "1b", fdv: 1_000_000_000, volumeTotal: 0, yesChance: null, source: "gamma", url: "https://polymarket.com/event/variational-fdv-above-one-day-after-launch" },
-  { conditionId: "7", question: "Variational FDV > $2B", slug: "2b", fdv: 2_000_000_000, volumeTotal: 0, yesChance: null, source: "gamma", url: "https://polymarket.com/event/variational-fdv-above-one-day-after-launch" },
+  { conditionId: "1", question: "Variational FDV > $100M", slug: "100m", fdv: 100_000_000, volumeTotal: 0, yesChance: null, url: "https://polymarket.com/event/variational-fdv-above-one-day-after-launch" },
+  { conditionId: "2", question: "Variational FDV > $200M", slug: "200m", fdv: 200_000_000, volumeTotal: 0, yesChance: null, url: "https://polymarket.com/event/variational-fdv-above-one-day-after-launch" },
+  { conditionId: "3", question: "Variational FDV > $300M", slug: "300m", fdv: 300_000_000, volumeTotal: 0, yesChance: null, url: "https://polymarket.com/event/variational-fdv-above-one-day-after-launch" },
+  { conditionId: "4", question: "Variational FDV > $500M", slug: "500m", fdv: 500_000_000, volumeTotal: 0, yesChance: null, url: "https://polymarket.com/event/variational-fdv-above-one-day-after-launch" },
+  { conditionId: "5", question: "Variational FDV > $800M", slug: "800m", fdv: 800_000_000, volumeTotal: 0, yesChance: null, url: "https://polymarket.com/event/variational-fdv-above-one-day-after-launch" },
+  { conditionId: "6", question: "Variational FDV > $1B", slug: "1b", fdv: 1_000_000_000, volumeTotal: 0, yesChance: null, url: "https://polymarket.com/event/variational-fdv-above-one-day-after-launch" },
+  { conditionId: "7", question: "Variational FDV > $2B", slug: "2b", fdv: 2_000_000_000, volumeTotal: 0, yesChance: null, url: "https://polymarket.com/event/variational-fdv-above-one-day-after-launch" },
 ];
 
 export default function Home() {
