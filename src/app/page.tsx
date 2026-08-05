@@ -510,6 +510,7 @@ export default function Home() {
         ctx.scale(3.424, 3.424);
         const bgLogoPath = new Path2D("M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z");
         ctx.fill(bgLogoPath);
+        ctx.filter = "none";
         ctx.restore();
       }
 
@@ -572,7 +573,7 @@ export default function Home() {
       ctx.fillText("Estimated TGE Value", 52, 230);
 
       ctx.fillStyle = textMain;
-      let tgeFontSize = 100;
+      let tgeFontSize = 112;
       ctx.font = `bold ${tgeFontSize}px ${monoFontFamily}`;
       let tgeText = formatUsdRounded(results.expectedValue);
       while (ctx.measureText(tgeText).width > 520 && tgeFontSize > 40) {
@@ -604,7 +605,7 @@ export default function Home() {
         ctx.fillText("Your Points", 640, 230);
 
         ctx.fillStyle = "#4C9AF8";
-        ctx.font = `bold 66px ${monoFontFamily}`;
+        ctx.font = `bold 74px ${monoFontFamily}`;
         ctx.shadowColor = "rgba(76, 154, 248, 0.25)";
         ctx.shadowBlur = 12;
         ctx.fillText(formatNumber(parsePositive(userPoints) + twitterExtraPoints), 640, 283);
@@ -635,7 +636,7 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = `bold 38px ${monoFontFamily}`;
+        ctx.font = `bold 43px ${monoFontFamily}`;
         ctx.fillText(`${(results.share * 100).toFixed(4)}%`, 972, 283);
 
         // Horizontal Divider Line
@@ -663,7 +664,7 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = `bold 38px ${monoFontFamily}`;
+        ctx.font = `bold 43px ${monoFontFamily}`;
         ctx.fillText(formatNumber(results.estimatedTokens, 0), 678, 428);
 
         // Vertical divider bottom row
@@ -678,7 +679,7 @@ export default function Home() {
         ctx.fillText(`𝕏 @${twitterUsername}`, 934, 375);
 
         ctx.fillStyle = twitterExtraPoints > 0 ? "#4C9AF8" : textMuted;
-        ctx.font = `bold 32px ${monoFontFamily}`;
+        ctx.font = `bold 36px ${monoFontFamily}`;
         ctx.fillText(twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0", 934, 428);
       } else {
         // Your Points (Top Spanned)
@@ -687,7 +688,7 @@ export default function Home() {
         ctx.fillText("Your Points", 640, 230);
 
         ctx.fillStyle = "#4C9AF8";
-        ctx.font = `bold 66px ${monoFontFamily}`;
+        ctx.font = `bold 74px ${monoFontFamily}`;
         ctx.shadowColor = "rgba(76, 154, 248, 0.25)";
         ctx.shadowBlur = 12;
         ctx.fillText(formatNumber(parsePositive(userPoints)), 640, 290);
@@ -718,7 +719,7 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = `bold 38px ${monoFontFamily}`;
+        ctx.font = `bold 43px ${monoFontFamily}`;
         ctx.fillText(`${(results.share * 100).toFixed(4)}%`, 678, 428);
 
         // Vertical divider bottom row
@@ -1260,7 +1261,7 @@ export default function Home() {
                       {/* Left: Expected TGE Value */}
                       <div className="flex-1 flex flex-col justify-center">
                         <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Estimated TGE Value</span>
-                        <span className="text-[5.7cqw] font-bold font-mono tracking-tight text-[#4C9AF8] leading-tight mt-[0.4cqw] [text-shadow:0_0_14px_rgba(76,154,248,0.3)]">
+                        <span className="text-[6.4cqw] font-bold font-mono tracking-tight text-[#4C9AF8] leading-tight mt-[0.4cqw] [text-shadow:0_0_14px_rgba(76,154,248,0.3)]">
                           <AnimatedNumber value={results.expectedValue} />
                         </span>
                         <span className="text-[1.3cqw] font-semibold text-zinc-500 mt-[1.3cqw]">
@@ -1278,20 +1279,20 @@ export default function Home() {
                             {/* Your Points */}
                             <div className="flex flex-col">
                               <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
-                              <span className="text-[5.3cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw] [text-shadow:0_0_12px_rgba(76,154,248,0.25)]">
+                              <span className="text-[5.9cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw] [text-shadow:0_0_12px_rgba(76,154,248,0.25)]">
                                 {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
                               </span>
                             </div>
                             {/* Pool Share */}
                             <div className="flex flex-col border-l border-[#1E2026] pl-[2cqw]">
                               <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Pool Share</span>
-                              <span className="text-[3.2cqw] font-bold font-mono text-white leading-none mt-[0.4cqw]">{(results.share * 100).toFixed(4)}%</span>
+                              <span className="text-[3.6cqw] font-bold font-mono text-white leading-none mt-[0.4cqw]">{(results.share * 100).toFixed(4)}%</span>
                             </div>
                           </div>
                         ) : (
                           <div className="flex flex-col">
                             <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
-                            <span className="text-[5.3cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw] [text-shadow:0_0_12px_rgba(76,154,248,0.25)]">
+                            <span className="text-[5.9cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw] [text-shadow:0_0_12px_rgba(76,154,248,0.25)]">
                               {formatNumber(parsePositive(userPoints))}
                             </span>
                           </div>
@@ -1307,12 +1308,12 @@ export default function Home() {
                               {/* Est. Tokens */}
                               <div className="flex flex-col">
                                 <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Est. Tokens</span>
-                                <span className="text-[3.2cqw] font-bold font-mono text-white leading-none mt-[0.4cqw]">{formatNumber(results.estimatedTokens, 0)}</span>
+                                <span className="text-[3.6cqw] font-bold font-mono text-white leading-none mt-[0.4cqw]">{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                               {/* Twitter handle */}
                               <div className="flex flex-col border-l border-[#1E2026] pl-[2cqw] truncate">
                                 <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B] truncate">𝕏 @{twitterUsername}</span>
-                                <span className="text-[3.2cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw]">+{formatNumber(twitterExtraPoints)}</span>
+                                <span className="text-[3.6cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw]">+{formatNumber(twitterExtraPoints)}</span>
                               </div>
                             </>
                           ) : (
@@ -1320,12 +1321,12 @@ export default function Home() {
                               {/* Pool Share */}
                               <div className="flex flex-col">
                                 <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Pool Share</span>
-                                <span className="text-[2.8cqw] font-bold font-mono text-white leading-none mt-[0.4cqw]">{(results.share * 100).toFixed(4)}%</span>
+                                <span className="text-[3.1cqw] font-bold font-mono text-white leading-none mt-[0.4cqw]">{(results.share * 100).toFixed(4)}%</span>
                               </div>
                               {/* Est. Tokens */}
                               <div className="flex flex-col border-l border-[#1E2026] pl-[2cqw]">
                                 <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Est. Tokens</span>
-                                <span className="text-[2.8cqw] font-bold font-mono text-white leading-none mt-[0.4cqw]">{formatNumber(results.estimatedTokens, 0)}</span>
+                                <span className="text-[3.1cqw] font-bold font-mono text-white leading-none mt-[0.4cqw]">{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                             </>
                           )}
@@ -1721,7 +1722,7 @@ export default function Home() {
                     {/* Left: Expected TGE Value */}
                     <div className="flex-1 flex flex-col justify-center">
                       <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Estimated TGE Value</span>
-                      <span className={`text-[64px] sm:text-[76px] font-bold font-mono tracking-tight mt-[4px] leading-tight ${shareCardTheme === "light" ? "text-zinc-900" : "text-white [text-shadow:0_0_14px_rgba(76,154,248,0.3)]"}`}>
+                      <span className={`text-[72px] sm:text-[86px] font-bold font-mono tracking-tight mt-[4px] leading-tight ${shareCardTheme === "light" ? "text-zinc-900" : "text-white [text-shadow:0_0_14px_rgba(76,154,248,0.3)]"}`}>
                         {formatUsdRounded(results.expectedValue)}
                       </span>
                       <span className={`text-[13px] font-semibold mt-[12px] ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>
@@ -1740,7 +1741,7 @@ export default function Home() {
                           {/* Your Points */}
                           <div className="flex flex-col">
                             <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
-                            <span className={`text-[56px] sm:text-[68px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
+                            <span className={`text-[63px] sm:text-[76px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
                               {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
                             </span>
                           </div>
@@ -1748,14 +1749,14 @@ export default function Home() {
                           <div className={`flex flex-col border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
                             <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
                             <div className="flex items-center gap-[4px] mt-[2px]">
-                              <span className={`text-[30px] sm:text-[36px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
+                              <span className={`text-[34px] sm:text-[40px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
                             </div>
                           </div>
                         </div>
                       ) : (
                         <div className="flex flex-col">
                           <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
-                          <span className={`text-[56px] sm:text-[68px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
+                          <span className={`text-[63px] sm:text-[76px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
                             {formatNumber(parsePositive(userPoints))}
                           </span>
                         </div>
@@ -1771,7 +1772,7 @@ export default function Home() {
                             <div className="flex flex-col gap-[2px]">
                               <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[30px] sm:text-[36px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
+                                <span className={`text-[34px] sm:text-[40px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                             </div>
                             <div className={`flex flex-col gap-[2px] border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
@@ -1779,7 +1780,7 @@ export default function Home() {
                                 <span className="font-sans font-black">𝕏</span> @{twitterUsername}
                               </span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[30px] sm:text-[36px] font-bold font-mono leading-none ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
+                                <span className={`text-[34px] sm:text-[40px] font-bold font-mono leading-none ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
                                   {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
                                 </span>
                               </div>
@@ -1790,13 +1791,13 @@ export default function Home() {
                             <div className="flex flex-col gap-[2px]">
                               <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[30px] sm:text-[36px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
+                                <span className={`text-[34px] sm:text-[40px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
                               </div>
                             </div>
                             <div className={`flex flex-col gap-[2px] border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
                               <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[30px] sm:text-[36px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
+                                <span className={`text-[34px] sm:text-[40px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                             </div>
                           </>
