@@ -476,7 +476,7 @@ export default function Home() {
         await new Promise((resolve, reject) => {
           waveImg.onload = resolve;
           waveImg.onerror = reject;
-          waveImg.src = theme === "light" ? "/brand/wave-light.png" : "/brand/wave-dark.png";
+          waveImg.src = theme === "light" ? "/brand/wave-light.png?v=3" : "/brand/wave-dark.png?v=4";
         });
         ctx.drawImage(waveImg, 0, 0, 1200, 630);
       } catch (e) {
@@ -492,14 +492,16 @@ export default function Home() {
         ctx.stroke();
       }
 
-      // Giant background logo watermark on the right (full height, extending beyond top & bottom borders)
-      ctx.fillStyle = theme === "light" ? "rgba(0, 0, 0, 0.02)" : "rgba(76, 154, 248, 0.035)";
-      ctx.save();
-      ctx.translate(48, -151);
-      ctx.scale(3.424, 3.424);
-      const bgLogoPath = new Path2D("M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z");
-      ctx.fill(bgLogoPath);
-      ctx.restore();
+      // Giant background logo watermark on the right for dark theme (full height, extending beyond top & bottom borders)
+      if (theme !== "light") {
+        ctx.fillStyle = "rgba(76, 154, 248, 0.035)";
+        ctx.save();
+        ctx.translate(48, -151);
+        ctx.scale(3.424, 3.424);
+        const bgLogoPath = new Path2D("M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z");
+        ctx.fill(bgLogoPath);
+        ctx.restore();
+      }
 
 
 
@@ -592,9 +594,9 @@ export default function Home() {
         ctx.fillText("Your Points", 640, 230);
 
         ctx.fillStyle = "#4C9AF8";
-        ctx.font = `bold 36px ${monoFontFamily}`;
+        ctx.font = `bold 58px ${monoFontFamily}`;
         ctx.shadowColor = "rgba(76, 154, 248, 0.25)";
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 12;
         ctx.fillText(formatNumber(parsePositive(userPoints) + twitterExtraPoints), 640, 283);
         ctx.shadowBlur = 0;
 
@@ -675,7 +677,7 @@ export default function Home() {
         ctx.fillText("Your Points", 640, 230);
 
         ctx.fillStyle = "#4C9AF8";
-        ctx.font = `bold 52px ${monoFontFamily}`;
+        ctx.font = `bold 58px ${monoFontFamily}`;
         ctx.shadowColor = "rgba(76, 154, 248, 0.25)";
         ctx.shadowBlur = 12;
         ctx.fillText(formatNumber(parsePositive(userPoints)), 640, 290);
@@ -1218,8 +1220,8 @@ export default function Home() {
 
                 <div className="@container w-full">
                   <div 
-                    className="relative overflow-hidden rounded-xl bg-[#050507] bg-[length:100%_100%] bg-center bg-no-repeat p-[4.33cqw] flex flex-col justify-between aspect-[1200/630] w-full shadow-lg flex-shrink-0"
-                    style={{ backgroundImage: "url('/brand/wave-dark.png')" }}
+                    className="relative overflow-hidden bg-[length:100%_100%] bg-center bg-no-repeat p-[4.33cqw] flex flex-col justify-between aspect-[1200/630] w-full shadow-lg flex-shrink-0"
+                    style={{ backgroundImage: "url('/brand/wave-dark.png?v=4')" }}
                   >
                     {/* Subtle giant background logo icon (extending beyond top & bottom borders) */}
                     <svg className="absolute left-[4%] top-[-50.8%] w-[105%] h-[195%] pointer-events-none text-[#4C9AF8] opacity-[0.035]" viewBox="0 0 368 260" fill="currentColor">
@@ -1265,7 +1267,7 @@ export default function Home() {
                             {/* Your Points */}
                             <div className="flex flex-col">
                               <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
-                              <span className="text-[3.2cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw] [text-shadow:0_0_10px_rgba(76,154,248,0.25)]">
+                              <span className="text-[4.7cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw] [text-shadow:0_0_12px_rgba(76,154,248,0.25)]">
                                 {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
                               </span>
                             </div>
@@ -1278,7 +1280,7 @@ export default function Home() {
                         ) : (
                           <div className="flex flex-col">
                             <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
-                            <span className="text-[4.2cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw] [text-shadow:0_0_12px_rgba(76,154,248,0.25)]">
+                            <span className="text-[4.7cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw] [text-shadow:0_0_12px_rgba(76,154,248,0.25)]">
                               {formatNumber(parsePositive(userPoints))}
                             </span>
                           </div>
@@ -1676,12 +1678,14 @@ export default function Home() {
                       ? "bg-slate-50 rounded-2xl border border-zinc-200/80 text-zinc-900"
                       : "bg-transparent rounded-none border-none text-white"
                   }`}
-                  style={{ backgroundImage: shareCardTheme === "light" ? "url('/brand/wave-light.png')" : "url('/brand/wave-dark.png')" }}
+                  style={{ backgroundImage: shareCardTheme === "light" ? "url('/brand/wave-light.png?v=3')" : "url('/brand/wave-dark.png?v=4')" }}
                 >
-                  {/* Subtle giant background logo icon (extending beyond top & bottom borders) */}
-                  <svg className={`absolute left-[4%] top-[-50.8%] w-[105%] h-[195%] pointer-events-none ${shareCardTheme === "light" ? "text-zinc-900 opacity-[0.02]" : "text-[#4C9AF8] opacity-[0.035]"}`} viewBox="0 0 368 260" fill="currentColor">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
-                  </svg>
+                  {/* Subtle giant background logo icon for dark theme (extending beyond top & bottom borders) */}
+                  {shareCardTheme !== "light" && (
+                    <svg className="absolute left-[4%] top-[-50.8%] w-[105%] h-[195%] pointer-events-none text-[#4C9AF8] opacity-[0.035]" viewBox="0 0 368 260" fill="currentColor">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
+                    </svg>
+                  )}
 
 
                   {/* Header row */}
@@ -1725,7 +1729,7 @@ export default function Home() {
                           {/* Your Points */}
                           <div className="flex flex-col">
                             <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
-                            <span className={`text-[34px] sm:text-[42px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_10px_rgba(76,154,248,0.25)]" : ""}`}>
+                            <span className={`text-[49px] sm:text-[60px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
                               {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
                             </span>
                           </div>
@@ -1740,7 +1744,7 @@ export default function Home() {
                       ) : (
                         <div className="flex flex-col">
                           <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
-                          <span className={`text-[44px] sm:text-[54px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
+                          <span className={`text-[49px] sm:text-[60px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
                             {formatNumber(parsePositive(userPoints))}
                           </span>
                         </div>
