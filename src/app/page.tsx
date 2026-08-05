@@ -35,8 +35,14 @@ function formatUsd(value: number) {
 }
 
 function parsePositive(value: string, fallback = 0) {
-  const parsed = Number(value.replaceAll(",", ""));
+  const parsed = Number(value.replace(/[,\s]/g, ""));
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+function formatInputWithSpaces(value: string) {
+  const raw = value.replace(/\D/g, "");
+  if (!raw) return "";
+  return raw.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
 function fdvLabel(value: number) {
@@ -152,7 +158,7 @@ const CustomTooltip = ({
 
 export default function Home() {
   const [tab, setTab] = useState<"estimator" | "stats">("estimator");
-  const [totalPoints, setTotalPoints] = useState("9000000");
+  const [totalPoints, setTotalPoints] = useState("9 000 000");
   const [userPoints, setUserPoints] = useState("");
   const [airdropPct, setAirdropPct] = useState(40);
   const [fdv, setFdv] = useState(500_000_000);
@@ -971,7 +977,7 @@ export default function Home() {
                     className="h-9 rounded-md bg-[#121318] border-0 px-3 font-mono text-xs font-semibold text-white outline-none focus:ring-1 focus:ring-zinc-700 transition w-full"
                     inputMode="decimal"
                     value={userPoints}
-                    onChange={(event) => setUserPoints(event.target.value)}
+                    onChange={(event) => setUserPoints(formatInputWithSpaces(event.target.value))}
                   />
                 </div>
 
@@ -982,7 +988,7 @@ export default function Home() {
                     className="h-9 rounded-md bg-[#121318] border-0 px-3 font-mono text-xs font-semibold text-white outline-none focus:ring-1 focus:ring-zinc-700 transition w-full"
                     inputMode="decimal"
                     value={totalPoints}
-                    onChange={(event) => setTotalPoints(event.target.value)}
+                    onChange={(event) => setTotalPoints(formatInputWithSpaces(event.target.value))}
                   />
                 </div>
 
