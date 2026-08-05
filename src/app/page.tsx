@@ -34,6 +34,15 @@ function formatUsd(value: number) {
   }).format(value);
 }
 
+function formatUsdRounded(value: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+    minimumFractionDigits: 0,
+  }).format(value);
+}
+
 function parsePositive(value: string, fallback = 0) {
   const parsed = Number(value.replace(/[,\s]/g, ""));
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
@@ -102,7 +111,7 @@ function AnimatedNumber({ value }: { value: number }) {
     return () => cancelAnimationFrame(animationFrameId);
   }, [value, displayValue]);
 
-  return <>{formatUsd(displayValue)}</>;
+  return <>{formatUsdRounded(displayValue)}</>;
 }
 
 function StatLine({ label, value }: { label: string; value: string }) {
@@ -284,7 +293,7 @@ export default function Home() {
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const width = entry.contentRect.width;
-        setModalScale(width / 780);
+        setModalScale(width / 1200);
       }
     });
     if (modalContainerRef.current) {
@@ -474,41 +483,27 @@ export default function Home() {
         console.error("Failed to load wave background image", e);
       }
 
-      // Frame border
+      // Frame border (Only for light theme, as dark theme asset has border included)
       if (theme === "light") {
         ctx.strokeStyle = "rgba(76, 154, 248, 0.15)";
-      } else {
-        ctx.strokeStyle = "rgba(76, 154, 248, 0.12)";
-      }
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.roundRect(16, 16, 1168, 598, 24);
-      ctx.stroke();
-
-      // Draw subtle background grid
-      ctx.strokeStyle = theme === "light" ? "rgba(76, 154, 248, 0.005)" : "rgba(76, 154, 248, 0.008)";
-      ctx.lineWidth = 1;
-      for (let x = 0; x < 1200; x += 40) {
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, 630);
-        ctx.stroke();
-      }
-      for (let y = 0; y < 630; y += 40) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(1200, y);
+        ctx.roundRect(16, 16, 1168, 598, 24);
         ctx.stroke();
       }
 
-      // Giant background logo watermark on the right
-      ctx.fillStyle = theme === "light" ? "rgba(0, 0, 0, 0.015)" : "rgba(76, 154, 248, 0.025)";
+      // Giant background logo watermark on the right (full height, extending beyond top & bottom borders)
+      ctx.fillStyle = theme === "light" ? "rgba(0, 0, 0, 0.02)" : "rgba(76, 154, 248, 0.035)";
       ctx.save();
-      ctx.translate(850, 350);
-      ctx.scale(1.5, 1.5);
+      ctx.translate(48, -151);
+      ctx.scale(3.424, 3.424);
       const bgLogoPath = new Path2D("M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z");
       ctx.fill(bgLogoPath);
       ctx.restore();
+
+
+
+
 
       // 2. Draw Header Logo Box (just the logo directly, no wrapper box/border)
       ctx.fillStyle = theme === "light" ? "#0b0f19" : "#ffffff";
@@ -565,14 +560,17 @@ export default function Home() {
       ctx.fillText("Estimated TGE Value", 52, 230);
 
       ctx.fillStyle = textMain;
-      let tgeFontSize = 76;
+      let tgeFontSize = 88;
       ctx.font = `bold ${tgeFontSize}px ${monoFontFamily}`;
-      let tgeText = formatUsd(results.expectedValue);
+      let tgeText = formatUsdRounded(results.expectedValue);
       while (ctx.measureText(tgeText).width > 520 && tgeFontSize > 40) {
         tgeFontSize -= 2;
         ctx.font = `bold ${tgeFontSize}px ${monoFontFamily}`;
       }
+      ctx.shadowColor = "rgba(76, 154, 248, 0.25)";
+      ctx.shadowBlur = 14;
       ctx.fillText(tgeText, 52, 335);
+      ctx.shadowBlur = 0;
 
       ctx.fillStyle = textMuted;
       ctx.font = "14px sans-serif";
@@ -595,7 +593,10 @@ export default function Home() {
 
         ctx.fillStyle = "#4C9AF8";
         ctx.font = `bold 36px ${monoFontFamily}`;
+        ctx.shadowColor = "rgba(76, 154, 248, 0.25)";
+        ctx.shadowBlur = 10;
         ctx.fillText(formatNumber(parsePositive(userPoints) + twitterExtraPoints), 640, 283);
+        ctx.shadowBlur = 0;
 
         // Vertical divider top row
         ctx.strokeStyle = dividerColor;
@@ -622,7 +623,7 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = `bold 28px ${monoFontFamily}`;
+        ctx.font = `bold 34px ${monoFontFamily}`;
         ctx.fillText(`${(results.share * 100).toFixed(4)}%`, 972, 283);
 
         // Horizontal Divider Line
@@ -650,7 +651,7 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = `bold 28px ${monoFontFamily}`;
+        ctx.font = `bold 34px ${monoFontFamily}`;
         ctx.fillText(formatNumber(results.estimatedTokens, 0), 678, 428);
 
         // Vertical divider bottom row
@@ -675,7 +676,10 @@ export default function Home() {
 
         ctx.fillStyle = "#4C9AF8";
         ctx.font = `bold 52px ${monoFontFamily}`;
+        ctx.shadowColor = "rgba(76, 154, 248, 0.25)";
+        ctx.shadowBlur = 12;
         ctx.fillText(formatNumber(parsePositive(userPoints)), 640, 290);
+        ctx.shadowBlur = 0;
 
         // Horizontal Divider Line
         ctx.strokeStyle = dividerColor;
@@ -702,7 +706,7 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = `bold 28px ${monoFontFamily}`;
+        ctx.font = `bold 34px ${monoFontFamily}`;
         ctx.fillText(`${(results.share * 100).toFixed(4)}%`, 678, 428);
 
         // Vertical divider bottom row
@@ -729,7 +733,7 @@ export default function Home() {
         ctx.stroke();
 
         ctx.fillStyle = textMain;
-        ctx.font = `bold 28px ${monoFontFamily}`;
+        ctx.font = `bold 34px ${monoFontFamily}`;
         ctx.fillText(formatNumber(results.estimatedTokens, 0), 972, 428);
       }
 
@@ -1203,21 +1207,25 @@ export default function Home() {
             </div>
 
             {/* COLUMN 3: SHARE PREVIEW & POLYMARKET INSIGHT (Span 3) */}
-            <div className="lg:col-span-3 flex flex-col gap-4 justify-between lg:max-h-[calc(100vh-140px)]">
+            <div className="lg:col-span-3 flex flex-col gap-4">
               
               {/* MINI CARD PREVIEW */}
-              <div className="bg-[#050507]/40 rounded-xl p-4 flex flex-col justify-between flex-1">
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#CBD5E1]">Share Card Preview</span>
-                    <span className="text-[8px] text-[#64748B] font-mono">1.91:1 PNG</span>
-                  </div>
+              <div className="flex flex-col w-full">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#CBD5E1]">Share Card Preview</span>
+                  <span className="text-[9px] text-[#64748B] font-mono">1.91:1 PNG</span>
+                </div>
 
-                  <div className="@container w-full">
-                    <div 
-                      className="relative overflow-hidden rounded-lg border border-[#4C9AF8]/15 bg-[#050507] bg-cover bg-bottom bg-no-repeat p-[3.3cqw] flex flex-col justify-between aspect-[1.91/1] w-full shadow-lg flex-shrink-0"
-                      style={{ backgroundImage: "url('/brand/wave-dark.png')" }}
-                    >
+                <div className="@container w-full">
+                  <div 
+                    className="relative overflow-hidden rounded-xl bg-[#050507] bg-[length:100%_100%] bg-center bg-no-repeat p-[4.33cqw] flex flex-col justify-between aspect-[1200/630] w-full shadow-lg flex-shrink-0"
+                    style={{ backgroundImage: "url('/brand/wave-dark.png')" }}
+                  >
+                    {/* Subtle giant background logo icon (extending beyond top & bottom borders) */}
+                    <svg className="absolute left-[4%] top-[-50.8%] w-[105%] h-[195%] pointer-events-none text-[#4C9AF8] opacity-[0.035]" viewBox="0 0 368 260" fill="currentColor">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
+                    </svg>
+
                     {/* Header */}
                     <div className="flex items-center justify-between border-b border-[#1E2026]/40 pb-[1.3cqw]">
                       <div className="flex items-center gap-[1.3cqw]">
@@ -1239,7 +1247,7 @@ export default function Home() {
                       {/* Left: Expected TGE Value */}
                       <div className="flex-1 flex flex-col justify-center">
                         <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Estimated TGE Value</span>
-                        <span className="text-[4cqw] font-bold font-mono tracking-tight text-[#4C9AF8] leading-tight mt-[0.6cqw]">
+                        <span className="text-[5cqw] font-bold font-mono tracking-tight text-[#4C9AF8] leading-tight mt-[0.4cqw] [text-shadow:0_0_14px_rgba(76,154,248,0.3)]">
                           <AnimatedNumber value={results.expectedValue} />
                         </span>
                         <span className="text-[1.3cqw] font-semibold text-zinc-500 mt-[1.3cqw]">
@@ -1251,60 +1259,60 @@ export default function Home() {
                       <div className="w-[0.16cqw] bg-[#1E2026]" />
 
                       {/* Right: Stats Layout */}
-                      <div className="flex-1 flex flex-col justify-between py-[0.6cqw]">
+                      <div className="flex-1 flex flex-col justify-between py-0">
                         {twitterUsername.trim() && showExtraPoints ? (
-                          <div className="grid grid-cols-2 gap-[1.3cqw].5">
+                          <div className="grid grid-cols-2 gap-[1.3cqw]">
                             {/* Your Points */}
                             <div className="flex flex-col">
-                              <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
-                              <span className="text-[2.6cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.6cqw]">
+                              <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
+                              <span className="text-[3.2cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw] [text-shadow:0_0_10px_rgba(76,154,248,0.25)]">
                                 {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
                               </span>
                             </div>
                             {/* Pool Share */}
                             <div className="flex flex-col border-l border-[#1E2026] pl-[2cqw]">
-                              <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Pool Share</span>
-                              <span className="text-[2.1cqw] font-bold font-mono text-white leading-none mt-[0.6cqw]">{(results.share * 100).toFixed(4)}%</span>
+                              <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Pool Share</span>
+                              <span className="text-[2.8cqw] font-bold font-mono text-white leading-none mt-[0.4cqw]">{(results.share * 100).toFixed(4)}%</span>
                             </div>
                           </div>
                         ) : (
                           <div className="flex flex-col">
-                            <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
-                            <span className="text-[3.3cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.6cqw]">
+                            <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
+                            <span className="text-[4.2cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw] [text-shadow:0_0_12px_rgba(76,154,248,0.25)]">
                               {formatNumber(parsePositive(userPoints))}
                             </span>
                           </div>
                         )}
 
                         {/* Horizontal divide line */}
-                        <div className="h-[0.16cqw] bg-[#1E2026] my-[1.3cqw]" />
+                        <div className="h-[0.16cqw] bg-[#1E2026] my-[0.8cqw]" />
 
                         {/* Bottom Row */}
-                        <div className="grid grid-cols-2 gap-[1.3cqw].5">
+                        <div className="grid grid-cols-2 gap-[1.3cqw]">
                           {twitterUsername.trim() && showExtraPoints ? (
                             <>
                               {/* Est. Tokens */}
                               <div className="flex flex-col">
-                                <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Est. Tokens</span>
-                                <span className="text-[2.1cqw] font-bold font-mono text-white leading-none mt-[0.6cqw]">{formatNumber(results.estimatedTokens, 0)}</span>
+                                <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Est. Tokens</span>
+                                <span className="text-[2.8cqw] font-bold font-mono text-white leading-none mt-[0.4cqw]">{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                               {/* Twitter handle */}
                               <div className="flex flex-col border-l border-[#1E2026] pl-[2cqw] truncate">
-                                <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B] truncate">𝕏 @{twitterUsername}</span>
-                                <span className="text-[2.1cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.6cqw]">+{formatNumber(twitterExtraPoints)}</span>
+                                <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B] truncate">𝕏 @{twitterUsername}</span>
+                                <span className="text-[2.8cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw]">+{formatNumber(twitterExtraPoints)}</span>
                               </div>
                             </>
                           ) : (
                             <>
                               {/* Pool Share */}
                               <div className="flex flex-col">
-                                <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Pool Share</span>
-                                <span className="text-[2.1cqw] font-bold font-mono text-white leading-none mt-[0.6cqw]">{(results.share * 100).toFixed(4)}%</span>
+                                <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Pool Share</span>
+                                <span className="text-[2.8cqw] font-bold font-mono text-white leading-none mt-[0.4cqw]">{(results.share * 100).toFixed(4)}%</span>
                               </div>
                               {/* Est. Tokens */}
                               <div className="flex flex-col border-l border-[#1E2026] pl-[2cqw]">
-                                <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Est. Tokens</span>
-                                <span className="text-[2.1cqw] font-bold font-mono text-white leading-none mt-[0.6cqw]">{formatNumber(results.estimatedTokens, 0)}</span>
+                                <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Est. Tokens</span>
+                                <span className="text-[2.8cqw] font-bold font-mono text-white leading-none mt-[0.4cqw]">{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                             </>
                           )}
@@ -1321,22 +1329,20 @@ export default function Home() {
                     </div>
                     </div>
                   </div>
-                </div>
-
-                <div className="mt-4 flex flex-col gap-2">
-                  <button
-                    id="tour-export"
-                    onClick={() => setIsShareModalOpen(true)}
-                    className="w-full h-8 px-2 inline-flex items-center justify-center rounded-lg bg-[#4C9AF8] hover:bg-[#3b8ae8] text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider whitespace-nowrap overflow-hidden text-ellipsis transition active:scale-95 cursor-pointer"
-                  >
-                    Show & Export Card
-                  </button>
-                </div>
               </div>
+
+              <div className="mt-[190px] flex flex-col gap-3 w-full">
+                <button
+                  id="tour-export"
+                  onClick={() => setIsShareModalOpen(true)}
+                  className="w-full h-7.5 inline-flex items-center justify-center rounded-lg bg-[#4C9AF8] hover:bg-[#3b8ae8] text-white text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider whitespace-nowrap overflow-hidden text-ellipsis transition active:scale-95 cursor-pointer"
+                >
+                  SHOW & EXPORT CARD
+                </button>
 
               {/* POLYMARKET INSIGHT */}
               {selectedMarket && (
-                <div className="bg-[#050507]/40 rounded-xl p-4 flex flex-col gap-2">
+                <div className="flex flex-col gap-2 mt-[15px]">
                   <div className="flex items-center justify-between">
                     <span className="flex items-center gap-1.5 text-[9px] font-bold tracking-wider text-[#64748B] uppercase">
                       <Image className="size-3.5 invert opacity-50" src="/polymarket-vector.png" alt="" width={14} height={14} />
@@ -1353,8 +1359,9 @@ export default function Home() {
                   </div>
                 </div>
               )}
+              </div>
             </div>
-            </div>
+          </div>
 
             {/* PROGRESS BAR */}
             <div className="w-full flex flex-col gap-2 pt-2">
@@ -1653,28 +1660,29 @@ export default function Home() {
               </div>
             </div>
             
-            <div ref={modalContainerRef} className="flex justify-center items-start py-2 w-full overflow-hidden" style={{ height: `${408 * modalScale + 16}px` }}>
+            <div ref={modalContainerRef} className="flex justify-center items-start py-0 w-full overflow-hidden" style={{ height: `${630 * modalScale}px` }}>
               <div 
                 style={{ 
                   transform: `scale(${modalScale})`, 
                   transformOrigin: 'top center',
-                  width: '780px',
-                  height: '408px'
+                  width: '1200px',
+                  height: '630px'
                 }}
                 className="flex-shrink-0"
               >
                 <div
-                  className={`relative overflow-hidden rounded-2xl border bg-cover bg-bottom bg-no-repeat flex flex-col justify-between w-full h-full p-6 shadow-xl transition-all duration-300 ${
+                  className={`relative overflow-hidden bg-[length:100%_100%] bg-center bg-no-repeat flex flex-col justify-between w-full h-full p-[52px] shadow-xl transition-all duration-300 ${
                     shareCardTheme === "light"
-                      ? "bg-slate-50 border-zinc-200/80 text-zinc-900"
-                      : "bg-[#050507] border-[#4C9AF8]/20 text-white"
+                      ? "bg-slate-50 rounded-2xl border border-zinc-200/80 text-zinc-900"
+                      : "bg-transparent rounded-none border-none text-white"
                   }`}
                   style={{ backgroundImage: shareCardTheme === "light" ? "url('/brand/wave-light.png')" : "url('/brand/wave-dark.png')" }}
                 >
-                  {/* Subtle giant background logo icon */}
-                  <svg className={`absolute right-[-10px] bottom-[-20px] pointer-events-none scale-110 ${shareCardTheme === "light" ? "text-zinc-900 opacity-[0.015]" : "text-[#4C9AF8] opacity-[0.025]"}`} width="368" height="260" viewBox="0 0 368 260" fill="currentColor">
+                  {/* Subtle giant background logo icon (extending beyond top & bottom borders) */}
+                  <svg className={`absolute left-[4%] top-[-50.8%] w-[105%] h-[195%] pointer-events-none ${shareCardTheme === "light" ? "text-zinc-900 opacity-[0.02]" : "text-[#4C9AF8] opacity-[0.035]"}`} viewBox="0 0 368 260" fill="currentColor">
                     <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
                   </svg>
+
 
                   {/* Header row */}
                   <div className={`flex items-center justify-between border-b pb-4 ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
@@ -1688,7 +1696,7 @@ export default function Home() {
                       </div>
                     </div>
                     
-                    <div className={`flex items-center gap-[4px] px-3 py-1.5 rounded-full border border-[#4C9AF8]/15 bg-[#4C9AF8]/4 text-[10px] font-bold tracking-widest text-[#4C9AF8] uppercase`}>
+                    <div className={`flex items-center gap-[4px] px-3 py-1.5 rounded-full border border-[#4C9AF8]/20 bg-[#4C9AF8]/10 text-[10px] font-bold tracking-widest text-[#4C9AF8] uppercase`}>
                       TGE Allocation Estimate
                     </div>
                   </div>
@@ -1698,8 +1706,8 @@ export default function Home() {
                     {/* Left: Expected TGE Value */}
                     <div className="flex-1 flex flex-col justify-center">
                       <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Estimated TGE Value</span>
-                      <span className={`text-[48px] sm:text-[56px] font-bold font-mono tracking-tight mt-[4px] leading-tight ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>
-                        {formatUsd(results.expectedValue)}
+                      <span className={`text-[56px] sm:text-[66px] font-bold font-mono tracking-tight mt-[4px] leading-tight ${shareCardTheme === "light" ? "text-zinc-900" : "text-white [text-shadow:0_0_14px_rgba(76,154,248,0.3)]"}`}>
+                        {formatUsdRounded(results.expectedValue)}
                       </span>
                       <span className={`text-[13px] font-semibold mt-[12px] ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>
                         Based on {fdvLabel(fdv)} FDV & {airdropPct}% Pool
@@ -1710,53 +1718,53 @@ export default function Home() {
                     <div className={`w-[1px] ${shareCardTheme === "light" ? "bg-zinc-200" : "bg-[#1E2026]"}`} />
 
                     {/* Right: Stats Layout */}
-                    <div className="flex-1 flex flex-col justify-between py-[4px]">
+                    <div className="flex-1 flex flex-col justify-between py-0">
                       {/* Top Row */}
                       {twitterUsername.trim() && showExtraPoints ? (
                         <div className="grid grid-cols-2 gap-[16px]">
                           {/* Your Points */}
                           <div className="flex flex-col">
-                            <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
-                            <span className="text-[28px] sm:text-[36px] font-bold font-mono text-[#4C9AF8] mt-[4px] leading-none">
+                            <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
+                            <span className={`text-[34px] sm:text-[42px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_10px_rgba(76,154,248,0.25)]" : ""}`}>
                               {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
                             </span>
                           </div>
                           {/* Pool Share */}
                           <div className={`flex flex-col border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
-                            <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
-                            <div className="flex items-center gap-[4px] mt-[4px]">
-                              <span className={`text-[20px] sm:text-[24px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
+                            <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
+                            <div className="flex items-center gap-[4px] mt-[2px]">
+                              <span className={`text-[26px] sm:text-[32px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
                             </div>
                           </div>
                         </div>
                       ) : (
                         <div className="flex flex-col">
-                          <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
-                          <span className="text-[36px] sm:text-[44px] font-bold font-mono text-[#4C9AF8] mt-[4px] leading-none">
+                          <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
+                          <span className={`text-[44px] sm:text-[54px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
                             {formatNumber(parsePositive(userPoints))}
                           </span>
                         </div>
                       )}
 
                       {/* Horizontal divide line */}
-                      <div className={`h-[1px] my-[16px] ${shareCardTheme === "light" ? "bg-zinc-200" : "bg-[#1E2026]"}`} />
+                      <div className={`h-[1px] my-[10px] ${shareCardTheme === "light" ? "bg-zinc-200" : "bg-[#1E2026]"}`} />
 
                       {/* Bottom Row */}
                       <div className="grid grid-cols-2 gap-[16px]">
                         {twitterUsername.trim() && showExtraPoints ? (
                           <>
                             <div className="flex flex-col gap-[2px]">
-                              <span className={`text-[12px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
+                              <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[20px] sm:text-[24px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
+                                <span className={`text-[26px] sm:text-[32px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                             </div>
                             <div className={`flex flex-col gap-[2px] border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
-                              <span className={`text-[12px] font-bold uppercase tracking-wider flex items-center gap-[4px] truncate ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>
+                              <span className={`text-[14px] font-bold uppercase tracking-wider flex items-center gap-[4px] truncate ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>
                                 <span className="font-sans font-black">𝕏</span> @{twitterUsername}
                               </span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[20px] sm:text-[24px] font-bold font-mono leading-none ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
+                                <span className={`text-[26px] sm:text-[32px] font-bold font-mono leading-none ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
                                   {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
                                 </span>
                               </div>
@@ -1765,15 +1773,15 @@ export default function Home() {
                         ) : (
                           <>
                             <div className="flex flex-col gap-[2px]">
-                              <span className={`text-[12px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
+                              <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[20px] sm:text-[24px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
+                                <span className={`text-[26px] sm:text-[32px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
                               </div>
                             </div>
                             <div className={`flex flex-col gap-[2px] border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
-                              <span className={`text-[12px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
+                              <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[20px] sm:text-[24px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
+                                <span className={`text-[26px] sm:text-[32px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                             </div>
                           </>
