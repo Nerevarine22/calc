@@ -1261,7 +1261,7 @@ export default function Home() {
                       {/* Left: Expected TGE Value */}
                       <div className="flex-1 flex flex-col justify-center">
                         <span className="text-[1.5cqw] font-bold uppercase tracking-wider text-[#64748B]">Estimated TGE Value</span>
-                        <span className="text-[6.4cqw] font-bold font-mono tracking-tight text-[#4C9AF8] leading-tight mt-[0.4cqw] [text-shadow:0_0_14px_rgba(76,154,248,0.3)]">
+                        <span className="text-[6.4cqw] font-bold font-mono tracking-tight text-white leading-tight mt-[0.4cqw] [text-shadow:0_0_14px_rgba(76,154,248,0.3)]">
                           <AnimatedNumber value={results.expectedValue} />
                         </span>
                         <span className="text-[1.3cqw] font-semibold text-zinc-500 mt-[1.3cqw]">
@@ -1279,7 +1279,7 @@ export default function Home() {
                             {/* Your Points */}
                             <div className="flex flex-col">
                               <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
-                              <span className="text-[5.9cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw] [text-shadow:0_0_12px_rgba(76,154,248,0.25)]">
+                              <span className="text-[5.9cqw] font-bold font-mono text-[#4C9AF8] [text-shadow:0_0_12px_rgba(76,154,248,0.25)] leading-none mt-[0.4cqw]">
                                 {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
                               </span>
                             </div>
@@ -1292,7 +1292,7 @@ export default function Home() {
                         ) : (
                           <div className="flex flex-col">
                             <span className="text-[1.7cqw] font-bold uppercase tracking-wider text-[#64748B]">Your Points</span>
-                            <span className="text-[5.9cqw] font-bold font-mono text-[#4C9AF8] leading-none mt-[0.4cqw] [text-shadow:0_0_12px_rgba(76,154,248,0.25)]">
+                            <span className="text-[5.9cqw] font-bold font-mono text-[#4C9AF8] [text-shadow:0_0_12px_rgba(76,154,248,0.25)] leading-none mt-[0.4cqw]">
                               {formatNumber(parsePositive(userPoints))}
                             </span>
                           </div>
