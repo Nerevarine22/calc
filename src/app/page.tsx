@@ -733,7 +733,7 @@ export default function Home() {
                   </div>
                   <div className="flex gap-1.5">
                     <div className="relative flex-1">
-                      <span className={`absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono ${parsePositive(userPoints) === 0 ? "text-[#64748B]/50" : "text-[#64748B]"}`}>@</span>
+                      <span className={`absolute left-2.5 top-1/2 -translate-y-1/2 text-sm font-bold font-mono ${parsePositive(userPoints) === 0 ? "text-[#64748B]/50" : "text-[#64748B]"}`}>@</span>
                       <input
                         className="w-full h-8 rounded-md bg-[#121318] border-0 pl-6 pr-2.5 font-mono text-[10px] text-white outline-none focus:ring-1 focus:ring-zinc-700 transition disabled:opacity-50 cursor-text disabled:cursor-not-allowed"
                         placeholder={parsePositive(userPoints) > 0 ? "username" : "Enter points first"}
