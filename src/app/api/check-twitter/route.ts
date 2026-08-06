@@ -12,23 +12,42 @@ export async function GET(request: Request) {
   try {
     const apiKey = "new1_11159716a5c644a7af4d58d8357a36c2";
     // Search query: from:username (variational OR @variational_io)
-    // Standard twitter search is case-insensitive. We also exclude replies at the API level to not waste the 20-tweet limit.
     const queryStr = `from:${username} (variational OR @variational_io) -filter:replies`;
-    const targetUrl = `https://api.twitterapi.io/twitter/tweet/advanced_search?query=${encodeURIComponent(queryStr)}&queryType=Top`;
     
-    const res = await fetch(targetUrl, {
-      headers: {
-        "X-API-Key": apiKey,
-        "Accept": "application/json"
-      }
-    });
-    
-    if (!res.ok) {
-      return NextResponse.json({ error: `Failed to fetch tweets (Status: ${res.status})` }, { status: res.status });
-    }
+    let cursor = "";
+    let pageCount = 0;
+    const maxPages = 5; // Up to 100 tweets depth (5 pages x 20 results)
+    const tweets: any[] = [];
 
-    const data = await res.json();
-    const tweets = data.tweets || [];
+    while (pageCount < maxPages) {
+      let targetUrl = `https://api.twitterapi.io/twitter/tweet/advanced_search?query=${encodeURIComponent(queryStr)}&queryType=Latest`;
+      if (cursor) {
+        targetUrl += `&cursor=${encodeURIComponent(cursor)}`;
+      }
+
+      const res = await fetch(targetUrl, {
+        headers: {
+          "X-API-Key": apiKey,
+          "Accept": "application/json"
+        }
+      });
+
+      if (!res.ok) {
+        if (tweets.length > 0) break; // Use whatever we fetched so far if API errors on later page
+        return NextResponse.json({ error: `Failed to fetch tweets (Status: ${res.status})` }, { status: res.status });
+      }
+
+      const data = await res.json();
+      const pageTweets = data.tweets || [];
+      tweets.push(...pageTweets);
+
+      if (data.has_next_page && data.next_cursor && pageTweets.length > 0) {
+        cursor = data.next_cursor;
+        pageCount++;
+      } else {
+        break;
+      }
+    }
 
     let totalViews = 0;
     let totalLikes = 0;
@@ -61,20 +80,20 @@ export async function GET(request: Request) {
     // Engagement rate
     const engagementRate = totalViews > 0 ? (totalLikes + totalRetweets) / totalViews : 0;
 
-    // Calculate bonus percentage based on:
-    // - < 5 000 views -> 0
-    // - 5k - 20k, >=3 tweets, >=1% engagement -> 3%
-    // - 20k - 80k, >=5 tweets, >=1% engagement -> 5%
-    // - 80k - 300k, >=8 tweets, >=0.8% engagement -> 7%
-    // - > 300k, >=10 tweets, >=0.7% engagement -> 10%
+    // Calculate bonus percentage based on reach and engagement:
+    // - < 5 000 views -> 0%
+    // - 5k - 20k views, >=3 tweets, >=0.5% engagement -> 3%
+    // - 20k - 80k views, >=5 tweets, >=0.5% engagement -> 5%
+    // - 80k - 300k views, >=8 tweets, >=0.5% engagement -> 7%
+    // - > 300k views, >=10 tweets, >=0.5% engagement -> 10%
     let bonusPct = 0;
-    if (totalViews >= 300000 && matchingTweetsCount >= 10 && engagementRate >= 0.007) {
+    if (totalViews >= 300000 && matchingTweetsCount >= 10 && engagementRate >= 0.005) {
       bonusPct = 0.10;
-    } else if (totalViews >= 80000 && matchingTweetsCount >= 8 && engagementRate >= 0.008) {
+    } else if (totalViews >= 80000 && matchingTweetsCount >= 8 && engagementRate >= 0.005) {
       bonusPct = 0.07;
-    } else if (totalViews >= 20000 && matchingTweetsCount >= 5 && engagementRate >= 0.01) {
+    } else if (totalViews >= 20000 && matchingTweetsCount >= 5 && engagementRate >= 0.005) {
       bonusPct = 0.05;
-    } else if (totalViews >= 5000 && matchingTweetsCount >= 3 && engagementRate >= 0.01) {
+    } else if (totalViews >= 5000 && matchingTweetsCount >= 3 && engagementRate >= 0.005) {
       bonusPct = 0.03;
     }
 

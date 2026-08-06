@@ -54,6 +54,15 @@ function getTgeFontSizeClass(value: number) {
   return "text-[52px] sm:text-[64px]";
 }
 
+function getPointsFontSizeClass(value: number) {
+  const formatted = formatNumber(value);
+  const len = formatted.length;
+  if (len <= 5) return "text-[48px] sm:text-[58px]";
+  if (len <= 7) return "text-[40px] sm:text-[48px]";
+  if (len <= 9) return "text-[34px] sm:text-[40px]";
+  return "text-[28px] sm:text-[34px]";
+}
+
 function parsePositive(value: string, fallback = 0) {
   const parsed = Number(value.replace(/[,\s]/g, ""));
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
@@ -1352,18 +1361,18 @@ export default function Home() {
             <div className="flex-1 flex flex-col justify-between py-0">
               {/* Top Row */}
               {twitterUsername.trim() && showExtraPoints ? (
-                <div className="grid grid-cols-2 gap-[16px]">
+                <div className="grid grid-cols-2 gap-[16px] items-stretch">
                   {/* Your Points */}
-                  <div className="flex flex-col">
+                  <div className="flex flex-col justify-between">
                     <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
-                    <span className={`text-[72px] sm:text-[88px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
+                    <span className={`${getPointsFontSizeClass(parsePositive(userPoints) + twitterExtraPoints)} font-bold font-mono text-[#4C9AF8] mt-auto leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
                       {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
                     </span>
                   </div>
                   {/* Pool Share */}
-                  <div className={`flex flex-col border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
+                  <div className={`flex flex-col justify-between border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
                     <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
-                    <div className="flex items-center gap-[4px] mt-[2px]">
+                    <div className="flex items-center gap-[4px] mt-auto pb-[2px]">
                       <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
                     </div>
                   </div>
@@ -1381,21 +1390,21 @@ export default function Home() {
               <div className={`h-[1px] my-[10px] ${shareCardTheme === "light" ? "bg-zinc-200" : "bg-[#1E2026]"}`} />
 
               {/* Bottom Row */}
-              <div className="grid grid-cols-2 gap-[16px]">
+              <div className="grid grid-cols-2 gap-[16px] items-stretch">
                 {twitterUsername.trim() && showExtraPoints ? (
                   <>
-                    <div className="flex flex-col gap-[2px]">
+                    <div className="flex flex-col justify-between">
                       <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
-                      <div className="flex items-center gap-[4px] mt-[2px]">
+                      <div className="flex items-center gap-[4px] mt-auto pb-[2px]">
                         <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
                       </div>
                     </div>
-                    <div className={`flex flex-col gap-[2px] border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
+                    <div className={`flex flex-col justify-between border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
                       <span className={`text-[14px] font-bold uppercase tracking-wider flex items-center gap-[4px] truncate ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>
                         <span className="font-sans font-black">𝕏</span> @{twitterUsername}
                       </span>
-                      <div className="flex items-center gap-[4px] mt-[2px]">
-                        <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
+                      <div className="flex items-center gap-[4px] mt-auto pb-[2px]">
+                        <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${twitterExtraPoints > 0 ? "#4C9AF8" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
                           {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
                         </span>
                       </div>
@@ -1550,7 +1559,6 @@ export default function Home() {
                         Based on {fdvLabel(fdv)} FDV & {airdropPct}% Pool
                       </span>
                     </div>
-
                     {/* Middle Vertical line */}
                     <div className={`w-[1px] ${shareCardTheme === "light" ? "bg-zinc-200" : "bg-[#1E2026]"}`} />
 
@@ -1558,18 +1566,18 @@ export default function Home() {
                     <div className="flex-1 flex flex-col justify-between py-0">
                       {/* Top Row */}
                       {twitterUsername.trim() && showExtraPoints ? (
-                        <div className="grid grid-cols-2 gap-[16px]">
+                        <div className="grid grid-cols-2 gap-[16px] items-stretch">
                           {/* Your Points */}
-                          <div className="flex flex-col">
+                          <div className="flex flex-col justify-between">
                             <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
-                            <span className={`text-[72px] sm:text-[88px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
+                            <span className={`${getPointsFontSizeClass(parsePositive(userPoints) + twitterExtraPoints)} font-bold font-mono text-[#4C9AF8] mt-auto leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
                               {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
                             </span>
                           </div>
                           {/* Pool Share */}
-                          <div className={`flex flex-col border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
+                          <div className={`flex flex-col justify-between border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
                             <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
-                            <div className="flex items-center gap-[4px] mt-[2px]">
+                            <div className="flex items-center gap-[4px] mt-auto pb-[2px]">
                               <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
                             </div>
                           </div>
@@ -1577,7 +1585,7 @@ export default function Home() {
                       ) : (
                         <div className="flex flex-col">
                           <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
-                          <span className={`text-[72px] sm:text-[88px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
+                          <span className={`${getPointsFontSizeClass(parsePositive(userPoints))} font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
                             {formatNumber(parsePositive(userPoints))}
                           </span>
                         </div>
@@ -1587,20 +1595,20 @@ export default function Home() {
                       <div className={`h-[1px] my-[10px] ${shareCardTheme === "light" ? "bg-zinc-200" : "bg-[#1E2026]"}`} />
 
                       {/* Bottom Row */}
-                      <div className="grid grid-cols-2 gap-[16px]">
+                      <div className="grid grid-cols-2 gap-[16px] items-stretch">
                         {twitterUsername.trim() && showExtraPoints ? (
                           <>
-                            <div className="flex flex-col gap-[2px]">
+                            <div className="flex flex-col justify-between">
                               <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
-                              <div className="flex items-center gap-[4px] mt-[2px]">
+                              <div className="flex items-center gap-[4px] mt-auto pb-[2px]">
                                 <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                             </div>
-                            <div className={`flex flex-col gap-[2px] border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
+                            <div className={`flex flex-col justify-between border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
                               <span className={`text-[14px] font-bold uppercase tracking-wider flex items-center gap-[4px] truncate ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>
                                 <span className="font-sans font-black">𝕏</span> @{twitterUsername}
                               </span>
-                              <div className="flex items-center gap-[4px] mt-[2px]">
+                              <div className="flex items-center gap-[4px] mt-auto pb-[2px]">
                                 <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
                                   {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
                                 </span>
@@ -1609,9 +1617,9 @@ export default function Home() {
                           </>
                         ) : (
                           <>
-                            <div className="flex flex-col gap-[2px]">
+                            <div className="flex flex-col justify-between">
                               <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
-                              <div className="flex items-center gap-[4px] mt-[2px]">
+                              <div className="flex items-center gap-[4px] mt-auto pb-[2px]">
                                 <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
                               </div>
                             </div>
