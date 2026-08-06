@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { Joyride, Step, STATUS } from "react-joyride";
+import { toPng } from "html-to-image";
 
 const TOTAL_SUPPLY = 1_000_000_000;
 const fdvOptions = [100_000_000, 200_000_000, 300_000_000, 500_000_000, 800_000_000, 1_000_000_000, 2_000_000_000];
@@ -41,6 +42,16 @@ function formatUsdRounded(value: number) {
     maximumFractionDigits: 0,
     minimumFractionDigits: 0,
   }).format(value);
+}
+
+function getTgeFontSizeClass(value: number) {
+  const formatted = formatUsdRounded(value);
+  const len = formatted.length;
+  if (len <= 7) return "text-[104px] sm:text-[124px]";
+  if (len <= 8) return "text-[90px] sm:text-[108px]";
+  if (len <= 10) return "text-[76px] sm:text-[90px]";
+  if (len <= 12) return "text-[62px] sm:text-[76px]";
+  return "text-[52px] sm:text-[64px]";
 }
 
 function parsePositive(value: string, fallback = 0) {
@@ -297,6 +308,7 @@ export default function Home() {
   
   const [modalScale, setModalScale] = useState(1);
   const modalContainerRef = useRef<HTMLDivElement>(null);
+  const shareCardExportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isShareModalOpen) return;
@@ -313,7 +325,7 @@ export default function Home() {
   }, [isShareModalOpen]);
 
   const handleCopyReferralCode = () => {
-    navigator.clipboard.writeText("OMNIKLJ9FBUC");
+    navigator.clipboard.writeText("OMNIATOMS");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -448,350 +460,18 @@ export default function Home() {
   const handleDownloadCard = async (theme: "dark" | "light") => {
     setIsDownloading(true);
     try {
-      const canvas = document.createElement("canvas");
-      canvas.width = 2400;
-      canvas.height = 1260;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      // Automatically scale context coordinates by 2 for double resolution crispness
-      ctx.scale(2, 2);
-
-      // 1. Draw Background based on Theme
-      if (theme === "light") {
-        ctx.fillStyle = "#f9fafb";
-        ctx.fillRect(0, 0, 1200, 630);
-
-        // Subtle radial blue glow
-        const glowGrad = ctx.createRadialGradient(1000, 100, 50, 1000, 100, 500);
-        glowGrad.addColorStop(0, "rgba(76, 154, 248, 0.05)");
-        glowGrad.addColorStop(1, "rgba(76, 154, 248, 0)");
-        ctx.fillStyle = glowGrad;
-        ctx.fillRect(0, 0, 1200, 630);
-      } else {
-        ctx.fillStyle = "#050507";
-        ctx.fillRect(0, 0, 1200, 630);
-
-        // Subtle radial blue glow
-        const glowGrad = ctx.createRadialGradient(1000, 100, 50, 1000, 100, 500);
-        glowGrad.addColorStop(0, "rgba(76, 154, 248, 0.12)");
-        glowGrad.addColorStop(1, "rgba(76, 154, 248, 0)");
-        ctx.fillStyle = glowGrad;
-        ctx.fillRect(0, 0, 1200, 630);
-      }
-
-      // Draw background wave image
-      try {
-        const waveImg = new window.Image();
-        await new Promise((resolve, reject) => {
-          waveImg.onload = resolve;
-          waveImg.onerror = reject;
-          waveImg.src = theme === "light" ? "/brand/wave-light.png?v=3" : "/brand/wave-dark.png?v=4";
-        });
-        ctx.drawImage(waveImg, 0, 0, 1200, 630);
-      } catch (e) {
-        console.error("Failed to load wave background image", e);
-      }
-
-      // Frame border (Only for light theme, as dark theme asset has border included)
-      if (theme === "light") {
-        ctx.strokeStyle = "rgba(76, 154, 248, 0.15)";
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.roundRect(16, 16, 1168, 598, 24);
-        ctx.stroke();
-      }
-
-      // Giant background logo watermark on the right for dark theme (full height, extending beyond top & bottom borders)
-      if (theme !== "light") {
-        ctx.fillStyle = "rgba(76, 154, 248, 0.035)";
-        ctx.save();
-        ctx.translate(48, -151);
-        ctx.scale(3.424, 3.424);
-        const bgLogoPath = new Path2D("M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z");
-        ctx.fill(bgLogoPath);
-        ctx.filter = "none";
-        ctx.restore();
-      }
-
-
-
-
-
-      // 2. Draw Header Logo Box (just the logo directly, no wrapper box/border)
-      ctx.fillStyle = theme === "light" ? "#0b0f19" : "#ffffff";
-      ctx.save();
-      ctx.translate(52, 60);
-      ctx.scale(30 / 260, 30 / 260); // Keep aspect ratio (uniform scale factor)
-      const p = new Path2D("M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z");
-      ctx.fill(p);
-      ctx.restore();
-
-      // Wordmark
-      ctx.fillStyle = theme === "light" ? "#0b0f19" : "#ffffff";
-      ctx.font = "bold 22px sans-serif";
-      ctx.textAlign = "left";
-      ctx.fillText("VARIATIONAL", 107, 71);
-
-      ctx.fillStyle = "#4C9AF8";
-      ctx.font = "bold 11px sans-serif";
-      if ('letterSpacing' in ctx) {
-        (ctx as any).letterSpacing = "2px";
-      }
-      ctx.fillText("POINTS ESTIMATOR", 107, 90);
-      if ('letterSpacing' in ctx) {
-        (ctx as any).letterSpacing = "0px";
-      }
-
-      // Tag "TGE ALLOCATION ESTIMATE"
-      ctx.strokeStyle = "rgba(76, 154, 248, 0.2)";
-      ctx.fillStyle = "rgba(76, 154, 248, 0.05)";
-      ctx.beginPath();
-      ctx.roundRect(858, 52, 290, 40, 20);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = "#4C9AF8";
-      ctx.font = "bold 11px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("TGE ALLOCATION ESTIMATE", 1003, 76);
-      ctx.textAlign = "left";
-
-      // 3. Center Section: Left Value Box
-      const tmpEl = document.createElement('span');
-      tmpEl.className = 'font-mono';
-      document.body.appendChild(tmpEl);
-      const monoFontFamily = getComputedStyle(tmpEl).fontFamily;
-      document.body.removeChild(tmpEl);
-
-      const textMuted = theme === "light" ? "rgba(11, 15, 25, 0.45)" : "rgba(255, 255, 255, 0.4)";
-      const textMain = theme === "light" ? "#0b0f19" : "#ffffff";
-      const dividerColor = theme === "light" ? "rgba(11, 15, 25, 0.08)" : "rgba(255, 255, 255, 0.08)";
-
-      ctx.fillStyle = textMuted;
-      ctx.font = "bold 15px sans-serif";
-      ctx.fillText("Estimated TGE Value", 52, 230);
-
-      ctx.fillStyle = textMain;
-      let tgeFontSize = 112;
-      ctx.font = `bold ${tgeFontSize}px ${monoFontFamily}`;
-      let tgeText = formatUsdRounded(results.expectedValue);
-      while (ctx.measureText(tgeText).width > 520 && tgeFontSize > 40) {
-        tgeFontSize -= 2;
-        ctx.font = `bold ${tgeFontSize}px ${monoFontFamily}`;
-      }
-      ctx.shadowColor = "rgba(76, 154, 248, 0.25)";
-      ctx.shadowBlur = 14;
-      ctx.fillText(tgeText, 52, 335);
-      ctx.shadowBlur = 0;
-
-      ctx.fillStyle = textMuted;
-      ctx.font = "14px sans-serif";
-      ctx.fillText(`Based on ${fdvLabel(fdv)} FDV & ${airdropPct}% Pool`, 52, 395);
-
-      // Middle Vertical Divider Line
-      ctx.strokeStyle = dividerColor;
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(600, 170);
-      ctx.lineTo(600, 460);
-      ctx.stroke();
-
-      // 4. Right Side Layout
-      if (twitterUsername.trim() && showExtraPoints) {
-        // Top Row: Your Points & Pool Share
-        ctx.fillStyle = textMuted;
-        ctx.font = "bold 15px sans-serif";
-        ctx.fillText("Your Points", 640, 230);
-
-        ctx.fillStyle = "#4C9AF8";
-        ctx.font = `bold 74px ${monoFontFamily}`;
-        ctx.shadowColor = "rgba(76, 154, 248, 0.25)";
-        ctx.shadowBlur = 12;
-        ctx.fillText(formatNumber(parsePositive(userPoints) + twitterExtraPoints), 640, 283);
-        ctx.shadowBlur = 0;
-
-        // Vertical divider top row
-        ctx.strokeStyle = dividerColor;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(894, 200);
-        ctx.lineTo(894, 310);
-        ctx.stroke();
-
-        ctx.fillStyle = textMuted;
-        ctx.font = "bold 15px sans-serif";
-        ctx.fillText("Pool Share", 934, 230);
-
-        // Donut icon top row
-        ctx.strokeStyle = "#4C9AF8";
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(949, 275, 10, 0, Math.PI * 2);
-        ctx.globalAlpha = 0.25;
-        ctx.stroke();
-        ctx.globalAlpha = 1;
-        ctx.beginPath();
-        ctx.arc(949, 275, 10, -Math.PI / 2, Math.PI / 2);
-        ctx.stroke();
-
-        ctx.fillStyle = textMain;
-        ctx.font = `bold 43px ${monoFontFamily}`;
-        ctx.fillText(`${(results.share * 100).toFixed(4)}%`, 972, 283);
-
-        // Horizontal Divider Line
-        ctx.strokeStyle = dividerColor;
-        ctx.beginPath();
-        ctx.moveTo(640, 335);
-        ctx.lineTo(1148, 335);
-        ctx.stroke();
-
-        // Bottom Row: Est. Tokens & Twitter Handle
-        ctx.fillStyle = textMuted;
-        ctx.font = "bold 13px sans-serif";
-        ctx.fillText("Est. Tokens", 640, 375);
-
-        // Draw wallet icon bottom row
-        ctx.strokeStyle = "#4C9AF8";
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.roundRect(645, 414, 18, 13, 2);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(658, 414);
-        ctx.lineTo(658, 410);
-        ctx.quadraticCurveTo(654, 407, 648, 410);
-        ctx.stroke();
-
-        ctx.fillStyle = textMain;
-        ctx.font = `bold 43px ${monoFontFamily}`;
-        ctx.fillText(formatNumber(results.estimatedTokens, 0), 678, 428);
-
-        // Vertical divider bottom row
-        ctx.strokeStyle = dividerColor;
-        ctx.beginPath();
-        ctx.moveTo(894, 360);
-        ctx.lineTo(894, 450);
-        ctx.stroke();
-
-        ctx.fillStyle = textMuted;
-        ctx.font = "bold 13px sans-serif";
-        ctx.fillText(`𝕏 @${twitterUsername}`, 934, 375);
-
-        ctx.fillStyle = twitterExtraPoints > 0 ? "#4C9AF8" : textMuted;
-        ctx.font = `bold 36px ${monoFontFamily}`;
-        ctx.fillText(twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0", 934, 428);
-      } else {
-        // Your Points (Top Spanned)
-        ctx.fillStyle = textMuted;
-        ctx.font = "bold 15px sans-serif";
-        ctx.fillText("Your Points", 640, 230);
-
-        ctx.fillStyle = "#4C9AF8";
-        ctx.font = `bold 74px ${monoFontFamily}`;
-        ctx.shadowColor = "rgba(76, 154, 248, 0.25)";
-        ctx.shadowBlur = 12;
-        ctx.fillText(formatNumber(parsePositive(userPoints)), 640, 290);
-        ctx.shadowBlur = 0;
-
-        // Horizontal Divider Line
-        ctx.strokeStyle = dividerColor;
-        ctx.beginPath();
-        ctx.moveTo(640, 335);
-        ctx.lineTo(1148, 335);
-        ctx.stroke();
-
-        // Bottom Row: Pool Share & Est. Tokens
-        ctx.fillStyle = textMuted;
-        ctx.font = "bold 13px sans-serif";
-        ctx.fillText("Pool Share", 640, 375);
-
-        // Donut icon bottom row
-        ctx.strokeStyle = "#4C9AF8";
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(655, 420, 10, 0, Math.PI * 2);
-        ctx.globalAlpha = 0.25;
-        ctx.stroke();
-        ctx.globalAlpha = 1;
-        ctx.beginPath();
-        ctx.arc(655, 420, 10, -Math.PI / 2, Math.PI / 2);
-        ctx.stroke();
-
-        ctx.fillStyle = textMain;
-        ctx.font = `bold 43px ${monoFontFamily}`;
-        ctx.fillText(`${(results.share * 100).toFixed(4)}%`, 678, 428);
-
-        // Vertical divider bottom row
-        ctx.strokeStyle = dividerColor;
-        ctx.beginPath();
-        ctx.moveTo(894, 360);
-        ctx.lineTo(894, 450);
-        ctx.stroke();
-
-        ctx.fillStyle = textMuted;
-        ctx.font = "bold 13px sans-serif";
-        ctx.fillText("Est. Tokens", 934, 375);
-
-        // Draw wallet icon bottom row
-        ctx.strokeStyle = "#4C9AF8";
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.roundRect(939, 414, 18, 13, 2);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(952, 414);
-        ctx.lineTo(952, 410);
-        ctx.quadraticCurveTo(948, 407, 942, 410);
-        ctx.stroke();
-
-        ctx.fillStyle = textMain;
-        ctx.font = `bold 34px ${monoFontFamily}`;
-        ctx.fillText(formatNumber(results.estimatedTokens, 0), 972, 428);
-      }
-
-      // 5. Footer section
-      ctx.strokeStyle = dividerColor;
-      ctx.beginPath();
-      ctx.moveTo(52, 520);
-      ctx.lineTo(1148, 520);
-      ctx.stroke();
-
-      // Segmented coloring for footer text
-      ctx.fillStyle = textMuted;
-      ctx.font = "14px monospace";
-      ctx.fillText("Base Points: ", 52, 565);
+      if (!shareCardExportRef.current) return;
       
-      let offset = 52 + ctx.measureText("Base Points: ").width;
-      ctx.fillStyle = "#4C9AF8";
-      ctx.fillText(formatNumber(parsePositive(userPoints)), offset, 565);
+      const dataUrl = await toPng(shareCardExportRef.current, {
+        width: 1200,
+        height: 630,
+        pixelRatio: 2,
+        cacheBust: true,
+        backgroundColor: theme === "light" ? "#f9fafb" : "#050507",
+      });
       
-      offset += ctx.measureText(formatNumber(parsePositive(userPoints))).width;
-      ctx.fillStyle = textMuted;
-      ctx.fillText("  •  Total: ", offset, 565);
-      
-      offset += ctx.measureText("  •  Total: ").width;
-      ctx.fillStyle = "#4C9AF8";
-      const displayTotal = parsePositive(userPoints) + (showExtraPoints ? twitterExtraPoints : 0);
-      ctx.fillText(formatNumber(displayTotal), offset, 565);
-
-      if (twitterExtraPoints > 0 && showExtraPoints) {
-        offset += ctx.measureText(formatNumber(displayTotal)).width;
-        ctx.fillStyle = textMuted;
-        ctx.fillText("  •  Extra: ", offset, 565);
-        
-        offset += ctx.measureText("  •  Extra: ").width;
-        ctx.fillStyle = "#4C9AF8";
-        ctx.fillText(`+${formatNumber(twitterExtraPoints)}`, offset, 565);
-      }
-
-      ctx.fillStyle = "#4C9AF8";
-      ctx.textAlign = "right";
-      ctx.fillText("variational.io", 1148, 565);
-
-      const dataUrl = canvas.toDataURL("image/png");
       const link = document.createElement("a");
-      link.download = `variational-airdrop-estimate-${formatNumber(parsePositive(userPoints) + twitterExtraPoints)}.png`;
+      link.download = `variational-airdrop-estimate-${formatNumber(parsePositive(userPoints) + (showExtraPoints ? twitterExtraPoints : 0))}.png`;
       link.href = dataUrl;
       link.click();
     } catch (error) {
@@ -897,7 +577,7 @@ export default function Home() {
           {/* 2. Omni promo widget (Bottom on mobile, Middle on Desktop) */}
           <div className="flex flex-wrap justify-center items-center gap-1.5 order-3 lg:order-2 w-full lg:w-auto lg:mx-auto mt-0">
             <a
-              href="https://omni.variational.io/?ref=OMNIKLJ9FBUC"
+              href="https://omni.variational.io/?ref=OMNIATOMS"
               target="_blank"
               rel="noreferrer"
               className="inline-flex h-6 items-center justify-center rounded-full border border-[#4C9AF8]/25 bg-[#0C0D11]/40 px-3.5 text-[8px] font-extrabold text-[#4C9AF8] hover:bg-[#4C9AF8]/5 hover:border-[#4C9AF8]/50 transition uppercase tracking-[0.06em] gap-1.5 cursor-pointer whitespace-nowrap flex-shrink-0"
@@ -916,7 +596,7 @@ export default function Home() {
             >
               <span className={`text-[8px] transition-colors font-extrabold ${copied ? "text-emerald-400/80" : "text-[#64748B]"}`}>CODE:</span>
               <span className={`text-[8px] transition-colors font-extrabold ${copied ? "text-emerald-400" : "text-[#CBD5E1] group-hover:text-white"}`}>
-                OMNIKLJ9FBUC
+                OMNIATOMS
               </span>
               <svg 
                 className={`size-3 transition-colors ${copied ? "text-emerald-400" : "text-[#64748B] group-hover:text-[#CBD5E1]"}`} 
@@ -1613,9 +1293,150 @@ export default function Home() {
           </div>
         )}
 
+      {/* Hidden off-screen Card for pixel-perfect 1:1 PNG export using html-to-image */}
+      <div className="fixed -left-[9999px] -top-[9999px] pointer-events-none opacity-0 z-[-9999]" aria-hidden="true">
+        <div 
+          ref={shareCardExportRef}
+          style={{ 
+            width: "1200px", 
+            height: "630px",
+            backgroundImage: shareCardTheme === "light" ? "url('/brand/wave-light.png?v=3')" : "url('/brand/wave-dark.png?v=4')"
+          }}
+          className={`relative overflow-hidden bg-[length:100%_100%] bg-center bg-no-repeat flex flex-col justify-between w-[1200px] h-[630px] p-[52px] shadow-xl ${
+            shareCardTheme === "light"
+              ? "bg-slate-50 rounded-2xl border border-zinc-200/80 text-zinc-900"
+              : "bg-[#050507] rounded-none border-none text-white"
+          }`}
+        >
+          {/* Subtle giant background logo icon for dark theme */}
+          {shareCardTheme !== "light" && (
+            <svg className="absolute left-[4%] top-[-50.8%] w-[105%] h-[195%] pointer-events-none text-[#4C9AF8] opacity-[0.035]" viewBox="0 0 368 260" fill="currentColor">
+              <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
+            </svg>
+          )}
+
+          {/* Header row */}
+          <div className={`flex items-center justify-between border-b pb-4 ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
+            <div className="flex items-center gap-2">
+              <svg className={`h-7 w-8 flex-shrink-0 ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`} viewBox="0 0 368 260" fill="currentColor">
+                <path fillRule="evenodd" clipRule="evenodd" d="M184.119 0.554062C215.75 0.554062 244.399 20.8274 256.232 50.8548L317.757 216.482C321.032 224.33 328.396 229.367 336.279 229.367H368.808V259.336H336.279C315.948 259.336 297.322 246.119 290.126 226.468L272.766 179.775C269.657 171.499 262.078 166.14 253.947 166.139C245.761 166.139 238.231 171.36 235.139 179.754L235.128 179.775L217.769 226.468C210.573 246.118 191.946 259.335 171.615 259.336H0V229.367H32.1586C40.1273 229.365 47.8672 223.98 50.9671 215.731L111.645 52.2934C123.113 21.4959 151.968 0.555387 184.119 0.554062ZM184.119 30.5229C164.337 30.5242 145.991 43.4339 138.8 63.0094V63.0306L76.9162 229.367H101.797C109.771 229.364 117.52 223.969 120.616 215.71L159.629 110.761V110.74C169.232 85.1888 192.485 68.3622 219.038 68.3622C223.426 68.3625 227.755 68.8635 231.954 69.8114L229.098 62.1314C221.498 43.005 203.562 30.5229 184.119 30.5229ZM218.848 98.5214C204.676 98.5218 192.097 107.306 186.774 121.508L146.554 229.367H171.424C179.4 229.367 187.158 223.971 190.254 215.71L207.603 169.027C214.845 149.573 232.438 136.548 252.667 136.35H253.63C254.577 136.351 255.51 136.385 256.423 136.445L250.911 121.477C245.759 107.65 232.99 98.5224 218.848 98.5214Z" />
+              </svg>
+              <div className="flex flex-col">
+                <span className={`font-mono text-xl font-bold tracking-wider leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>VARIATIONAL</span>
+                <span className="text-[10px] font-bold text-[#4C9AF8] tracking-widest uppercase mt-[2px]">Points Estimator</span>
+              </div>
+            </div>
+            
+            <div className={`flex items-center gap-[4px] px-3 py-1.5 rounded-full border border-[#4C9AF8]/20 bg-[#4C9AF8]/10 text-[10px] font-bold tracking-widest text-[#4C9AF8] uppercase`}>
+              TGE Allocation Estimate
+            </div>
+          </div>
+
+          {/* Body row */}
+          <div className="flex items-stretch gap-[24px] my-auto">
+            {/* Left: Expected TGE Value */}
+            <div className="flex-1 flex flex-col justify-center">
+              <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Estimated TGE Value</span>
+              <span className={`${getTgeFontSizeClass(results.expectedValue)} font-bold font-mono tracking-tight mt-[2px] leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white [text-shadow:0_0_14px_rgba(76,154,248,0.3)]"}`}>
+                {formatUsdRounded(results.expectedValue)}
+              </span>
+              <span className={`text-[13px] font-semibold mt-[12px] ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>
+                Based on {fdvLabel(fdv)} FDV & {airdropPct}% Pool
+              </span>
+            </div>
+
+            {/* Middle Vertical line */}
+            <div className={`w-[1px] ${shareCardTheme === "light" ? "bg-zinc-200" : "bg-[#1E2026]"}`} />
+
+            {/* Right: Stats Layout */}
+            <div className="flex-1 flex flex-col justify-between py-0">
+              {/* Top Row */}
+              {twitterUsername.trim() && showExtraPoints ? (
+                <div className="grid grid-cols-2 gap-[16px]">
+                  {/* Your Points */}
+                  <div className="flex flex-col">
+                    <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
+                    <span className={`text-[72px] sm:text-[88px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
+                      {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
+                    </span>
+                  </div>
+                  {/* Pool Share */}
+                  <div className={`flex flex-col border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
+                    <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
+                    <div className="flex items-center gap-[4px] mt-[2px]">
+                      <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col">
+                  <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
+                  <span className={`text-[72px] sm:text-[88px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
+                    {formatNumber(parsePositive(userPoints))}
+                  </span>
+                </div>
+              )}
+
+              {/* Horizontal divide line */}
+              <div className={`h-[1px] my-[10px] ${shareCardTheme === "light" ? "bg-zinc-200" : "bg-[#1E2026]"}`} />
+
+              {/* Bottom Row */}
+              <div className="grid grid-cols-2 gap-[16px]">
+                {twitterUsername.trim() && showExtraPoints ? (
+                  <>
+                    <div className="flex flex-col gap-[2px]">
+                      <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
+                      <div className="flex items-center gap-[4px] mt-[2px]">
+                        <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
+                      </div>
+                    </div>
+                    <div className={`flex flex-col gap-[2px] border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
+                      <span className={`text-[14px] font-bold uppercase tracking-wider flex items-center gap-[4px] truncate ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>
+                        <span className="font-sans font-black">𝕏</span> @{twitterUsername}
+                      </span>
+                      <div className="flex items-center gap-[4px] mt-[2px]">
+                        <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
+                          {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
+                        </span>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex flex-col gap-[2px]">
+                      <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
+                      <div className="flex items-center gap-[4px] mt-[2px]">
+                        <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
+                      </div>
+                    </div>
+                    <div className={`flex flex-col gap-[2px] border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
+                      <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
+                      <div className="flex items-center gap-[4px] mt-[2px]">
+                        <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Footer section */}
+          <div className={`flex justify-between border-t pt-3 text-[12px] font-mono leading-none ${shareCardTheme === "light" ? "border-zinc-200 text-[#94A3B8]" : "border-[#1E2026] text-[#64748B]"}`}>
+            <span>
+              Base Points: <span className="text-[#4C9AF8] font-bold">{formatNumber(parsePositive(userPoints))}</span> • Total: <span className="text-[#4C9AF8] font-bold">{formatNumber(parsePositive(userPoints) + (showExtraPoints ? twitterExtraPoints : 0))}</span>
+              {twitterExtraPoints > 0 && showExtraPoints ? (
+                <> • Extra: <span className="text-[#4C9AF8] font-bold">+{formatNumber(twitterExtraPoints)}</span></>
+              ) : null}
+            </span>
+            <span className="text-[#4C9AF8] font-bold">variational.io</span>
+          </div>
+        </div>
+      </div>
+
       </section>
       {isShareModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0C0D11]lack/85 backdrop-blur-md animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
           <div className="relative bg-[#050507] border border-[#1E2026] rounded-2xl max-w-[840px] w-full p-6 flex flex-col gap-6 animate-slide-fade-in shadow-2xl">
             
             {/* Modal Header */}
@@ -1722,7 +1543,7 @@ export default function Home() {
                     {/* Left: Expected TGE Value */}
                     <div className="flex-1 flex flex-col justify-center">
                       <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Estimated TGE Value</span>
-                      <span className={`text-[72px] sm:text-[86px] font-bold font-mono tracking-tight mt-[4px] leading-tight ${shareCardTheme === "light" ? "text-zinc-900" : "text-white [text-shadow:0_0_14px_rgba(76,154,248,0.3)]"}`}>
+                      <span className={`${getTgeFontSizeClass(results.expectedValue)} font-bold font-mono tracking-tight mt-[2px] leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white [text-shadow:0_0_14px_rgba(76,154,248,0.3)]"}`}>
                         {formatUsdRounded(results.expectedValue)}
                       </span>
                       <span className={`text-[13px] font-semibold mt-[12px] ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>
@@ -1741,7 +1562,7 @@ export default function Home() {
                           {/* Your Points */}
                           <div className="flex flex-col">
                             <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
-                            <span className={`text-[63px] sm:text-[76px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
+                            <span className={`text-[72px] sm:text-[88px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
                               {formatNumber(parsePositive(userPoints) + twitterExtraPoints)}
                             </span>
                           </div>
@@ -1749,14 +1570,14 @@ export default function Home() {
                           <div className={`flex flex-col border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
                             <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
                             <div className="flex items-center gap-[4px] mt-[2px]">
-                              <span className={`text-[34px] sm:text-[40px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
+                              <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
                             </div>
                           </div>
                         </div>
                       ) : (
                         <div className="flex flex-col">
                           <span className={`text-[15px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Your Points</span>
-                          <span className={`text-[63px] sm:text-[76px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
+                          <span className={`text-[72px] sm:text-[88px] font-bold font-mono text-[#4C9AF8] mt-[2px] leading-none ${shareCardTheme === "dark" ? "[text-shadow:0_0_12px_rgba(76,154,248,0.25)]" : ""}`}>
                             {formatNumber(parsePositive(userPoints))}
                           </span>
                         </div>
@@ -1772,7 +1593,7 @@ export default function Home() {
                             <div className="flex flex-col gap-[2px]">
                               <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[34px] sm:text-[40px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
+                                <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                             </div>
                             <div className={`flex flex-col gap-[2px] border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
@@ -1780,7 +1601,7 @@ export default function Home() {
                                 <span className="font-sans font-black">𝕏</span> @{twitterUsername}
                               </span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[34px] sm:text-[40px] font-bold font-mono leading-none ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
+                                <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${twitterExtraPoints > 0 ? "text-[#4C9AF8]" : (shareCardTheme === "light" ? "text-zinc-300" : "text-zinc-600")}`}>
                                   {twitterExtraPoints > 0 ? `+${formatNumber(twitterExtraPoints)}` : "0"}
                                 </span>
                               </div>
@@ -1791,13 +1612,13 @@ export default function Home() {
                             <div className="flex flex-col gap-[2px]">
                               <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Pool Share</span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[34px] sm:text-[40px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
+                                <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{(results.share * 100).toFixed(4)}%</span>
                               </div>
                             </div>
                             <div className={`flex flex-col gap-[2px] border-l pl-[16px] ${shareCardTheme === "light" ? "border-zinc-200" : "border-[#1E2026]"}`}>
                               <span className={`text-[14px] font-bold uppercase tracking-wider ${shareCardTheme === "light" ? "text-[#94A3B8]" : "text-[#64748B]"}`}>Est. Tokens</span>
                               <div className="flex items-center gap-[4px] mt-[2px]">
-                                <span className={`text-[34px] sm:text-[40px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
+                                <span className={`text-[38px] sm:text-[44px] font-bold font-mono leading-none ${shareCardTheme === "light" ? "text-zinc-900" : "text-white"}`}>{formatNumber(results.estimatedTokens, 0)}</span>
                               </div>
                             </div>
                           </>
