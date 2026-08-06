@@ -197,7 +197,7 @@ const DEFAULT_FDV_MARKETS: FdvMarket[] = [
 
 export default function Home() {
   const [tab, setTab] = useState<"estimator" | "stats">("estimator");
-  const [totalPoints, setTotalPoints] = useState("9 000 000");
+  const [totalPoints, setTotalPoints] = useState("8 100 000");
   const [userPoints, setUserPoints] = useState("");
   const [airdropPct, setAirdropPct] = useState(40);
   const [fdv, setFdv] = useState(500_000_000);
